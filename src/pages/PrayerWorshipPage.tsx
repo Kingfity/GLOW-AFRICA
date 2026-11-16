@@ -56,8 +56,8 @@ export function PrayerWorshipPage() {
             <div className="lg:col-span-5">
               <div className="aspect-[16/10] rounded-lg overflow-hidden border border-white/15">
                 <SafeImage
-                  src="/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg"
-                  alt="Evening sanctuary lit warmly for prayer and worship"
+                  src="/src/assets/images/doc_worship_gathering_1794832340911.jpg"
+                  alt="Sunlit stone and timber sanctuary filled with prayer and joyful singing at golden hour"
                   className="w-full h-full object-cover"
                 />
               </div>

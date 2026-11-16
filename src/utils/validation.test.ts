@@ -17,6 +17,8 @@ import {
   filterAndSortEvents,
   formatEventDate,
   isHoneypotTriggered,
+  isUpcomingEvent,
+  normalizeEventCategory,
 } from './validation';
 import type { EventItem, ImpactProject, RehabFacility } from '../shared/types';
 
@@ -302,7 +304,7 @@ test('isHoneypotTriggered detects filled bot field', () => {
   assert.equal(isHoneypotTriggered('https://spam.example'), true);
 });
 
-test('filterImpactProjects and filterAndSortEvents filter and sort deterministically', () => {
+test('filterImpactProjects and filterAndSortEvents filter, search, and normalize deterministically', () => {
   const projects = [
     { id: '1', category: 'Community Outreach' },
     { id: '2', category: 'Acts of Compassion' },
@@ -310,15 +312,49 @@ test('filterImpactProjects and filterAndSortEvents filter and sort deterministic
   assert.equal(filterImpactProjects(projects, 'All').length, 2);
   assert.equal(filterImpactProjects(projects, 'Acts of Compassion').length, 1);
 
+  assert.equal(normalizeEventCategory('Worship Gathering'), 'Safe Refuge & Fellowship');
+  assert.equal(normalizeEventCategory('Prayer Meeting'), 'Mental Health & Recovery');
+  assert.equal(normalizeEventCategory("Children's Home Visits"), 'Children’s Home Visits');
+  assert.equal(isUpcomingEvent('2026-12-01', '2026-11-20'), true);
+  assert.equal(isUpcomingEvent('2026-10-01', '2026-11-20'), false);
+
   const events = [
-    { id: 'b', category: 'Prayer Meeting', dateISO: '2026-12-10' },
-    { id: 'a', category: 'Prayer Meeting', dateISO: '2026-11-20' },
-    { id: 'c', category: 'Worship Gathering', dateISO: '2026-11-25' },
-  ] as EventItem[];
-  const sorted = filterAndSortEvents(events, 'Prayer Meeting');
+    {
+      id: 'b',
+      title: 'Evening Burden Circle',
+      summary: 'Calm mental wellness session',
+      venue: 'Care Room',
+      category: 'Mental Health & Recovery',
+      dateISO: '2026-12-10',
+    },
+    {
+      id: 'a',
+      title: 'Amani Children Home Visit',
+      summary: 'CSR mentoring visit',
+      venue: 'Karen Courtyard',
+      category: 'Children’s Home Visits',
+      dateISO: '2026-11-20',
+    },
+    {
+      id: 'c',
+      title: 'Legacy Recovery Gathering',
+      summary: 'Prayer and renewal',
+      venue: 'Sanctuary',
+      category: 'Prayer Meeting',
+      dateISO: '2026-11-25',
+    },
+  ] as unknown as EventItem[];
+
+  const mentalHealthOnly = filterAndSortEvents(events, 'Mental Health & Recovery');
   assert.deepEqual(
-    sorted.map((e) => e.id),
-    ['a', 'b']
+    mentalHealthOnly.map((e) => e.id),
+    ['c', 'b']
+  );
+
+  const keywordMatch = filterAndSortEvents(events, 'All', 'Karen');
+  assert.deepEqual(
+    keywordMatch.map((e) => e.id),
+    ['a']
   );
 });
 

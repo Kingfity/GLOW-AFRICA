@@ -3,7 +3,9 @@ import express from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import { sanitizeAssistantResult, validateAssistantMessage } from './src/utils/careTools.ts';
 import {
   clearSessionCookie,
   getSessionFromRequest,
@@ -21,6 +23,7 @@ import {
 import {
   cleanText,
   isHoneypotTriggered,
+  normalizeEventCategory,
   slugify,
   validateAsdSupportRequest,
   validateContactMessage,
@@ -47,6 +50,13 @@ import type {
 const PORT = 3000;
 const UPLOADS_DIR = path.resolve(process.cwd(), 'public', 'uploads');
 const VIDEOS_DIR = path.resolve(process.cwd(), 'public', 'videos');
+
+const geminiClient = process.env.GEMINI_API_KEY
+  ? new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      httpOptions: { headers: { 'User-Agent': 'aistudio-build' } },
+    })
+  : null;
 
 const rateBuckets = new Map<string, { count: number; resetAt: number }>();
 
@@ -77,6 +87,123 @@ async function startServer() {
   // Public site data (never exposes private prayer, counselling, safe-home, volunteer, or contact submissions)
   app.get('/api/public-data', (_req, res) => {
     res.json(getPublicSiteData());
+  });
+
+  // Server-side AI Care Guide Chatbot (/api/care-assistant)
+  app.post('/api/care-assistant', async (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 20, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please pause briefly before sending another question.' });
+      return;
+    }
+
+    const validated = validateAssistantMessage(req.body?.message);
+    if (!validated.valid) {
+      res.status(400).json({ error: validated.error });
+      return;
+    }
+
+    if (!geminiClient) {
+      res.status(503).json({
+        error:
+          'Care Guide AI is temporarily unavailable while the Gemini API key is being configured. Please use the Care Family Compass cards or Contact page to reach us directly.',
+      });
+      return;
+    }
+
+    const publicData = getPublicSiteData();
+    const homesSummary = publicData.childrensHomes
+      .map((h) => `${h.name} (${h.countyRegion}, ${h.townArea}; needs: ${h.currentNeeds.join(', ')})`)
+      .join('; ');
+    const rehabSummary = publicData.rehabFacilities
+      .map((f) => `${f.name} (${f.countyRegion}, ${f.focusType}, ${f.careFormat})`)
+      .join('; ');
+    const asdSummary = publicData.asdGuides
+      .map((g) => `${g.pillar}: ${g.title}`)
+      .join('; ');
+
+    const historyItems = Array.isArray(req.body?.history)
+      ? req.body.history
+          .slice(-6)
+          .map((item: { role?: unknown; text?: unknown }) => {
+            const role = item?.role === 'assistant' ? 'Guide' : 'Visitor';
+            const text = cleanText(item?.text, 350);
+            return text ? `${role}: ${text}` : '';
+          })
+          .filter(Boolean)
+          .join('\n')
+      : '';
+
+    const systemInstruction = [
+      'You are the warm, compassionate HIS AND HERS Care Family Guide.',
+      'Your role is to listen briefly to what a visitor, parent, corporate team, or loved one needs and guide them directly to the right verified HIS AND HERS page or resource.',
+      'Available routes (ONLY recommend href values from this exact list):',
+      '- /home-visits: Book individuals, friend groups, or corporate CSR teams to visit Children’s Homes, OR onboard a Corporate/NGO/Children’s Home partner.',
+      '- /rehabilitation: Search verified rehabilitation facilities sorted by proximity and submit a confidential referral.',
+      '- /asd-support: ASD Parents & Kids Support Hub with interactive Visual Daily Routine Builder, calming sensory tips, and ASD parent mentors.',
+      '- /counselling: Talk to a Counsellor, Lighten Your Burden (anonymous or callback), and 60-second grounding breath tool.',
+      '- /find-my-home: Urgent safe refuge coordination for individuals/children fleeing gender-based violence or child abuse (with Quick Exit safety).',
+      '- /prayer-worship: Confidential prayer request & interdenominational fellowship details.',
+      '- /events: Upcoming Children’s Home visit days, ASD play mornings, and gatherings.',
+      '- /get-involved: Volunteer and stewardship pathways.',
+      '- /contact: Direct contact channels.',
+      `Current Children’s Homes: ${homesSummary}`,
+      `Current Rehabilitation Centres: ${rehabSummary}`,
+      `Current ASD Guides: ${asdSummary}`,
+      'Guidelines: Be concise (2–4 gentle sentences), never invent fake phone numbers or addresses, never claim medical diagnoses, and if abuse or acute crisis is mentioned include urgentSafetyNote guiding them to /find-my-home or emergency services.',
+    ].join('\n');
+
+    const promptContents = historyItems
+      ? `Recent conversation:\n${historyItems}\n\nLatest visitor question: ${validated.message}`
+      : validated.message;
+
+    try {
+      const response = await geminiClient.models.generateContent({
+        model: 'gemini-4-hydrogen',
+        contents: promptContents,
+        config: {
+          systemInstruction,
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              reply: {
+                type: Type.STRING,
+                description: 'Warm, clear 2-4 sentence answer guiding the visitor.',
+              },
+              suggestedLinks: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    label: { type: Type.STRING, description: 'Short link button label' },
+                    href: {
+                      type: Type.STRING,
+                      description: 'Exact route path from the allowed list starting with /',
+                    },
+                    reason: { type: Type.STRING, description: 'Brief 4-8 word reason why this helps' },
+                  },
+                },
+              },
+              urgentSafetyNote: {
+                type: Type.STRING,
+                description: 'Optional urgent safety note if violence, abuse, or emergency is mentioned.',
+              },
+            },
+          },
+        },
+      });
+
+      const rawText = (response.text ?? '{}').trim();
+      const parsed = JSON.parse(rawText);
+      res.json(sanitizeAssistantResult(parsed));
+    } catch (err) {
+      console.error('Gemini care-assistant error:', err);
+      res.status(502).json({
+        error:
+          'Unable to reach Care Guide AI right now. Please try again in a moment or use the pathway cards on screen.',
+      });
+    }
   });
 
   // Public submission: Prayer Request
@@ -534,19 +661,19 @@ async function startServer() {
       id: generateId('evt'),
       slug: slugify(title) || generateId('event'),
       title,
-      category: category || 'Worship Gathering',
+      category: normalizeEventCategory(category || 'Community Outreach'),
       dateISO,
-      timeLabel: timeLabel || '17:00 – 19:00',
+      timeLabel: timeLabel || '10:00 – 13:00',
       venue,
       summary,
       description: description || summary,
       registrationOpen: req.body?.registrationOpen !== false,
       registrationNote:
         cleanText(req.body?.registrationNote, 300) ||
-        'Open gathering. Register below so we can welcome you warmly.',
+        'Open community event. Register below so our Care Family team can prepare warmly.',
       imageUrl:
         cleanText(req.body?.imageUrl, 500) ||
-        '/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg',
+        '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
       imageAlt: cleanText(req.body?.imageAlt, 200) || title,
       featured: Boolean(req.body?.featured),
       createdAt: new Date().toISOString(),
@@ -565,11 +692,12 @@ async function startServer() {
     }
     const existing = db.events[idx];
     const title = cleanText(req.body?.title, 180) || existing.title;
+    const rawCat = cleanText(req.body?.category, 60);
     const updated: EventItem = {
       ...existing,
       title,
       slug: slugify(title) || existing.slug,
-      category: (cleanText(req.body?.category, 60) as EventCategory) || existing.category,
+      category: rawCat ? normalizeEventCategory(rawCat) : existing.category,
       dateISO: cleanText(req.body?.dateISO, 20) || existing.dateISO,
       timeLabel: cleanText(req.body?.timeLabel, 80) || existing.timeLabel,
       venue: cleanText(req.body?.venue, 200) || existing.venue,
@@ -811,7 +939,7 @@ async function startServer() {
       acceptsCorporateTeams: req.body?.acceptsCorporateTeams !== false,
       acceptsIndividualGroups: req.body?.acceptsIndividualGroups !== false,
       description,
-      imageUrl: '/src/assets/images/children_home_visit_joy_1794828208960.jpg',
+      imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
       imageAlt: `${name} partner children home courtyard`,
     };
     db.childrensHomes.unshift(home);
@@ -848,7 +976,7 @@ async function startServer() {
       lng: Number.isFinite(Number(req.body?.lng)) ? Number(req.body.lng) : 36.8219,
       acceptsCommunityReferrals: true,
       summary,
-      imageUrl: '/src/assets/images/rehab_recovery_garden_1794828209576.jpg',
+      imageUrl: '/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg',
       imageAlt: `${name} rehabilitation courtyard`,
     };
     db.rehabFacilities.unshift(facility);

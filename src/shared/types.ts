@@ -4,12 +4,15 @@ export type ImpactCategory =
   | 'Support for Vulnerable Communities'
   | 'Community Engagement';
 
-export type EventCategory =
-  | 'Worship Gathering'
-  | 'Prayer Meeting'
-  | 'Special Service'
-  | 'Community Outreach'
-  | 'Conference';
+export const HELPING_HAND_EVENT_CATEGORIES = [
+  'Children’s Home Visits',
+  'Mental Health & Recovery',
+  'ASD Family Gatherings',
+  'Community Outreach',
+  'Safe Refuge & Fellowship',
+] as const;
+
+export type EventCategory = (typeof HELPING_HAND_EVENT_CATEGORIES)[number];
 
 export type SubmissionStatus = 'new' | 'reviewed' | 'prayed' | 'archived';
 

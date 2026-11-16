@@ -60,3 +60,10 @@
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  header,
+  footer {
+    display: none !important;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, CheckCircle2, Lock, PhoneCall } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
+import { CalmBreathWidget } from '../components/CalmBreathWidget';
 import { useSiteData } from '../context/SiteDataContext';
 import { SafeImage } from '../components/SafeImage';
 import type { CounsellingRequest } from '../shared/types';
@@ -154,6 +155,9 @@ export function CounsellingPage() {
           </div>
         </div>
       </section>
+
+      {/* Calm Grounding Breath & Private Local Burden Release */}
+      <CalmBreathWidget />
 
       {/* Main Content + Form */}
       <section id="counselling-form" className="py-16 sm:py-24 bg-[#FAF7F2]">

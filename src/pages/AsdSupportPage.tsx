@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { CheckCircle2, HeartHandshake, Sparkles } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
+import { AsdRoutineBuilder } from '../components/AsdRoutineBuilder';
+import { CommunityVideoPlayer } from '../components/CommunityVideoPlayer';
 import { useSiteData } from '../context/SiteDataContext';
 import type { AsdGuideTip, AsdSupportRequest } from '../shared/types';
 import { validateAsdSupportRequest } from '../utils/validation';
@@ -132,28 +134,29 @@ export function AsdSupportPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="rounded-xl overflow-hidden border border-white/20 bg-black">
-              <div className="aspect-video">
-                <video
-                  controls
-                  playsInline
-                  muted
-                  preload="metadata"
-                  poster="/src/assets/images/asd_parent_child_care_1794828209127.jpg"
-                  aria-label="Parent and young autistic child playing gently with wooden sensory blocks and routine cards"
-                  className="w-full h-full object-cover"
-                >
-                  <source src="/videos/asd_and_family_home_reel.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <div className="px-5 py-3.5 bg-[#1B4A42] flex items-center justify-between text-xs text-[#FAF7F2]/85">
+            <div className="rounded-xl overflow-hidden border border-white/20 bg-[#160822]">
+              <CommunityVideoPlayer
+                videoSrc="/videos/asd_and_family_home_reel.mp4"
+                posterSrc="/src/assets/images/doc_asd_family_moment_1794832339166.jpg"
+                ariaLabel="Parent and young autistic child playing gently with wooden sensory blocks"
+                soundMoodLabel="Warm Marimba Lullaby"
+                chapters={[
+                  { timeSeconds: 0, label: '01 · Sensory Play' },
+                  { timeSeconds: 3.6, label: '02 · Care Family' },
+                  { timeSeconds: 7.0, label: '03 · Fellowship' },
+                ]}
+              />
+              <div className="px-5 py-3 bg-[#1B4A42] flex items-center justify-between text-xs text-[#FAF7F2]/85 border-t border-white/10">
                 <span>Sensory Routines &amp; Family Peace</span>
-                <span className="text-[#F3D79B] tabular-nums">0:07 Video Reel</span>
+                <span className="text-[#F3D79B] tabular-nums">0:10 Reel · Marimba Sound</span>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Interactive Daily Visual Routine Builder */}
+      <AsdRoutineBuilder />
 
       {/* Practical Easy-to-Follow Daily Guides */}
       <section id="asd-daily-guides" className="py-16 sm:py-24 bg-[#EDF6F3] border-b border-[#256358]/15">
@@ -241,8 +244,8 @@ export function AsdSupportPage() {
             </h2>
             <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
               Need ideas for fussy eating, non-speaking communication tools, sibling questions, or
-              a calm church/community welcome? Write to us—our mentors and fellow ASD parents love
-              to share what really helps at home.
+              a calm community &amp; neighbourhood welcome? Write to us—our mentors and fellow ASD
+              parents love to share what really helps at home.
             </p>
             <div className="bg-[#FDF6EE] border border-[#C2593F]/20 rounded-xl p-6 space-y-2">
               <p className="text-xs font-semibold uppercase tracking-wider text-[#C2593F]">

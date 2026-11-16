@@ -1,5 +1,7 @@
+import { CareGuideChatbot } from './components/CareGuideChatbot';
 import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
+import { ColourMoodProvider } from './context/ColourMoodContext';
 import { RouterProvider, useRouter } from './context/RouterContext';
 import { SiteDataProvider } from './context/SiteDataContext';
 import { AboutPage } from './pages/AboutPage';
@@ -50,21 +52,24 @@ function PageView() {
 export default function App() {
   return (
     <RouterProvider>
-      <SiteDataProvider>
-        <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#1A1224]">
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#3B155F] focus:text-[#FAF7F2] focus:rounded-md"
-          >
-            Skip to main content
-          </a>
-          <Navbar />
-          <main id="main-content" className="flex-1">
-            <PageView />
-          </main>
-          <Footer />
-        </div>
-      </SiteDataProvider>
+      <ColourMoodProvider>
+        <SiteDataProvider>
+          <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#1A1224]">
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#3B155F] focus:text-[#FAF7F2] focus:rounded-md"
+            >
+              Skip to main content
+            </a>
+            <Navbar />
+            <main id="main-content" className="flex-1">
+              <PageView />
+            </main>
+            <Footer />
+            <CareGuideChatbot />
+          </div>
+        </SiteDataProvider>
+      </ColourMoodProvider>
     </RouterProvider>
   );
 }

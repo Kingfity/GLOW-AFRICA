@@ -62,14 +62,13 @@ export function AboutPage() {
             <div className="lg:col-span-5 space-y-6">
               <div className="aspect-[4/3] rounded-lg overflow-hidden border border-[#3B155F]/12">
                 <SafeImage
-                  src="/src/assets/images/impact_education_youth_1794821888567.jpg"
-                  alt="Community mentors and youth sharing conversation around wooden tables"
+                  src="/src/assets/images/lifelike_care_family_art_1794832340734.jpg"
+                  alt="Lifelike painterly illustration of the HIS AND HERS Care Family Home courtyard with elders, parents, and children walking beneath acacia and jacaranda trees"
                   className="w-full h-full object-cover"
                 />
               </div>
               <figure className="text-xs text-[#665B73] italic">
-                Shared tables of encouragement and community partnership—reflecting HIS AND HERS’s
-                commitment to dignity and human presence.
+                Lifelike Care Family Home courtyard artwork—warmth, open doors, and generational belonging at HIS AND HERS.
               </figure>
             </div>
           </div>

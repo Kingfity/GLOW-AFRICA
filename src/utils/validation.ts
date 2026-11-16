@@ -1,13 +1,15 @@
-import type {
-  AsdSupportRequest,
-  CounsellingRequest,
-  EventItem,
-  HomeVisitBooking,
-  ImpactProject,
-  PartnerOrganization,
-  RehabFacility,
-  RehabReferralRequest,
-  SafeHomeRequest,
+import {
+  HELPING_HAND_EVENT_CATEGORIES,
+  type AsdSupportRequest,
+  type CounsellingRequest,
+  type EventCategory,
+  type EventItem,
+  type HomeVisitBooking,
+  type ImpactProject,
+  type PartnerOrganization,
+  type RehabFacility,
+  type RehabReferralRequest,
+  type SafeHomeRequest,
 } from '../shared/types';
 
 export interface ValidationResult<T> {
@@ -687,9 +689,64 @@ export function filterImpactProjects(
   return projects.filter((p) => p.category === category);
 }
 
-export function filterAndSortEvents(events: EventItem[], category: string): EventItem[] {
-  const filtered =
-    !category || category === 'All' ? events : events.filter((e) => e.category === category);
+export function normalizeEventCategory(raw: string): EventCategory {
+  const value = (raw || '').trim();
+  if ((HELPING_HAND_EVENT_CATEGORIES as readonly string[]).includes(value)) {
+    return value as EventCategory;
+  }
+  const lower = value.toLowerCase();
+  if (lower.includes('child') || lower.includes('home visit')) {
+    return 'Children’s Home Visits';
+  }
+  if (lower.includes('asd') || lower.includes('autism') || lower.includes('sensory')) {
+    return 'ASD Family Gatherings';
+  }
+  if (
+    lower.includes('mental') ||
+    lower.includes('rehab') ||
+    lower.includes('recovery') ||
+    lower.includes('counsell') ||
+    lower === 'prayer meeting'
+  ) {
+    return 'Mental Health & Recovery';
+  }
+  if (
+    lower.includes('refuge') ||
+    lower.includes('fellowship') ||
+    lower.includes('worship') ||
+    lower.includes('special service') ||
+    lower.includes('conference')
+  ) {
+    return 'Safe Refuge & Fellowship';
+  }
+  return 'Community Outreach';
+}
+
+export function isUpcomingEvent(
+  dateISO: string,
+  referenceISO = new Date().toISOString().slice(0, 10)
+): boolean {
+  return typeof dateISO === 'string' && dateISO >= referenceISO;
+}
+
+export function filterAndSortEvents(
+  events: EventItem[],
+  category: string,
+  searchQuery = ''
+): EventItem[] {
+  const normalizedTarget =
+    category && category !== 'All' ? normalizeEventCategory(category) : null;
+  const query = searchQuery.trim().toLowerCase();
+
+  const filtered = events.filter((e) => {
+    const categoryMatches =
+      !normalizedTarget || normalizeEventCategory(e.category) === normalizedTarget;
+    if (!categoryMatches) return false;
+    if (!query) return true;
+    const haystack = `${e.title} ${e.summary} ${e.venue} ${e.category}`.toLowerCase();
+    return haystack.includes(query);
+  });
+
   return [...filtered].sort((a, b) => a.dateISO.localeCompare(b.dateISO));
 }
 

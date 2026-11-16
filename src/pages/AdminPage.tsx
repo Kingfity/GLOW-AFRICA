@@ -19,17 +19,18 @@ import {
   Users,
 } from 'lucide-react';
 import { useSiteData } from '../context/SiteDataContext';
-import type {
-  AdminDashboardData,
-  AdminUserSession,
-  Announcement,
-  EventCategory,
-  EventItem,
-  ImpactCategory,
-  ImpactProject,
-  SiteSettings,
+import {
+  HELPING_HAND_EVENT_CATEGORIES,
+  type AdminDashboardData,
+  type AdminUserSession,
+  type Announcement,
+  type EventCategory,
+  type EventItem,
+  type ImpactCategory,
+  type ImpactProject,
+  type SiteSettings,
 } from '../shared/types';
-import { formatEventDate } from '../utils/validation';
+import { formatEventDate, normalizeEventCategory } from '../utils/validation';
 
 type AdminTab =
   | 'homevisits'
@@ -65,18 +66,23 @@ export function AdminPage() {
     }) | null
   >(null);
   const [statusNotice, setStatusNotice] = useState<string | null>(null);
+  const [errorNotice, setErrorNotice] = useState<string | null>(null);
 
   // Event creation / editing form state
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
   const [evtTitle, setEvtTitle] = useState('');
-  const [evtCategory, setEvtCategory] = useState<EventCategory>('Worship Gathering');
-  const [evtDate, setEvtDate] = useState('2026-12-15');
-  const [evtTime, setEvtTime] = useState('17:00 – 19:00');
+  const [evtCategory, setEvtCategory] = useState<EventCategory>('Children’s Home Visits');
+  const [evtDate, setEvtDate] = useState('2026-12-22');
+  const [evtTime, setEvtTime] = useState('09:30 – 14:30');
   const [evtVenue, setEvtVenue] = useState('');
   const [evtSummary, setEvtSummary] = useState('');
   const [evtDescription, setEvtDescription] = useState('');
+  const [evtRegistrationOpen, setEvtRegistrationOpen] = useState(true);
+  const [evtRegistrationNote, setEvtRegistrationNote] = useState(
+    'Open community event. Register online so our Care Family hosts can prepare welcome kits.'
+  );
   const [evtImageUrl, setEvtImageUrl] = useState(
-    '/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg'
+    '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg'
   );
 
   // Impact story creation state
@@ -126,8 +132,14 @@ export function AdminPage() {
   }, [loadDashboard]);
 
   const notify = (msg: string) => {
+    setErrorNotice(null);
     setStatusNotice(msg);
     setTimeout(() => setStatusNotice(null), 4000);
+  };
+
+  const showError = (msg: string) => {
+    setStatusNotice(null);
+    setErrorNotice(msg);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -190,86 +202,116 @@ export function AdminPage() {
   const startEditEvent = (evt: EventItem) => {
     setEditingEventId(evt.id);
     setEvtTitle(evt.title);
-    setEvtCategory(evt.category);
+    setEvtCategory(normalizeEventCategory(evt.category));
     setEvtDate(evt.dateISO);
     setEvtTime(evt.timeLabel);
     setEvtVenue(evt.venue);
     setEvtSummary(evt.summary);
     setEvtDescription(evt.description);
+    setEvtRegistrationOpen(evt.registrationOpen);
+    setEvtRegistrationNote(evt.registrationNote || '');
     setEvtImageUrl(evt.imageUrl);
   };
 
   const resetEventForm = () => {
     setEditingEventId(null);
     setEvtTitle('');
-    setEvtCategory('Worship Gathering');
-    setEvtDate('2026-12-15');
-    setEvtTime('17:00 – 19:00');
+    setEvtCategory('Children’s Home Visits');
+    setEvtDate('2026-12-22');
+    setEvtTime('09:30 – 14:30');
     setEvtVenue('');
     setEvtSummary('');
     setEvtDescription('');
-    setEvtImageUrl('/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg');
+    setEvtRegistrationOpen(true);
+    setEvtRegistrationNote(
+      'Open community event. Register online so our Care Family hosts can prepare welcome kits.'
+    );
+    setEvtImageUrl('/src/assets/images/doc_childrens_home_csr_1794832339445.jpg');
   };
 
   const handleCreateOrUpdateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorNotice(null);
     const endpoint = editingEventId
       ? `/api/admin/events/${editingEventId}`
       : '/api/admin/events';
     const method = editingEventId ? 'PUT' : 'POST';
-    const res = await fetch(endpoint, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: evtTitle,
-        category: evtCategory,
-        dateISO: evtDate,
-        timeLabel: evtTime,
-        venue: evtVenue,
-        summary: evtSummary,
-        description: evtDescription || evtSummary,
-        imageUrl: evtImageUrl,
-        featured: true,
-      }),
-    });
-    if (res.ok) {
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: evtTitle,
+          category: evtCategory,
+          dateISO: evtDate,
+          timeLabel: evtTime,
+          venue: evtVenue,
+          summary: evtSummary,
+          description: evtDescription || evtSummary,
+          registrationOpen: evtRegistrationOpen,
+          registrationNote: evtRegistrationNote,
+          imageUrl: evtImageUrl,
+          featured: true,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not save event details. Please check required fields.');
+        return;
+      }
       const wasEditing = Boolean(editingEventId);
       resetEventForm();
       await loadDashboard();
       await refreshPublicSite();
-      notify(wasEditing ? 'Gathering details updated.' : 'Gathering added and published.');
+      notify(wasEditing ? 'Community event updated.' : 'Community event published.');
+    } catch {
+      showError('Network error while saving community event.');
     }
   };
 
   const handleDeleteEvent = async (id: string) => {
-    const res = await fetch(`/api/admin/events/${id}`, { method: 'DELETE' });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch(`/api/admin/events/${id}`, { method: 'DELETE' });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not remove event.');
+        return;
+      }
       await loadDashboard();
       await refreshPublicSite();
-      notify('Gathering removed.');
+      notify('Community event removed.');
+    } catch {
+      showError('Network error while removing event.');
     }
   };
 
   const handleCreateImpact = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch('/api/admin/impact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: impTitle,
-        category: impCategory,
-        dateLabel: impDateLabel,
-        locationLabel: impLocation,
-        summary: impSummary,
-        whatWasDone: impWhatWasDone,
-        whyItMattered: impWhyMattered,
-        whoItServed: impWhoServed,
-        whatGlowHopedToAchieve: impAchieve,
-        imageUrl: impImageUrl,
-        featured: true,
-      }),
-    });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch('/api/admin/impact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: impTitle,
+          category: impCategory,
+          dateLabel: impDateLabel,
+          locationLabel: impLocation,
+          summary: impSummary,
+          whatWasDone: impWhatWasDone,
+          whyItMattered: impWhyMattered,
+          whoItServed: impWhoServed,
+          whatGlowHopedToAchieve: impAchieve,
+          imageUrl: impImageUrl,
+          featured: true,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not publish impact story. Check required fields.');
+        return;
+      }
       setImpTitle('');
       setImpLocation('');
       setImpSummary('');
@@ -280,57 +322,89 @@ export function AdminPage() {
       await loadDashboard();
       await refreshPublicSite();
       notify('Impact initiative story published.');
+    } catch {
+      showError('Network error while publishing impact story.');
     }
   };
 
   const handleDeleteImpact = async (id: string) => {
-    const res = await fetch(`/api/admin/impact/${id}`, { method: 'DELETE' });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch(`/api/admin/impact/${id}`, { method: 'DELETE' });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not remove impact story.');
+        return;
+      }
       await loadDashboard();
       await refreshPublicSite();
       notify('Impact story removed.');
+    } catch {
+      showError('Network error while removing impact story.');
     }
   };
 
   const handleCreateAnnouncement = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch('/api/admin/announcements', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: annTitle,
-        message: annMessage,
-        linkLabel: 'Get Support',
-        linkPath: '/counselling',
-        isActive: true,
-      }),
-    });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch('/api/admin/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: annTitle,
+          message: annMessage,
+          linkLabel: 'Get Support',
+          linkPath: '/counselling',
+          isActive: true,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not publish announcement.');
+        return;
+      }
       setAnnTitle('');
       setAnnMessage('');
       await loadDashboard();
       await refreshPublicSite();
       notify('Announcement published.');
+    } catch {
+      showError('Network error while publishing announcement.');
     }
   };
 
   const handleToggleAnnouncement = async (ann: Announcement) => {
-    const res = await fetch(`/api/admin/announcements/${ann.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ isActive: !ann.isActive }),
-    });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch(`/api/admin/announcements/${ann.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive: !ann.isActive }),
+      });
+      if (!res.ok) {
+        showError('Could not update announcement visibility.');
+        return;
+      }
       await loadDashboard();
       await refreshPublicSite();
+    } catch {
+      showError('Network error updating announcement.');
     }
   };
 
   const handleDeleteAnnouncement = async (id: string) => {
-    const res = await fetch(`/api/admin/announcements/${id}`, { method: 'DELETE' });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch(`/api/admin/announcements/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        showError('Could not delete announcement.');
+        return;
+      }
       await loadDashboard();
       await refreshPublicSite();
+    } catch {
+      showError('Network error deleting announcement.');
     }
   };
 
@@ -348,29 +422,45 @@ export function AdminPage() {
     id: string,
     status: string
   ) => {
-    const res = await fetch(`/api/admin/submissions/${type}/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch(`/api/admin/submissions/${type}/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not update record status.');
+        return;
+      }
       await loadDashboard();
       notify('Record status updated.');
+    } catch {
+      showError('Network error updating status.');
     }
   };
 
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settingsForm) return;
-    const res = await fetch('/api/admin/settings', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(settingsForm),
-    });
-    if (res.ok) {
+    setErrorNotice(null);
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settingsForm),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not save public settings.');
+        return;
+      }
       await loadDashboard();
       await refreshPublicSite();
       notify('Site content and contact details saved.');
+    } catch {
+      showError('Network error while saving settings.');
     }
   };
 
@@ -578,10 +668,19 @@ export function AdminPage() {
         {statusNotice && (
           <div
             role="status"
-            className="p-3.5 rounded-md bg-white border border-[#3B155F]/25 text-sm text-[#1E0B2B] flex items-center gap-2"
+            className="p-3.5 rounded-md bg-white border border-[#256358]/30 text-sm text-[#1E0B2B] flex items-center gap-2"
           >
-            <Check className="w-4 h-4 text-[#3B155F]" aria-hidden="true" />
+            <Check className="w-4 h-4 text-[#256358]" aria-hidden="true" />
             <span>{statusNotice}</span>
+          </div>
+        )}
+
+        {errorNotice && (
+          <div
+            role="alert"
+            className="p-3.5 rounded-md bg-red-50 border border-red-200 text-sm text-red-800"
+          >
+            {errorNotice}
           </div>
         )}
 
@@ -596,10 +695,10 @@ export function AdminPage() {
                 role="tab"
                 aria-selected={active}
                 onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+                className={`inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-medium rounded-md border whitespace-nowrap shrink-0 ${
                   active
-                    ? 'bg-[#3B155F] text-[#FAF7F2]'
-                    : 'bg-white text-[#3E3349] border border-[#3B155F]/15 hover:bg-[#F3EEF8]'
+                    ? 'bg-[#3B155F] text-white border-[#3B155F]'
+                    : 'bg-white text-[#3E3349] border-[#3B155F]/15 hover:bg-[#F3EEF8]'
                 }`}
               >
                 {tab.icon}
@@ -1026,7 +1125,7 @@ export function AdminPage() {
             >
               <div className="flex items-center justify-between gap-2">
                 <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
-                  {editingEventId ? 'Edit Gathering' : 'Add New Gathering'}
+                  {editingEventId ? 'Edit Community Event' : 'Add Helping Hand Event'}
                 </h2>
                 {editingEventId && (
                   <button
@@ -1053,7 +1152,7 @@ export function AdminPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="cms-evt-cat" className="block text-xs font-medium mb-1">
-                    Category
+                    Helping Hand Focus
                   </label>
                   <select
                     id="cms-evt-cat"
@@ -1061,11 +1160,11 @@ export function AdminPage() {
                     onChange={(e) => setEvtCategory(e.target.value as EventCategory)}
                     className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
                   >
-                    <option>Worship Gathering</option>
-                    <option>Prayer Meeting</option>
-                    <option>Special Service</option>
-                    <option>Community Outreach</option>
-                    <option>Conference</option>
+                    {HELPING_HAND_EVENT_CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -1085,7 +1184,7 @@ export function AdminPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="cms-evt-time" className="block text-xs font-medium mb-1">
-                    Time
+                    Time Window
                   </label>
                   <input
                     id="cms-evt-time"
@@ -1096,7 +1195,7 @@ export function AdminPage() {
                 </div>
                 <div>
                   <label htmlFor="cms-evt-venue" className="block text-xs font-medium mb-1">
-                    Venue *
+                    Venue / Home *
                   </label>
                   <input
                     id="cms-evt-venue"
@@ -1132,9 +1231,34 @@ export function AdminPage() {
                   className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
                 />
               </div>
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center gap-2">
+                  <input
+                    id="cms-evt-rsvp-open"
+                    type="checkbox"
+                    checked={evtRegistrationOpen}
+                    onChange={(e) => setEvtRegistrationOpen(e.target.checked)}
+                    className="w-4 h-4 accent-[#3B155F] rounded"
+                  />
+                  <label htmlFor="cms-evt-rsvp-open" className="text-xs font-medium text-[#1E0B2B]">
+                    Enable online RSVP form for this event
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="cms-evt-rsvp-note" className="block text-xs font-medium mb-1">
+                    Participation / Coordination Note
+                  </label>
+                  <input
+                    id="cms-evt-rsvp-note"
+                    value={evtRegistrationNote}
+                    onChange={(e) => setEvtRegistrationNote(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+              </div>
               <div>
                 <label htmlFor="cms-evt-upload" className="block text-xs font-medium mb-1">
-                  Upload Gathering Photo (Optional)
+                  Upload Event Photo (Optional)
                 </label>
                 <input
                   id="cms-evt-upload"
@@ -1149,21 +1273,24 @@ export function AdminPage() {
                 disabled={uploadingPhoto}
                 className="w-full px-4 py-2.5 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md"
               >
-                {editingEventId ? 'Save Gathering Changes' : 'Publish Gathering'}
+                {editingEventId ? 'Save Event Changes' : 'Publish Community Event'}
               </button>
             </form>
 
             <div className="lg:col-span-7 bg-white border border-[#3B155F]/12 rounded-lg p-6 space-y-4">
               <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
-                Published Gatherings &amp; RSVPs ({dashboard?.eventRegistrations.length || 0} RSVPs)
+                Published Helping Hand Events &amp; RSVPs ({dashboard?.eventRegistrations.length || 0}{' '}
+                {(dashboard?.eventRegistrations.length || 0) === 1 ? 'RSVP' : 'RSVPs'})
               </h2>
               <div className="divide-y divide-[#3B155F]/10">
                 {dashboard?.events.map((evt) => (
                   <div key={evt.id} className="py-4 flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-xs text-[#7A5A10] font-semibold">
+                      <p className="text-xs text-[#C2593F] font-semibold">
                         {evt.category} ·{' '}
-                        <span className="tabular-nums">{formatEventDate(evt.dateISO)}</span>
+                        <span className="tabular-nums text-[#7A5A10]">
+                          {formatEventDate(evt.dateISO)}
+                        </span>
                       </p>
                       <h3 className="font-serif text-xl font-semibold text-[#1E0B2B]">
                         {evt.title}
@@ -1181,7 +1308,7 @@ export function AdminPage() {
                       <button
                         type="button"
                         onClick={() => handleDeleteEvent(evt.id)}
-                        aria-label={`Delete gathering ${evt.title}`}
+                        aria-label={`Delete event ${evt.title}`}
                         className="p-2 text-red-700 hover:bg-red-50 rounded-md"
                       >
                         <Trash2 className="w-4 h-4" />

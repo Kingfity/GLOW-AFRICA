@@ -2,6 +2,8 @@ import { ArrowRight, Calendar, HeartHandshake, MapPin, Sparkles } from 'lucide-r
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import { SafeImage } from '../components/SafeImage';
+import { CareCompassSection } from '../components/CareCompassSection';
+import { LivingPortfolioSection } from '../components/LivingPortfolioSection';
 import { VideoShowcaseSection } from '../components/VideoShowcaseSection';
 import { formatEventDate } from '../utils/validation';
 
@@ -140,6 +142,9 @@ export function HomePage() {
         </section>
       )}
 
+      {/* Interactive Care Family Compass */}
+      <CareCompassSection />
+
       {/* 2. Welcome & Care Family Home Identity */}
       <section className="py-16 sm:py-24 bg-[#FAF7F2]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -177,8 +182,8 @@ export function HomePage() {
             <div className="lg:col-span-6">
               <div className="h-full min-h-[320px] rounded-xl overflow-hidden border border-[#C2593F]/20">
                 <SafeImage
-                  src="/src/assets/images/children_home_visit_joy_1794828208960.jpg"
-                  alt="Volunteers and children sharing books, fruit, and laughter in a sunlit children home courtyard"
+                  src="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
+                  alt="Volunteers and children sharing books and fresh mango beneath sunlit acacia trees"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -230,6 +235,9 @@ export function HomePage() {
       {/* 4. Interactive Video Stories in Motion */}
       <VideoShowcaseSection />
 
+      {/* 4b. Realistic Photo & Lifelike Artwork Portfolio + Interactive Colour Grading */}
+      <LivingPortfolioSection />
+
       {/* 5. ASD Family Care & Rehabilitation Spotlight */}
       <section className="py-16 sm:py-24 bg-[#256358] text-[#FAF7F2]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -237,8 +245,8 @@ export function HomePage() {
             <div className="lg:col-span-6 order-2 lg:order-1">
               <div className="h-full min-h-[300px] rounded-xl overflow-hidden border border-white/20">
                 <SafeImage
-                  src="/src/assets/images/asd_parent_child_care_1794828209127.jpg"
-                  alt="Warm mother and autistic child enjoying wooden blocks and visual routine cards together"
+                  src="/src/assets/images/doc_asd_family_moment_1794832339166.jpg"
+                  alt="Smiling mother and autistic son gently arranging wooden sensory blocks on a woven mat"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -358,17 +366,17 @@ export function HomePage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div className="max-w-2xl space-y-3">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#7A5A10]">
-                Children’s Home Days, ASD Play Mornings &amp; Gatherings
+                Children’s Home Visits, ASD Mornings &amp; Helping Hand Days
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-                Upcoming Gatherings &amp; Events
+                Upcoming Community Events &amp; Action Days
               </h2>
             </div>
             <AppLink
               href="/events"
               className="inline-flex items-center gap-2 text-sm font-semibold text-[#3B155F] hover:text-[#C2593F] whitespace-nowrap shrink-0"
             >
-              View Full Schedule
+              View Helping Hand Calendar
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </AppLink>
           </div>
@@ -408,7 +416,7 @@ export function HomePage() {
                     href={`/events/${evt.slug}`}
                     className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md hover:bg-[#F3EEF8] transition-colors whitespace-nowrap"
                   >
-                    Gathering Details
+                    Event Details &amp; RSVP
                   </AppLink>
                 </div>
               </div>

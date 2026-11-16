@@ -67,9 +67,9 @@ const ROUTE_META: Array<{ match: (p: string) => boolean; title: string; descript
   },
   {
     match: (p) => p.startsWith('/events'),
-    title: 'Events & Gatherings | HIS AND HERS',
+    title: 'Helping Hand Events & Community Calendar | HIS AND HERS',
     description:
-      'View upcoming children’s home visit days, ASD family mornings, mental health circles, and worship gatherings.',
+      'Browse upcoming children’s home visit days, ASD family play mornings, mental health listening circles, and neighbourhood outreach actions.',
   },
   {
     match: (p) => p === '/get-involved',

@@ -13,44 +13,72 @@ const NAV_ITEMS = [
 ];
 
 export function BrandMark({ light = false }: { light?: boolean }) {
-  const roofStroke = light ? '#E5CA7B' : '#3B155F';
-  const warmAccent = light ? '#F3A683' : '#C2593F';
-  const goldAccent = light ? '#FAF7F2' : '#B88F28';
+  const roofStroke = light ? '#F3D79B' : '#3B155F';
+  const warmTerracotta = light ? '#F3A683' : '#C2593F';
+  const goldAccent = light ? '#FAF7F2' : '#D4AF37';
+  const sageLeaf = light ? '#84B5A9' : '#256358';
 
   return (
     <svg
-      width="30"
-      height="30"
-      viewBox="0 0 32 32"
+      width="34"
+      height="34"
+      viewBox="0 0 36 36"
       fill="none"
       aria-hidden="true"
       className="shrink-0"
     >
-      {/* Sheltering Care Family Home Roof */}
+      {/* Warm sunlit doorway halo */}
+      <circle
+        cx="18"
+        cy="19"
+        r="12"
+        fill={goldAccent}
+        fillOpacity={light ? '0.16' : '0.22'}
+      />
+      {/* Sheltering home eaves & timber roof */}
       <path
-        d="M4.5 14.5L16 4.8L27.5 14.5"
+        d="M4.5 16.5L18 5.2L31.5 16.5"
         stroke={roofStroke}
-        strokeWidth="2.1"
+        strokeWidth="2.3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Warm Hearth Heart Bridge beneath the Roof */}
+      {/* Home foundation walls */}
       <path
-        d="M8.5 26.5V16.2M23.5 26.5V16.2M8.5 26.5H23.5"
+        d="M9 29.5V17.5M27 29.5V17.5M7 29.5H29"
         stroke={roofStroke}
-        strokeWidth="1.75"
+        strokeWidth="1.9"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Connected Family Figures (His, Hers, and Child in Care) */}
-      <circle cx="12.2" cy="15.4" r="1.75" fill={roofStroke} />
-      <circle cx="19.8" cy="15.4" r="1.75" fill={warmAccent} />
-      <circle cx="16" cy="18.2" r="1.45" fill={goldAccent} />
+      {/* Organic caring leaf sprigs cradling the hearth */}
       <path
-        d="M10.4 23.6C10.4 21.4 11.4 20.1 12.6 20.1C13.7 20.1 14.5 21.1 14.7 23.6M17.3 23.6C17.5 21.1 18.3 20.1 19.4 20.1C20.6 20.1 21.6 21.4 21.6 23.6M14.3 24.4C14.5 22.8 15.2 21.8 16 21.8C16.8 21.8 17.5 22.8 17.7 24.4"
-        stroke={warmAccent}
-        strokeWidth="1.5"
-        strokeLinecap="round"
+        d="M9.5 28.5C6.5 26 6.2 21.5 8.8 19.2C10.2 21.8 10.6 25.2 9.5 28.5Z"
+        fill={sageLeaf}
+        fillOpacity="0.88"
+      />
+      <path
+        d="M26.5 28.5C29.5 26 29.8 21.5 27.2 19.2C25.8 21.8 25.4 25.2 26.5 28.5Z"
+        fill={sageLeaf}
+        fillOpacity="0.88"
+      />
+      {/* Lifelike connected family silhouettes (Parents & Child) */}
+      <circle cx="13.2" cy="17.2" r="2.1" fill={roofStroke} />
+      <circle cx="22.8" cy="17.2" r="2.1" fill={warmTerracotta} />
+      <circle cx="18" cy="20.1" r="1.75" fill={goldAccent} />
+      <path
+        d="M11 27.4C11.2 23.4 12.2 21.4 13.5 21.4C14.7 21.4 15.5 23 15.8 27.4"
+        fill={roofStroke}
+        fillOpacity="0.9"
+      />
+      <path
+        d="M20.2 27.4C20.5 23 21.3 21.4 22.5 21.4C23.8 21.4 24.8 23.4 25 27.4"
+        fill={warmTerracotta}
+        fillOpacity="0.92"
+      />
+      <path
+        d="M15.8 27.8C16 25 16.8 23.6 18 23.6C19.2 23.6 20 25 20.2 27.8"
+        fill={goldAccent}
       />
     </svg>
   );

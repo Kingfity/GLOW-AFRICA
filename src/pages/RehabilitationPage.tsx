@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { ArrowRight, CheckCircle2, LocateFixed, MapPin, ShieldCheck } from 'lucide-react';
+import { CommunityVideoPlayer } from '../components/CommunityVideoPlayer';
 import { SafeImage } from '../components/SafeImage';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
@@ -210,23 +211,21 @@ export function RehabilitationPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="rounded-xl overflow-hidden border border-white/15 bg-black">
-              <div className="aspect-video">
-                <video
-                  controls
-                  playsInline
-                  muted
-                  preload="metadata"
-                  poster="/src/assets/images/rehab_recovery_garden_1794828209576.jpg"
-                  aria-label="Counselling room and calm rehabilitation garden pathway"
-                  className="w-full h-full object-cover"
-                >
-                  <source src="/videos/healing_and_recovery_reel.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <div className="px-5 py-3.5 bg-[#160822] flex items-center justify-between text-xs text-[#FAF7F2]/80">
+            <div className="rounded-xl overflow-hidden border border-white/15 bg-[#160822]">
+              <CommunityVideoPlayer
+                videoSrc="/videos/healing_and_recovery_reel.mp4"
+                posterSrc="/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg"
+                ariaLabel="Counselling room and calm rehabilitation garden pathway"
+                soundMoodLabel="Serene Harp & Pad"
+                chapters={[
+                  { timeSeconds: 0, label: '01 · Garden Talk' },
+                  { timeSeconds: 3.6, label: '02 · Quiet Room' },
+                  { timeSeconds: 7.0, label: '03 · Safe Haven' },
+                ]}
+              />
+              <div className="px-5 py-3 bg-[#160822] flex items-center justify-between text-xs text-[#FAF7F2]/80 border-t border-white/10">
                 <span>Restoration &amp; Counselling Centres</span>
-                <span className="text-[#E5CA7B] tabular-nums">0:07 Video Reel</span>
+                <span className="text-[#E5CA7B] tabular-nums">0:10 Reel · Serene Harp Sound</span>
               </div>
             </div>
           </div>

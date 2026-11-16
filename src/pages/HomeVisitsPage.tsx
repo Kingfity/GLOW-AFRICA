@@ -8,7 +8,9 @@ import {
   MapPin,
   Users,
 } from 'lucide-react';
+import { CommunityVideoPlayer } from '../components/CommunityVideoPlayer';
 import { SafeImage } from '../components/SafeImage';
+import { VisitKitEstimator } from '../components/VisitKitEstimator';
 import { useSiteData } from '../context/SiteDataContext';
 import type { ChildrensHome, HomeVisitBooking, PartnerOrganization } from '../shared/types';
 import { validateHomeVisitBooking, validatePartnerOnboarding } from '../utils/validation';
@@ -63,6 +65,7 @@ export function HomeVisitsPage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [groupSize, setGroupSize] = useState(8);
+  const [estimatedChildren, setEstimatedChildren] = useState(45);
   const [focusArea, setFocusArea] = useState(VISIT_PURPOSES[0]);
   const [preferredDate, setPreferredDate] = useState('2026-12-05');
   const [preferredTimeWindow, setPreferredTimeWindow] = useState(TIME_WINDOWS[0]);
@@ -284,23 +287,21 @@ export function HomeVisitsPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="rounded-xl overflow-hidden border border-white/15 bg-black">
-              <div className="aspect-video">
-                <video
-                  controls
-                  playsInline
-                  muted
-                  preload="metadata"
-                  poster="/src/assets/images/children_home_visit_joy_1794828208960.jpg"
-                  aria-label="Volunteers and children reading storybooks together during a partner children home visit"
-                  className="w-full h-full object-cover"
-                >
-                  <source src="/videos/childrens_home_visits_reel.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <div className="px-5 py-3.5 bg-[#1E0B2B] flex items-center justify-between text-xs text-[#FAF7F2]/80">
+            <div className="rounded-xl overflow-hidden border border-white/15 bg-[#160822]">
+              <CommunityVideoPlayer
+                videoSrc="/videos/childrens_home_visits_reel.mp4"
+                posterSrc="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
+                ariaLabel="Volunteers and children reading storybooks together during a partner children home visit"
+                soundMoodLabel="Kalimba & Acoustic Chord"
+                chapters={[
+                  { timeSeconds: 0, label: '01 · Reading Circle' },
+                  { timeSeconds: 3.6, label: '02 · Mentorship' },
+                  { timeSeconds: 7.0, label: '03 · Care Packs' },
+                ]}
+              />
+              <div className="px-5 py-3 bg-[#1E0B2B] flex items-center justify-between text-xs text-[#FAF7F2]/80 border-t border-white/10">
                 <span>Partner Children’s Home Visit Highlights</span>
-                <span className="text-[#E5CA7B] tabular-nums">0:07 Video Reel</span>
+                <span className="text-[#E5CA7B] tabular-nums">0:10 Reel · Acoustic Sound</span>
               </div>
             </div>
           </div>
@@ -449,6 +450,18 @@ export function HomeVisitsPage() {
                 </div>
               </div>
             </div>
+
+            <VisitKitEstimator
+              groupSize={groupSize}
+              childrenCount={estimatedChildren}
+              onGroupSizeChange={setGroupSize}
+              onChildrenCountChange={setEstimatedChildren}
+              onApplyToNotes={(summary) => {
+                setFormMode('visit');
+                setConfirmation(null);
+                setNotes((prev) => (prev.trim() ? `${prev.trim()}\n\n${summary}` : summary));
+              }}
+            />
           </div>
 
           {/* Right Side: Interactive Tabbed Workspace */}
