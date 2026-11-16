@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-plum-950: #160822;
+  --color-plum-900: #1E0B2B;
+  --color-plum-800: #2C1042;
+  --color-royal-700: #3B155F;
+  --color-royal-600: #4C1D7A;
+  --color-lavender-100: #F3EEF8;
+  --color-lavender-200: #E7DFF1;
+  --color-gold-300: #E5CA7B;
+  --color-gold-400: #D4AF37;
+  --color-gold-500: #B88F28;
+  --color-gold-700: #7A5A10;
+  --color-ivory-50: #FAF7F2;
+  --color-ivory-100: #F4EFE6;
+  --color-ink-900: #1A1224;
+  --color-ink-700: #3E3349;
+  --color-ink-500: #665B73;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #FAF7F2;
+    color: #1A1224;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-serif);
+    text-wrap: balance;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #9A7418;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

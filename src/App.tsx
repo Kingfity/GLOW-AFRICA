@@ -1,0 +1,60 @@
+import { Footer } from './components/Footer';
+import { Navbar } from './components/Navbar';
+import { RouterProvider, useRouter } from './context/RouterContext';
+import { SiteDataProvider } from './context/SiteDataContext';
+import { AboutPage } from './pages/AboutPage';
+import { AdminPage } from './pages/AdminPage';
+import { ContactPage } from './pages/ContactPage';
+import { EventDetailPage } from './pages/EventDetailPage';
+import { EventsPage } from './pages/EventsPage';
+import { GetInvolvedPage } from './pages/GetInvolvedPage';
+import { HomePage } from './pages/HomePage';
+import { ImpactDetailPage } from './pages/ImpactDetailPage';
+import { ImpactPage } from './pages/ImpactPage';
+import { PrayerWorshipPage } from './pages/PrayerWorshipPage';
+import { PrivacyPage } from './pages/PrivacyPage';
+
+function PageView() {
+  const { path } = useRouter();
+  const normalized = path === '/' ? '/' : path.replace(/\/+$/, '');
+
+  if (normalized === '/') return <HomePage />;
+  if (normalized === '/about') return <AboutPage />;
+  if (normalized === '/prayer-worship') return <PrayerWorshipPage />;
+  if (normalized === '/impact') return <ImpactPage />;
+  if (normalized.startsWith('/impact/')) {
+    return <ImpactDetailPage slug={normalized.replace('/impact/', '')} />;
+  }
+  if (normalized === '/events') return <EventsPage />;
+  if (normalized.startsWith('/events/')) {
+    return <EventDetailPage slug={normalized.replace('/events/', '')} />;
+  }
+  if (normalized === '/get-involved') return <GetInvolvedPage />;
+  if (normalized === '/contact') return <ContactPage />;
+  if (normalized === '/privacy') return <PrivacyPage />;
+  if (normalized === '/admin') return <AdminPage />;
+
+  return <HomePage />;
+}
+
+export default function App() {
+  return (
+    <RouterProvider>
+      <SiteDataProvider>
+        <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#1A1224]">
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#3B155F] focus:text-[#FAF7F2] focus:rounded-md"
+          >
+            Skip to main content
+          </a>
+          <Navbar />
+          <main id="main-content" className="flex-1">
+            <PageView />
+          </main>
+          <Footer />
+        </div>
+      </SiteDataProvider>
+    </RouterProvider>
+  );
+}

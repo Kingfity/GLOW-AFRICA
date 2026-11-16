@@ -1,0 +1,6 @@
+{
+  "name": "GLOW Church Africa",
+  "description": "An interdenominational Christian prayer and worship movement demonstrating God's love through spiritual fellowship, compassionate service, and community outreach since 2024.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

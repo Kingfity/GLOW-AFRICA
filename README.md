@@ -1,11 +1,26 @@
-<div align="center">
+# GLOW Church Africa — Digital Platform
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+An institutional, human-centred web platform and Stewardship Content Management System (CMS) for **GLOW Church Africa**, an interdenominational prayer and worship movement demonstrating God's love through spiritual fellowship, compassionate service, and community outreach since 2024.
 
-  <h1>Built with AI Studio</h2>
+**Developed by:** Aurel Tech Ventures
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Key Features
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+- **Editorial Public Website**: Multi-page architecture covering Home, About Us, Prayer & Worship, Our Impact (with individual documented initiative pages), Events & Gatherings (with dedicated event views and RSVPs), Get Involved, Contact Us, and Privacy Policy.
+- **Confidential Prayer Request Handling**: Dedicated prayer submission flow supporting anonymous submission, explicit consent, spam honeypot + rate-limiting protection, and private storage never exposed on public endpoints.
+- **Role-Based Stewardship CMS (`/admin`)**: Signed HTTP-only session authentication allowing authorised administrators to review private prayer requests, manage volunteer enquiries and contact messages, add/delete events, publish impact stories with photograph uploads, publish homepage announcements, and update contact details.
 
-</div>
+## Configuration
+
+See `.env.example` for configurable environment variables:
+
+- `GLOW_ADMIN_SECRET`: Secret key used to sign administrator session cookies.
+- `GLOW_ADMIN_EMAIL`: Administrator email address for `/admin` login.
+- `GLOW_ADMIN_PASSWORD`: Administrator password for `/admin` login.
+
+## Scripts
+
+- `npm run dev` — Starts the Express + Vite full-stack server on port 3000.
+- `npm run build` — Builds the production client bundle into `dist/`.
+- `npm run lint` — Runs TypeScript type checking (`tsc --noEmit`).
+- `npx tsx --test src/utils/validation.test.ts` — Runs unit tests for validation and filtering logic.
