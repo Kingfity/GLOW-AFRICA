@@ -2,18 +2,24 @@ import crypto from 'node:crypto';
 import type { Request, Response, NextFunction } from 'express';
 import type { AdminUserSession } from '../src/shared/types.ts';
 
-const COOKIE_NAME = 'glow_session';
+const COOKIE_NAME = 'hisandhers_session';
 const SESSION_TTL_MS = 1000 * 60 * 60 * 12; // 12 hours
 
 function getSecret(): string {
-  return process.env.GLOW_ADMIN_SECRET || 'glow-church-africa-dev-secret-key';
+  return (
+    process.env.ADMIN_SECRET ||
+    process.env.GLOW_ADMIN_SECRET ||
+    'his-and-hers-dev-session-secret-key'
+  );
 }
 
 export function getAdminCredentials(): { email: string; password: string; name: string; role: 'admin' } {
   return {
-    email: (process.env.GLOW_ADMIN_EMAIL || 'admin@glowchurchafrica.org').trim().toLowerCase(),
-    password: process.env.GLOW_ADMIN_PASSWORD || 'GlowAdmin!2026',
-    name: 'GLOW Stewardship Admin',
+    email: (process.env.ADMIN_EMAIL || process.env.GLOW_ADMIN_EMAIL || 'admin@hisandhers.org')
+      .trim()
+      .toLowerCase(),
+    password: process.env.ADMIN_PASSWORD || process.env.GLOW_ADMIN_PASSWORD || 'HisAndHersAdmin!2026',
+    name: 'HIS AND HERS Stewardship Admin',
     role: 'admin',
   };
 }

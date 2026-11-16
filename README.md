@@ -1,22 +1,24 @@
-# GLOW Church Africa — Digital Platform
+# HIS AND HERS — Community Care, Mental Health & Safe Refuge Platform
 
-An institutional, human-centred web platform and Stewardship Content Management System (CMS) for **GLOW Church Africa**, an interdenominational prayer and worship movement demonstrating God's love through spiritual fellowship, compassionate service, and community outreach since 2024.
+An institutional, human-centred web platform and Stewardship Content Management System (CMS) for **HIS AND HERS**, a community-based organization making the world better by touching lives through confidential mental health counselling, safe refuge for survivors of gender-based violence and child abuse, prayer fellowship, and organised community home visits.
 
 **Developed by:** Aurel Tech Ventures
 
 ## Key Features
 
-- **Editorial Public Website**: Multi-page architecture covering Home, About Us, Prayer & Worship, Our Impact (with individual documented initiative pages), Events & Gatherings (with dedicated event views and RSVPs), Get Involved, Contact Us, and Privacy Policy.
-- **Confidential Prayer Request Handling**: Dedicated prayer submission flow supporting anonymous submission, explicit consent, spam honeypot + rate-limiting protection, and private storage never exposed on public endpoints.
-- **Role-Based Stewardship CMS (`/admin`)**: Signed HTTP-only session authentication allowing authorised administrators to review private prayer requests, manage volunteer enquiries and contact messages, add/delete events, publish impact stories with photograph uploads, publish homepage announcements, and update contact details.
+- **Mental Health & Counselling Space (`/counselling`)**: Confidential request intake to speak with a counsellor or lighten burdens anonymously, with support area selection, contact preference, urgency level, and crisis guidance.
+- **Find My Home · Safe Refuge (`/find-my-home`)**: Dedicated safeguarding intake for people fleeing gender-based violence and child abuse, featuring a Quick Exit safety control, safe-contact instructions, and safety planning guidance.
+- **Organize a Home Visit (`/home-visits`)**: Structured coordination portal for individuals, fellowships, schools, and partner groups interested in community service visits.
+- **Prayer & Worship (`/prayer-worship`), Our Impact (`/impact`), Events (`/events`), Get Involved (`/get-involved`), & Contact (`/contact`)**.
+- **Role-Based Stewardship CMS (`/admin`)**: Signed HTTP-only session authentication allowing authorised coordinators to review confidential counselling requests, safe-refuge alerts, prayer requests, home visit bookings, volunteer enquiries, contact messages, and manage events, impact stories, announcements, and site settings.
 
 ## Configuration
 
-See `.env.example` for configurable environment variables:
+See `.env.example` for environment variables:
 
-- `GLOW_ADMIN_SECRET`: Secret key used to sign administrator session cookies.
-- `GLOW_ADMIN_EMAIL`: Administrator email address for `/admin` login.
-- `GLOW_ADMIN_PASSWORD`: Administrator password for `/admin` login.
+- `ADMIN_SECRET`: Signing secret for administrator session cookies.
+- `ADMIN_EMAIL`: Administrator email address for `/admin` login.
+- `ADMIN_PASSWORD`: Administrator password for `/admin` login.
 
 ## Scripts
 

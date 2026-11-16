@@ -4,40 +4,51 @@ import { AppLink, useRouter } from '../context/RouterContext';
 
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Prayer & Worship', href: '/prayer-worship' },
-  { label: 'Our Impact', href: '/impact' },
+  { label: 'Children’s Homes', href: '/home-visits' },
+  { label: 'Rehabilitation', href: '/rehabilitation' },
+  { label: 'ASD Family', href: '/asd-support' },
+  { label: 'Mental Health', href: '/counselling' },
+  { label: 'Safe Refuge', href: '/find-my-home' },
   { label: 'Events', href: '/events' },
-  { label: 'Get Involved', href: '/get-involved' },
-  { label: 'Contact', href: '/contact' },
 ];
 
 export function BrandMark({ light = false }: { light?: boolean }) {
+  const roofStroke = light ? '#E5CA7B' : '#3B155F';
+  const warmAccent = light ? '#F3A683' : '#C2593F';
+  const goldAccent = light ? '#FAF7F2' : '#B88F28';
+
   return (
     <svg
-      width="24"
-      height="24"
-      viewBox="0 0 28 28"
+      width="30"
+      height="30"
+      viewBox="0 0 32 32"
       fill="none"
       aria-hidden="true"
       className="shrink-0"
     >
-      <circle
-        cx="14"
-        cy="14"
-        r="12.5"
-        stroke={light ? '#D4AF37' : '#3B155F'}
-        strokeWidth="1.5"
-      />
+      {/* Sheltering Care Family Home Roof */}
       <path
-        d="M14 5.5C15.8 9.2 18.8 11.4 18.8 15.2C18.8 17.9 16.65 20.1 14 20.1C11.35 20.1 9.2 17.9 9.2 15.2C9.2 11.4 12.2 9.2 14 5.5Z"
-        stroke={light ? '#FAF7F2' : '#9A7418'}
-        strokeWidth="1.5"
+        d="M4.5 14.5L16 4.8L27.5 14.5"
+        stroke={roofStroke}
+        strokeWidth="2.1"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
+      {/* Warm Hearth Heart Bridge beneath the Roof */}
       <path
-        d="M14 11.5V22.5M10.5 15.2H17.5"
-        stroke={light ? '#D4AF37' : '#3B155F'}
+        d="M8.5 26.5V16.2M23.5 26.5V16.2M8.5 26.5H23.5"
+        stroke={roofStroke}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Connected Family Figures (His, Hers, and Child in Care) */}
+      <circle cx="12.2" cy="15.4" r="1.75" fill={roofStroke} />
+      <circle cx="19.8" cy="15.4" r="1.75" fill={warmAccent} />
+      <circle cx="16" cy="18.2" r="1.45" fill={goldAccent} />
+      <path
+        d="M10.4 23.6C10.4 21.4 11.4 20.1 12.6 20.1C13.7 20.1 14.5 21.1 14.7 23.6M17.3 23.6C17.5 21.1 18.3 20.1 19.4 20.1C20.6 20.1 21.6 21.4 21.6 23.6M14.3 24.4C14.5 22.8 15.2 21.8 16 21.8C16.8 21.8 17.5 22.8 17.7 24.4"
+        stroke={warmAccent}
         strokeWidth="1.5"
         strokeLinecap="round"
       />
@@ -60,22 +71,22 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-sm border-b border-[#3B155F]/12">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 lg:h-[72px] flex items-center justify-between gap-8">
-        {/* Zone 1: Single-line Brand Wordmark */}
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 lg:h-[74px] flex items-center justify-between gap-4 xl:gap-6">
+        {/* Zone 1: Care Family Home Emblem + Wordmark */}
         <AppLink
           href="/"
           className="inline-flex items-center gap-2.5 text-[#1E0B2B] whitespace-nowrap shrink-0"
         >
           <BrandMark />
           <span className="font-serif text-xl sm:text-[22px] font-semibold tracking-tight whitespace-nowrap">
-            GLOW Church Africa
+            HIS AND HERS
           </span>
         </AppLink>
 
         {/* Zone 2: Concise Single-Line Navigation Links */}
         <nav
           aria-label="Primary navigation"
-          className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#3E3349]"
+          className="hidden lg:flex items-center gap-4 xl:gap-5 text-[13px] xl:text-sm font-medium text-[#3E3349]"
         >
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.href);
@@ -86,8 +97,8 @@ export function Navbar() {
                 ariaCurrent={active ? 'page' : undefined}
                 className={`whitespace-nowrap shrink-0 py-1 transition-colors duration-150 border-b-2 ${
                   active
-                    ? 'text-[#3B155F] border-[#B88F28] font-semibold'
-                    : 'border-transparent hover:text-[#3B155F] hover:border-[#3B155F]/30'
+                    ? 'text-[#3B155F] border-[#C2593F] font-semibold'
+                    : 'border-transparent hover:text-[#3B155F] hover:border-[#D4AF37]'
                 }`}
               >
                 {item.label}
@@ -99,10 +110,10 @@ export function Navbar() {
         {/* Zone 3: Single Primary Action + Mobile Drawer Toggle */}
         <div className="flex items-center gap-3 shrink-0">
           <AppLink
-            href="/prayer-worship"
+            href="/get-involved"
             className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs sm:text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
           >
-            Request Prayer
+            Get Involved
           </AppLink>
           <button
             type="button"
@@ -122,9 +133,15 @@ export function Navbar() {
         <nav
           id="mobile-navigation"
           aria-label="Mobile navigation"
-          className="lg:hidden bg-[#FAF7F2] border-t border-[#3B155F]/12 px-5 py-4 space-y-1"
+          className="lg:hidden bg-[#FAF7F2] border-t border-[#3B155F]/12 px-5 py-4 space-y-1 max-h-[80vh] overflow-y-auto"
         >
-          {NAV_ITEMS.map((item) => {
+          {[
+            ...NAV_ITEMS,
+            { label: 'About Us', href: '/about' },
+            { label: 'Our Impact', href: '/impact' },
+            { label: 'Prayer & Worship', href: '/prayer-worship' },
+            { label: 'Contact', href: '/contact' },
+          ].map((item) => {
             const active = isActive(item.href);
             return (
               <AppLink
@@ -144,11 +161,11 @@ export function Navbar() {
           })}
           <div className="pt-3 border-t border-[#3B155F]/10">
             <AppLink
-              href="/prayer-worship"
+              href="/get-involved"
               onClick={() => setMobileOpen(false)}
               className="flex items-center justify-center w-full px-4 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] rounded-md"
             >
-              Request Prayer
+              Get Involved
             </AppLink>
           </div>
         </nav>

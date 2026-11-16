@@ -3,115 +3,324 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import type {
   Announcement,
+  AsdGuideTip,
+  AsdSupportRequest,
+  ChildrensHome,
   ContactMessage,
+  CounsellingRequest,
   EventItem,
   EventRegistration,
+  HomeVisitBooking,
   ImpactProject,
+  PartnerOrganization,
   PrayerRequest,
   PublicSiteData,
+  RehabFacility,
+  RehabReferralRequest,
+  SafeHomeRequest,
   SiteSettings,
   VolunteerEnquiry,
 } from '../src/shared/types.ts';
 
-export interface GlowDatabase {
+export interface AppDatabase {
   settings: SiteSettings;
   announcements: Announcement[];
   impactProjects: ImpactProject[];
   events: EventItem[];
+  childrensHomes: ChildrensHome[];
+  rehabFacilities: RehabFacility[];
+  asdGuides: AsdGuideTip[];
   prayerRequests: PrayerRequest[];
+  counsellingRequests: CounsellingRequest[];
+  safeHomeRequests: SafeHomeRequest[];
+  homeVisitBookings: HomeVisitBooking[];
+  partnerOrganizations: PartnerOrganization[];
+  rehabReferrals: RehabReferralRequest[];
+  asdSupportRequests: AsdSupportRequest[];
   volunteerEnquiries: VolunteerEnquiry[];
   contactMessages: ContactMessage[];
   eventRegistrations: EventRegistration[];
 }
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
-const DB_FILE = path.join(DATA_DIR, 'glow-db.json');
+const DB_FILE = path.join(DATA_DIR, 'hisandhers-db.json');
 
-function createSeedDatabase(): GlowDatabase {
+function createSeedDatabase(): AppDatabase {
   const now = new Date().toISOString();
   return {
     settings: {
-      organisationName: 'GLOW Church Africa',
-      tagline: 'Where Every Heart Finds a Place.',
-      heroHeadline: 'More Than a Place to Gather. A Place to Belong.',
+      organisationName: 'HIS AND HERS',
+      tagline: 'Care Family Home. Touching Lives. Connecting Families to What They Need.',
+      heroHeadline: 'A Care Family Home That Connects Everyone to Hope.',
       heroSubheadline:
-        "Rooted in prayer, united in worship and driven by compassion. At GLOW Church Africa, we believe God's love is best demonstrated not only through what we profess, but also through how we serve, care and show up for one another.",
-      welcomeHeadline: 'A Prayer Movement & Worship Community Across Denominational Lines',
+        'HIS AND HERS is a vibrant community-based organization rooted in prayer, mental wellbeing, safe refuge, children’s home partnerships, rehabilitation support, and autism family care—uniting individuals, families, and organisations to touch lives together.',
+      welcomeHeadline: 'Where Individuals, Families & Partner Organisations Build Stronger Homes',
       welcomeBody:
-        'GLOW Church Africa is an interdenominational prayer and worship movement. More than a conventional church institution, we are a welcoming sanctuary where people from every background, tradition, and walk of life can seek God in prayer, experience genuine fellowship, and join hands in practical compassion.',
+        'Like a true care family home, HIS AND HERS connects people directly to what they need: corporate and group visits to verified children’s homes, mental health counselling to lighten heavy burdens, nearby rehabilitation centres for families in recovery, safe refuge from abuse, and practical ASD guidance for parents and kids.',
       prayerInvitation:
-        'Whatever season of life you find yourself in, you do not have to carry everything alone. We would be honoured to stand with you in prayer.',
+        'Whatever season your family or heart is walking through, you do not have to navigate it alone. We are here to listen, connect you to real care, and stand beside you.',
       closingStatement:
-        'At GLOW, we believe that love should be experienced, faith should be lived and no one should have to walk alone.',
-      primaryLocationLabel: 'Primary Gathering Centre (Update in Admin CMS)',
-      primaryAddress: 'City Centre Fellowship Hall — Exact street address configurable in Admin CMS',
-      gatheringScheduleSummary: 'Weekly Prayer Watches & Worship Gatherings (See Events schedule)',
-      contactEmail: 'hello@glowchurchafrica.org',
+        'At HIS AND HERS, we are a care family home where every child is seen, every burden is shared, and families find clear pathways to healing.',
+      primaryLocationLabel: 'HIS AND HERS Care Family Hub (Editable in Admin CMS)',
+      primaryAddress: 'Care Family Hub & Community Sanctuary — Update exact street address in Admin CMS',
+      gatheringScheduleSummary: 'Children’s Home Visits · Mental Health Circles · ASD Parent Care · Prayer',
+      contactEmail: 'care@hisandhers.org',
       contactPhone: '+254 700 000 000',
       whatsappNumber: '254700000000',
-      instagramUrl: 'https://instagram.com/glowchurchafrica',
-      facebookUrl: 'https://facebook.com/glowchurchafrica',
-      youtubeUrl: 'https://youtube.com/@glowchurchafrica',
+      emergencyHotlineNote:
+        'If you or a child is in immediate physical danger, please call your local police or national emergency hotline immediately before submitting an online request.',
+      instagramUrl: 'https://instagram.com/hisandherscommunity',
+      facebookUrl: 'https://facebook.com/hisandherscommunity',
+      youtubeUrl: 'https://youtube.com/@hisandherscommunity',
       approvedGivingNote:
-        'Stewardship and charitable contributions are coordinated strictly through verified GLOW Church Africa channels confirmed directly by our leadership team. Contact us if you wish to partner in a specific outreach initiative.',
+        'Stewardship, children’s home sponsorships, and rehabilitation aid are coordinated strictly through verified HIS AND HERS channels confirmed directly by our leadership team.',
       updatedAt: now,
     },
     announcements: [
       {
         id: 'ann-1',
-        title: 'Weekly Interdenominational Prayer Watch',
+        title: 'Care Family Hub Open',
         message:
-          'All believers and seekers from every church background are warmly welcome to join our upcoming worship and prayer gatherings.',
-        linkLabel: 'View Gatherings',
-        linkPath: '/events',
+          'Plan a corporate or group visit to a partner Children’s Home, connect with a nearby rehabilitation centre, or explore our ASD Parents & Kids support guides.',
+        linkLabel: 'Explore Children’s Homes',
+        linkPath: '/home-visits',
         isActive: true,
         publishedAt: now,
+      },
+    ],
+    childrensHomes: [
+      {
+        id: 'ch-1',
+        name: 'Amani Gardens Children’s Home (Partner Slot)',
+        countyRegion: 'Nairobi',
+        townArea: 'Karen / Lang’ata',
+        childrenAgeRange: 'Ages 3 – 16 (42 Children)',
+        currentNeeds: ['Reading Books & Art Kits', 'Nutritious Pantry Packs', 'Youth Career Mentorship'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'A warm residential family-style children’s home welcoming corporate CSR days, weekend storytelling circles, and sustained mentorship partnerships.',
+        imageUrl: '/src/assets/images/children_home_visit_joy_1794828208960.jpg',
+        imageAlt: 'Volunteers and children laughing and reading storybooks together in a sunlit children home courtyard',
+      },
+      {
+        id: 'ch-2',
+        name: 'Tumaini Bridge Haven (Partner Slot)',
+        countyRegion: 'Kiambu',
+        townArea: 'Thika / Ruiru',
+        childrenAgeRange: 'Ages 5 – 17 (56 Children)',
+        currentNeeds: ['School Uniforms & Shoes', 'Sports & Music Equipment', 'Solar Study Lamps'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Community children’s home focused on education continuity, creative arts, and structured group mentoring visits from corporate teams and youth fellowships.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Mentors and students seated around wooden tables with books in a warm classroom',
+      },
+      {
+        id: 'ch-3',
+        name: 'Neema Cradle Care Home (Partner Slot)',
+        countyRegion: 'Nakuru',
+        townArea: 'Milimani / Nakuru',
+        childrenAgeRange: 'Ages 0 – 10 (28 Children)',
+        currentNeeds: ['Infant Formula & Diapers', 'Bedding & Warm Blankets', 'Playroom Renovations'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Safe early-childhood sanctuary supporting rescued infants and primary-school children with gentle caregiver accompaniment and small-group volunteer days.',
+        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
+        imageAlt: 'Care volunteers organizing fresh produce and care hampers in a sunny courtyard',
+      },
+      {
+        id: 'ch-4',
+        name: 'Pwani Light Children’s Centre (Partner Slot)',
+        countyRegion: 'Mombasa',
+        townArea: 'Nyali / Bamburi',
+        childrenAgeRange: 'Ages 6 – 18 (38 Children)',
+        currentNeeds: ['STEM & Coding Laptops', 'Dry Food Staples', 'Vocational Life Skills'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Coastal residential home preparing older teens and children for bright futures through corporate skills workshops, tutoring visits, and community support.',
+        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
+        imageAlt: 'Caregivers and visitors seated warmly in fellowship conversation',
+      },
+    ],
+    rehabFacilities: [
+      {
+        id: 'reh-1',
+        name: 'Serene Horizon Restoration Centre (Partner Facility)',
+        focusType: 'Substance & Addiction Recovery',
+        careFormat: 'Residential & Outpatient',
+        countyRegion: 'Nairobi',
+        townArea: 'Karen / Ngong Road',
+        lat: -1.3192,
+        lng: 36.7073,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Dignified medical detox supervision, evidence-based addiction counselling, and family reconciliation workshops in a quiet garden campus.',
+        imageUrl: '/src/assets/images/rehab_recovery_garden_1794828209576.jpg',
+        imageAlt: 'Sunlit stone garden pathway and timber chairs at a peaceful rehabilitation centre',
+      },
+      {
+        id: 'reh-2',
+        name: 'Maji Mazuri Youth & Family Recovery Hub (Partner Facility)',
+        focusType: 'Youth & Adolescent Restoration',
+        careFormat: 'Outpatient Counselling',
+        countyRegion: 'Kiambu',
+        townArea: 'Kikuyu / Limuru',
+        lat: -1.2465,
+        lng: 36.6634,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Dedicated youth behavioural rehabilitation, digital & substance recovery, parent coaching, and vocational reintegration close to home.',
+        imageUrl: '/src/assets/images/counselling_safe_space_1794823558841.jpg',
+        imageAlt: 'Warm counselling room with soft daylight and wooden armchairs',
+      },
+      {
+        id: 'reh-3',
+        name: 'Rift Valley Renewal & Trauma Sanctuary (Partner Facility)',
+        focusType: 'Trauma & Crisis Rehabilitation',
+        careFormat: 'Residential & Outpatient',
+        countyRegion: 'Nakuru',
+        townArea: 'Nakuru Town',
+        lat: -0.3031,
+        lng: 36.08,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Trauma-informed inpatient and day-program care supporting survivors of acute crisis, grief, burnout, and emotional dependency.',
+        imageUrl: '/src/assets/images/safe_home_refuge_1794823558780.jpg',
+        imageAlt: 'Peaceful residential lounge offering calm refuge and supportive care',
+      },
+      {
+        id: 'reh-4',
+        name: 'Lakeside Wholeness & Family Care Clinic (Partner Facility)',
+        focusType: 'Family & Holistic Care',
+        careFormat: 'Outpatient Counselling',
+        countyRegion: 'Kisumu',
+        townArea: 'Milimani / Kisumu',
+        lat: -0.0917,
+        lng: 34.768,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Accessible outpatient family rehabilitation, dual-diagnosis counselling, and weekly community recovery support circles around the lake region.',
+        imageUrl: '/src/assets/images/rehab_recovery_garden_1794828209576.jpg',
+        imageAlt: 'Tranquil courtyard garden at a community family restoration clinic',
+      },
+      {
+        id: 'reh-5',
+        name: 'Pwani New Dawn Recovery Wing (Partner Facility)',
+        focusType: 'Substance & Addiction Recovery',
+        careFormat: 'Detox & Medical Recovery',
+        countyRegion: 'Mombasa',
+        townArea: 'Nyali / Mombasa',
+        lat: -4.0435,
+        lng: 39.6682,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Coastal medical stabilisation, compassionate family therapy, and structured sober-living reintegration pathways.',
+        imageUrl: '/src/assets/images/counselling_safe_space_1794823558841.jpg',
+        imageAlt: 'Bright indoor therapy room welcoming families seeking recovery care',
+      },
+    ],
+    asdGuides: [
+      {
+        id: 'asd-1',
+        pillar: 'Sensory-Friendly Home',
+        title: 'Creating a Calm Sensory Corner at Home',
+        audienceTag: 'Parents & Kids · Easy Daily Setup',
+        summary:
+          'Autistic children often experience lights, loud echoes, and clutter more intensely. A predictable low-stimulation corner helps their nervous system reset gently.',
+        practicalSteps: [
+          'Choose a quiet corner with soft natural light or warm lamp lighting instead of harsh overhead bulbs.',
+          'Keep a familiar basket of comforting textures (weighted blanket, soft cushion, fidget toy, or noise-cancelling ear defenders).',
+          'Never use the calm corner as punishment—introduce it when your child is happy so it feels like a safe harbour.',
+        ],
+      },
+      {
+        id: 'asd-2',
+        pillar: 'Calm Overwhelm & Meltdowns',
+        title: 'Understanding Meltdowns vs. Tantrums With Love',
+        audienceTag: 'Parents & Caregivers · Crisis Moments',
+        summary:
+          'A meltdown is sensory or emotional overload—not bad behaviour. Lowering demands and staying calm helps your child feel safe faster.',
+        practicalSteps: [
+          'Speak softly using short, calm sentences (or pause talking altogether while ensuring physical safety).',
+          'Reduce triggers right away: dim bright lights, turn off loud TVs, and give breathing space without lecturing.',
+          'Wait until after your child is fully settled to reconnect with water, a hug (if welcomed), or a gentle visual check-in.',
+        ],
+      },
+      {
+        id: 'asd-3',
+        pillar: 'Visual Routines & Speech',
+        title: 'Using Picture Schedules & Gentle Transitions',
+        audienceTag: 'Daily Living · Communication',
+        summary:
+          'Knowing what happens next reduces anxiety. Simple visual cards and 5-minute countdown warnings make mornings, meals, and bedtime smoother.',
+        practicalSteps: [
+          'Place 4–5 simple picture or drawn cards in order for key routines (Wake Up → Brush Teeth → Breakfast → School).',
+          'Give clear countdown warnings before stopping play (“5 more minutes with blocks, then bath time”).',
+          'Celebrate all communication—speech, pointing, picture exchange, gestures, or typing are all valid voices.',
+        ],
+      },
+      {
+        id: 'asd-4',
+        pillar: 'Siblings, School & Faith',
+        title: 'Helping Siblings, Relatives & Communities Understand',
+        audienceTag: 'Family & Community Inclusion',
+        summary:
+          'Extended family and community spaces thrive when people learn patience, clear sensory kindness, and joy in every child’s unique strengths.',
+        practicalSteps: [
+          'Explain autism to siblings simply: “Their brain notices sounds and feelings extra strongly, so quiet kindness helps them shine.”',
+          'Share a short one-page “How I Like to Be Greeted” note with teachers, Sunday caregivers, and relatives.',
+          'Build around your child’s special interests (trains, music, drawing, patterns)—they are wonderful bridges to joy and learning.',
+        ],
       },
     ],
     impactProjects: [
       {
         id: 'imp-1',
-        slug: 'community-care-nourishment-outreach',
-        title: 'Community Care & Nourishment Outreach',
+        slug: 'childrens-home-partnership-and-csr-day',
+        title: 'Children’s Home Mentorship & Care Hamper Day',
         category: 'Community Outreach',
         dateLabel: 'October 2024',
-        locationLabel: 'Local Neighbourhood Courtyard (Editable)',
+        locationLabel: 'Partner Children’s Home Courtyard',
         summary:
-          'Volunteers came together to prepare and share fresh food parcels and household essentials with families walking through difficult seasons.',
+          'Corporate volunteers and community friends partnered together to spend a joyful day reading, playing, and equipping a partner children’s home.',
         whatWasDone:
-          'GLOW members and partner volunteers gathered fresh produce, staple pantry supplies, and hygiene necessities, organizing an open-courtyard distribution focused on warm hospitality and personal conversation.',
+          'HIS AND HERS coordinated a vetted corporate CSR team and local storytellers to bring reading books, school packs, fresh produce, and unhurried mentorship games to a partner children’s home.',
         whyItMattered:
-          'Dignity matters just as much as provision. Rather than treating outreach as a distant transaction, we wanted neighbours to be greeted by name, listened to, and cared for without judgement.',
+          'Children thrive on genuine presence and long-term care, not drop-off charity. Structured visits ensure safeguarding, warmth, and real friendship.',
         whoItServed:
-          'Elderly neighbours, single-parent households, and local families facing acute food insecurity in our surrounding community.',
+          '42 children aged 3–16 alongside house mothers and dedicated residential caregivers.',
         whatGlowHopedToAchieve:
-          'To demonstrate that Christian faith is visible through practical kindness—standing beside neighbours in tangible need and building lasting relationships of trust.',
+          'To connect caring organisations and everyday individuals directly with verified children’s homes.',
         documentedStory:
-          'Throughout the afternoon, neighbours shared meals, children played in the courtyard, and volunteers stayed long after distribution to pray with families who asked for encouragement. This initiative marked one of our foundational steps in 2024 toward ongoing neighbourhood care.',
-        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
-        imageAlt: 'Community volunteers warmly sharing fresh food parcels with neighbours in a sunlit courtyard',
+          'Under wide courtyard trees, teams read stories side by side, shared fruit and lunch, and pledged ongoing termly stationery support.',
+        imageUrl: '/src/assets/images/children_home_visit_joy_1794828208960.jpg',
+        imageAlt: 'Corporate volunteers and community members reading with children at a partner children home',
         featured: true,
         createdAt: '2024-10-18T10:00:00.000Z',
       },
       {
         id: 'imp-2',
         slug: 'youth-encouragement-and-mentorship-circles',
-        title: 'Youth Encouragement & Mentorship Circles',
+        title: 'Youth Encouragement & Mental Wellbeing Circles',
         category: 'Community Engagement',
         dateLabel: 'March 2025',
-        locationLabel: 'Community Learning Hall (Editable)',
+        locationLabel: 'Community Learning Hall',
         summary:
-          'Intergenerational mentorship tables creating safe spaces for young people to receive guidance, study support, and spiritual encouragement.',
+          'Intergenerational mentorship and listening tables creating safe spaces for young people to speak openly, receive guidance, and lighten emotional burdens.',
         whatWasDone:
-          'We hosted welcoming afternoon sessions pairing older community mentors and educators with secondary school youth for open dialogue, study support, and life-skills encouragement.',
+          'We hosted welcoming afternoon sessions pairing trained community mentors, counsellors, and educators with youth for open dialogue and emotional wellbeing conversations.',
         whyItMattered:
-          'Many young people carry quiet pressures around education, purpose, and belonging. Having trusted adults who genuinely listen helps bridge isolation.',
+          'Many young people carry quiet pressures around mental health, family stress, and belonging. Having trusted adults who listen breaks isolation.',
         whoItServed:
-          'Teenagers, students, and young adults from across diverse neighbourhoods regardless of religious background.',
+          'Teenagers, students, and young adults from across diverse neighbourhoods.',
         whatGlowHopedToAchieve:
-          'To cultivate a supportive environment where young people feel seen, valued, and equipped with practical wisdom and hopeful community ties.',
+          'To cultivate a supportive environment where young people feel heard, safe, and connected to caring mentors and counsellors.',
         documentedStory:
-          'Seated around long wooden tables with notebooks and tea, mentors and students reflected on personal goals, resilience, and community responsibility—reinforcing our belief that transformation happens around shared tables.',
+          'Seated around long wooden tables with notebooks and tea, mentors and students reflected on emotional resilience, hope, and community care.',
         imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
         imageAlt: 'Community mentors and youth seated together around wooden tables in warm conversation',
         featured: true,
@@ -119,49 +328,49 @@ function createSeedDatabase(): GlowDatabase {
       },
       {
         id: 'imp-3',
-        slug: 'neighbourhood-prayer-and-family-care-visits',
-        title: 'Neighbourhood Prayer & Family Care Visits',
+        slug: 'asd-parent-and-family-compassion-workshop',
+        title: 'ASD Parents & Caregivers Support Gathering',
         category: 'Acts of Compassion',
         dateLabel: 'August 2025',
-        locationLabel: 'Participating Homes & Local Fellowships',
+        locationLabel: 'HIS AND HERS Care Family Hub',
         summary:
-          'Small intercessory fellowship teams visiting bereaved, unwell, and isolated households to sit together, listen, and pray.',
+          'A sensory-friendly afternoon empowering parents of autistic children with visual routine tools, calm regulation tips, and peer solidarity.',
         whatWasDone:
-          'Dedicated prayer and pastoral care volunteers visited homes upon invitation, bringing practical comfort, unhurried companionship, and heartfelt prayer.',
+          'Occupational therapists, parents, and community volunteers co-hosted an interactive sensory toolkit workshop while caring warmly for children in a calm adjoining playroom.',
         whyItMattered:
-          'Grief, illness, and hardship often deepen in silence. Showing up in someone’s living room communicates that no household is forgotten.',
+          'Raising a neurodivergent child can feel isolating without practical community understanding. Sharing real tools restores confidence and joy.',
         whoItServed:
-          'Families navigating illness, bereavement, or quiet personal transition within our wider community.',
+          'Parents, guardians, siblings, and children on the autism spectrum.',
         whatGlowHopedToAchieve:
-          'To carry the warmth of a prayer sanctuary into everyday homes—offering spiritual encouragement anchored in genuine human presence.',
+          'To build a warm, stigma-free community where ASD families feel celebrated and supported.',
         documentedStory:
-          'In small living rooms lit by afternoon sun, elders and younger believers held hands in quiet prayer—a living picture of interdenominational fellowship where care precedes formality.',
-        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
-        imageAlt: 'Diverse group of believers holding hands in a quiet prayer fellowship circle',
+          'Parents crafted custom picture schedules over tea while children explored wooden sensory puzzles in a gentle daylight room.',
+        imageUrl: '/src/assets/images/asd_parent_child_care_1794828209127.jpg',
+        imageAlt: 'Parent and young autistic child playing calmly with colorful wooden blocks and picture cards',
         featured: true,
         createdAt: '2025-08-22T10:00:00.000Z',
       },
       {
         id: 'imp-4',
         slug: 'sanctuary-doors-open-night-of-refuge',
-        title: 'Sanctuary Doors Open: Evening of Refuge & Care',
+        title: 'Safe Refuge & Rehabilitation Pathways Evening',
         category: 'Support for Vulnerable Communities',
         dateLabel: 'February 2026',
-        locationLabel: 'GLOW Gathering Space (Editable)',
+        locationLabel: 'HIS AND HERS Care Family Sanctuary',
         summary:
-          'An open-door evening combining unhurried worship, quiet personal prayer ministry, and warm hospitality for anyone seeking spiritual rest.',
+          'An open-door evening combining gentle worship, confidential counselling, rehabilitation referrals, and safe-refuge guidance.',
         whatWasDone:
-          'We opened our gathering space for a dusk-to-evening sanctuary session featuring acoustic worship, guided corporate prayer, and one-on-one prayer support alongside shared refreshments.',
+          'We opened our gathering space for a calm evening featuring acoustic reflection, one-on-one counselling check-ins, and guided referrals to partner rehab and shelter facilities.',
         whyItMattered:
-          'People carrying heavy burdens rarely need spectacle; they need a peaceful, welcoming room where God’s presence is honoured and every visitor is received warmly.',
+          'Families battling trauma, addiction, or domestic danger need trustworthy bridges to nearby care facilities without shame.',
         whoItServed:
-          'Individuals and families from multiple denominations, newcomers to the city, and anyone searching for spiritual refuge.',
+          'Individuals, families seeking rehabilitation partners, and survivors rebuilding stability.',
         whatGlowHopedToAchieve:
-          'To model a worship environment free of denominational barriers—centred on prayer, humility, and shared grace.',
+          'To bridge spiritual care, mental health listening, and practical safeguarding under one welcoming roof.',
         documentedStory:
-          'As evening settled over the open timber hall, attendees remained long after the final hymn to pray with one another and share stories of renewed hope.',
-        imageUrl: '/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg',
-        imageAlt: 'Peaceful evening prayer sanctuary bathed in candlelight and dusk glow',
+          'As evening settled over the sanctuary, attendees connected with counsellors, rehab liaisons, and prayer companions in warmth and dignity.',
+        imageUrl: '/src/assets/images/rehab_recovery_garden_1794828209576.jpg',
+        imageAlt: 'Sunlit restoration centre garden where counsellor and family member sit together',
         featured: false,
         createdAt: '2026-02-09T10:00:00.000Z',
       },
@@ -169,89 +378,95 @@ function createSeedDatabase(): GlowDatabase {
     events: [
       {
         id: 'evt-1',
-        slug: 'interdenominational-evening-of-worship-and-intercession',
-        title: 'Interdenominational Evening of Worship & Intercession',
-        category: 'Worship Gathering',
-        dateISO: '2026-11-29',
-        timeLabel: '16:30 – 19:00',
-        venue: 'GLOW Fellowship Sanctuary (Confirm exact venue in Admin CMS)',
+        slug: 'corporate-and-community-childrens-home-visit-day',
+        title: 'Partner Children’s Home Visit & Mentorship Day',
+        category: 'Community Outreach',
+        dateISO: '2026-11-28',
+        timeLabel: '09:30 – 14:30',
+        venue: 'Partner Children’s Homes (Nairobi & Kiambu)',
         summary:
-          'An unhurried afternoon and evening of Christ-centred worship, scripture reflection, and united prayer for families and communities.',
+          'Corporate CSR teams, fellowships, and individual volunteers join guided mentorship, storytelling, and care pack deliveries at verified children’s homes.',
         description:
-          'Join believers from across church traditions for an unhurried gathering devoted to worship and corporate intercession. Whether you have walked in faith for decades or are stepping into a prayer gathering for the first time, there is a seat and a warm welcome waiting for you.',
+          'Pre-briefed visitor groups meet our safeguarding leads at 09:30 for hospitality orientation before spending a structured, joyful day reading, playing sports, and delivering requested school and nutrition supplies.',
         registrationOpen: true,
-        registrationNote: 'Free open gathering. Register below so our hospitality team can prepare warmly for you.',
-        imageUrl: '/src/assets/images/hero_worship_community_1794821886213.jpg',
-        imageAlt: 'Congregation gathered in heartfelt worship and prayer',
+        registrationNote: 'Individual helpers welcome; corporate & group teams can also book custom dates via Children’s Homes.',
+        imageUrl: '/src/assets/images/children_home_visit_joy_1794828208960.jpg',
+        imageAlt: 'Volunteers and children celebrating reading and care hampers at a children home',
         featured: true,
         createdAt: now,
       },
       {
         id: 'evt-2',
-        slug: 'midweek-corporate-prayer-watch',
-        title: 'Midweek Corporate Prayer Watch',
-        category: 'Prayer Meeting',
-        dateISO: '2026-12-03',
-        timeLabel: '18:00 – 19:30',
-        venue: 'Prayer Chapel & Online Prayer Line',
+        slug: 'asd-parents-and-kids-sensory-play-morning',
+        title: 'ASD Parents Coffee & Sensory-Friendly Kids Morning',
+        category: 'Community Outreach',
+        dateISO: '2026-12-05',
+        timeLabel: '10:00 – 12:30',
+        venue: 'HIS AND HERS Care Family Hub (Quiet Garden Room)',
         summary:
-          'A focused midweek hour lifting up submitted prayer needs, local neighbourhoods, and church unity.',
+          'A calm, welcoming morning for parents raising children on the autism spectrum—featuring visual routine swaps, practical tips, and gentle sensory play.',
         description:
-          'Our midweek prayer watch is the heartbeat of GLOW Church Africa. Together we bring personal burdens, community needs, and prayers for renewal before God with reverence and faith.',
+          'No shushing, no judgement. Parents connect with peers and occupational therapy mentors while children enjoy soft lighting, wooden sensory stations, and quiet corner activities.',
         registrationOpen: true,
-        registrationNote: 'Open to all. You may attend in person or submit a prayer request beforehand.',
-        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
-        imageAlt: 'Small fellowship circle praying together with joined hands',
+        registrationNote: 'Free entry; let us know your child’s sensory preferences when registering.',
+        imageUrl: '/src/assets/images/asd_parent_child_care_1794828209127.jpg',
+        imageAlt: 'Parent and young child exploring sensory blocks and routine cards',
         featured: true,
         createdAt: now,
       },
       {
         id: 'evt-3',
-        slug: 'monthly-neighbourhood-compassion-outreach',
-        title: 'Monthly Neighbourhood Compassion Outreach',
-        category: 'Community Outreach',
-        dateISO: '2026-12-12',
-        timeLabel: '09:30 – 13:30',
-        venue: 'Community Courtyard & Outreach Hub (Editable)',
+        slug: 'mental-health-listening-and-burden-sharing-circle',
+        title: 'Lighten Your Burden: Mental Health & Recovery Circle',
+        category: 'Prayer Meeting',
+        dateISO: '2026-12-10',
+        timeLabel: '18:00 – 19:30',
+        venue: 'HIS AND HERS Care Room & Private Check-In',
         summary:
-          'Hands-on community care morning sharing food provisions, family encouragement, and neighbourhood fellowship.',
+          'A calm midweek gathering supporting emotional wellbeing, family recovery journeys, counselling referrals, and gentle prayer.',
         description:
-          'Faith moves outward into the streets and courtyards where our neighbours live. Volunteers gather at 09:30 for brief orientation and prayer before serving meals, distributing care packs, and spending unhurried time listening to local families.',
+          'Hosted alongside volunteer counsellors and rehabilitation partners, this gathering offers a stigma-free space to breathe, share honestly, and discover support facilities near you.',
         registrationOpen: true,
-        registrationNote: 'Volunteers and first-time helpers are warmly invited to RSVP below.',
-        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
-        imageAlt: 'Volunteers distributing fresh produce and care packages in a community courtyard',
+        registrationNote: 'Confidentiality and respect are upheld by everyone attending.',
+        imageUrl: '/src/assets/images/counselling_safe_space_1794823558841.jpg',
+        imageAlt: 'Warm sunlit counselling and listening room with armchairs and plants',
         featured: true,
         createdAt: now,
       },
       {
         id: 'evt-4',
-        slug: 'year-end-sanctuary-thanksgiving-and-prayer',
-        title: 'Sanctuary Thanksgiving & Prayer Convening',
-        category: 'Special Service',
-        dateISO: '2026-12-20',
-        timeLabel: '15:00 – 18:00',
-        venue: 'GLOW Gathering Sanctuary (Editable)',
+        slug: 'interdenominational-evening-of-worship-and-intercession',
+        title: 'Evening of Hope, Worship & Family Renewal',
+        category: 'Worship Gathering',
+        dateISO: '2026-12-19',
+        timeLabel: '16:30 – 19:00',
+        venue: 'HIS AND HERS Community Sanctuary',
         summary:
-          'A reflective gathering celebrating God’s faithfulness across our communities and praying into the new year.',
+          'An unhurried evening of worship, gratitude, and united prayer for families, children’s homes, healing, and safe communities.',
         description:
-          'As the year closes, we gather across denominations to give thanks for testimonies of grace, remember those we have walked alongside since 2024, and commit our families and cities to God in prayer.',
+          'Join neighbours and partner teams from every background for worship, testimonies of kindness, and quiet prayer stations.',
         registrationOpen: true,
-        registrationNote: 'Open to individuals, families, and partner fellowships.',
-        imageUrl: '/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg',
-        imageAlt: 'Candlelit wooden prayer hall prepared for an evening worship service',
+        registrationNote: 'Open to individuals, families, and community partners.',
+        imageUrl: '/src/assets/images/hero_worship_community_1794821886213.jpg',
+        imageAlt: 'Community gathered together in heartfelt worship and prayer',
         featured: false,
         createdAt: now,
       },
     ],
     prayerRequests: [],
+    counsellingRequests: [],
+    safeHomeRequests: [],
+    homeVisitBookings: [],
+    partnerOrganizations: [],
+    rehabReferrals: [],
+    asdSupportRequests: [],
     volunteerEnquiries: [],
     contactMessages: [],
     eventRegistrations: [],
   };
 }
 
-function ensureDatabaseExists(): GlowDatabase {
+function ensureDatabaseExists(): AppDatabase {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
@@ -262,7 +477,21 @@ function ensureDatabaseExists(): GlowDatabase {
   }
   try {
     const raw = fs.readFileSync(DB_FILE, 'utf8');
-    return JSON.parse(raw) as GlowDatabase;
+    const parsed = JSON.parse(raw) as Partial<AppDatabase>;
+    const seed = createSeedDatabase();
+    return {
+      ...seed,
+      ...parsed,
+      childrensHomes: parsed.childrensHomes?.length ? parsed.childrensHomes : seed.childrensHomes,
+      rehabFacilities: parsed.rehabFacilities?.length ? parsed.rehabFacilities : seed.rehabFacilities,
+      asdGuides: parsed.asdGuides?.length ? parsed.asdGuides : seed.asdGuides,
+      counsellingRequests: parsed.counsellingRequests || [],
+      safeHomeRequests: parsed.safeHomeRequests || [],
+      homeVisitBookings: parsed.homeVisitBookings || [],
+      partnerOrganizations: parsed.partnerOrganizations || [],
+      rehabReferrals: parsed.rehabReferrals || [],
+      asdSupportRequests: parsed.asdSupportRequests || [],
+    };
   } catch {
     const seed = createSeedDatabase();
     fs.writeFileSync(DB_FILE, JSON.stringify(seed, null, 2), 'utf8');
@@ -270,11 +499,11 @@ function ensureDatabaseExists(): GlowDatabase {
   }
 }
 
-export function readDatabase(): GlowDatabase {
+export function readDatabase(): AppDatabase {
   return ensureDatabaseExists();
 }
 
-export function writeDatabase(db: GlowDatabase): void {
+export function writeDatabase(db: AppDatabase): void {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
@@ -290,6 +519,9 @@ export function getPublicSiteData(): PublicSiteData {
     announcements: db.announcements.filter((a) => a.isActive),
     impactProjects: db.impactProjects,
     events: [...db.events].sort((a, b) => a.dateISO.localeCompare(b.dateISO)),
+    childrensHomes: db.childrensHomes,
+    rehabFacilities: db.rehabFacilities,
+    asdGuides: db.asdGuides,
   };
 }
 

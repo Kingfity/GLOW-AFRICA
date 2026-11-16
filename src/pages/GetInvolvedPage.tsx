@@ -7,45 +7,45 @@ import { validateVolunteerEnquiry } from '../utils/validation';
 const PARTICIPATION_PATHS = [
   {
     index: '01.',
-    title: 'Join the Prayer Movement',
+    title: 'Visit a Partner Children’s Home',
     description:
-      'Stand alongside our intercessory community during midweek prayer watches or commit to praying regularly for families and communities.',
-    actionLabel: 'Explore Prayer & Worship',
-    actionHref: '/prayer-worship',
+      'Coordinate a structured outreach visit for your corporate CSR team, fellowship, school, or volunteer group to partner children’s homes—never unsolicited private visits.',
+    actionLabel: 'Book Children’s Home Visit',
+    actionHref: '/home-visits',
   },
   {
     index: '02.',
-    title: 'Attend Worship Gatherings',
+    title: 'Volunteer in Care & Outreach',
     description:
-      'Come as you are to an upcoming worship gathering or special service. Bring a friend, experience fellowship, and find a welcoming spiritual home.',
-    actionLabel: 'View Upcoming Gatherings',
-    actionHref: '/events',
-  },
-  {
-    index: '03.',
-    title: 'Volunteer in Community Initiatives',
-    description:
-      'Serve practically in neighbourhood food sharing, family visitation, youth mentorship tables, logistics, or hospitality.',
+      'Serve alongside our teams in food nourishment drops, family support, hospitality, or community wellbeing events.',
     actionLabel: 'Apply Below',
     actionHref: '#volunteer-form',
   },
   {
-    index: '04.',
-    title: 'Partner With GLOW',
+    index: '03.',
+    title: 'Support Mental Health & Safe Refuge',
     description:
-      'Fellowships, community groups, and individuals can collaborate with us on compassionate outreach initiatives and neighbourhood support.',
-    actionLabel: 'Contact Leadership',
-    actionHref: '/contact',
+      'Trained counsellors, social workers, and safeguarding advocates can partner with our counselling and Find My Home desks.',
+    actionLabel: 'Connect via Form Below',
+    actionHref: '#volunteer-form',
+  },
+  {
+    index: '04.',
+    title: 'Join Prayer & Listening Gatherings',
+    description:
+      'Attend our regular prayer watches and community listening circles to uphold families and neighbours together.',
+    actionLabel: 'View Upcoming Gatherings',
+    actionHref: '/events',
   },
 ];
 
 const INTEREST_AREAS = [
   'Community Outreach & Food Care',
-  'Prayer & Intercession Team',
-  'Worship & Sanctuary Hospitality',
-  'Youth Encouragement & Mentorship',
-  'Media, Communications & Storytelling',
-  'Community Partnership / Collaboration',
+  'Mental Health / Counselling Professional Volunteer',
+  'Safe Refuge & Child Protection Support',
+  'Children’s Home Visits & Corporate CSR Team',
+  'Prayer & Spiritual Care Team',
+  'Community Partnership / Sponsorship',
 ];
 
 export function GetInvolvedPage() {
@@ -128,14 +128,15 @@ export function GetInvolvedPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              Get Involved
+              Get Involved · HIS AND HERS
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
-              From Visitor to Companion in Mission
+              From Visitor to Companion in Community Care
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              GLOW Church Africa grows through ordinary people offering prayer, time, warmth, and
-              compassionate service. Discover where your heart and hands fit.
+              Whether you want to bring your corporate team or group to a children’s home, onboard
+              your organisation as a partner, offer counselling hours, or walk beside ASD families,
+              your presence helps touch lives meaningfully.
             </p>
           </div>
         </div>
@@ -190,8 +191,15 @@ export function GetInvolvedPage() {
               Volunteer or Partner Enquiry
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              Let us know how you would like to participate—whether serving at an outreach day,
-              joining an intercession team, or welcoming newcomers.
+              Interested in organizing a corporate CSR or group visit to a partner children’s home
+              instead? Use our dedicated{' '}
+              <AppLink
+                href="/home-visits"
+                className="text-[#3B155F] font-semibold underline underline-offset-4"
+              >
+                Children’s Homes &amp; Partner Onboarding portal
+              </AppLink>
+              .
             </p>
 
             <div className="bg-white border border-[#3B155F]/12 rounded-lg p-6 space-y-3">
@@ -200,7 +208,7 @@ export function GetInvolvedPage() {
               </h3>
               <p className="text-sm text-[#3E3349] leading-relaxed">
                 {settings?.approvedGivingNote ||
-                  'Stewardship and charitable contributions are coordinated strictly through verified GLOW Church Africa channels confirmed directly by our leadership team.'}
+                  'Stewardship and charitable contributions are coordinated strictly through verified HIS AND HERS channels confirmed directly by our leadership team.'}
               </p>
               <AppLink
                 href="/contact"
@@ -371,7 +379,7 @@ export function GetInvolvedPage() {
                     required
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Share your interest, background, or any questions you have."
+                    placeholder="Share your interest, professional background, or any questions you have."
                     className="w-full px-3.5 py-2.5 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
                   />
                   {errors.message && (

@@ -93,7 +93,7 @@ export function ImpactDetailPage({ slug }: { slug: string }) {
             </div>
             <div className="space-y-2.5 pt-6 border-t border-[#3B155F]/10">
               <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
-                What GLOW Hoped to Achieve
+                What HIS AND HERS Hoped to Achieve
               </h2>
               <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
                 {project.whatGlowHopedToAchieve}
@@ -108,13 +108,13 @@ export function ImpactDetailPage({ slug }: { slug: string }) {
 
           <div className="pt-8 border-t border-[#3B155F]/15 flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm text-[#3E3349]">
-              Would you like to join upcoming community outreach initiatives?
+              Would you like to organize a group or corporate visit to a partner children’s home?
             </p>
             <AppLink
-              href="/get-involved"
+              href="/home-visits"
               className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors"
             >
-              Volunteer With GLOW
+              Visit a Children’s Home
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </AppLink>
           </div>

@@ -4,15 +4,20 @@ import { RouterProvider, useRouter } from './context/RouterContext';
 import { SiteDataProvider } from './context/SiteDataContext';
 import { AboutPage } from './pages/AboutPage';
 import { AdminPage } from './pages/AdminPage';
+import { AsdSupportPage } from './pages/AsdSupportPage';
 import { ContactPage } from './pages/ContactPage';
+import { CounsellingPage } from './pages/CounsellingPage';
 import { EventDetailPage } from './pages/EventDetailPage';
 import { EventsPage } from './pages/EventsPage';
+import { FindMyHomePage } from './pages/FindMyHomePage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { HomePage } from './pages/HomePage';
+import { HomeVisitsPage } from './pages/HomeVisitsPage';
 import { ImpactDetailPage } from './pages/ImpactDetailPage';
 import { ImpactPage } from './pages/ImpactPage';
 import { PrayerWorshipPage } from './pages/PrayerWorshipPage';
 import { PrivacyPage } from './pages/PrivacyPage';
+import { RehabilitationPage } from './pages/RehabilitationPage';
 
 function PageView() {
   const { path } = useRouter();
@@ -20,6 +25,11 @@ function PageView() {
 
   if (normalized === '/') return <HomePage />;
   if (normalized === '/about') return <AboutPage />;
+  if (normalized === '/home-visits') return <HomeVisitsPage />;
+  if (normalized === '/rehabilitation') return <RehabilitationPage />;
+  if (normalized === '/asd-support') return <AsdSupportPage />;
+  if (normalized === '/counselling') return <CounsellingPage />;
+  if (normalized === '/find-my-home') return <FindMyHomePage />;
   if (normalized === '/prayer-worship') return <PrayerWorshipPage />;
   if (normalized === '/impact') return <ImpactPage />;
   if (normalized.startsWith('/impact/')) {

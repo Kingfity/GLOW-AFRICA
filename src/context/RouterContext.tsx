@@ -13,56 +13,86 @@ const RouterContext = createContext<RouterContextValue>({
 const ROUTE_META: Array<{ match: (p: string) => boolean; title: string; description: string }> = [
   {
     match: (p) => p === '/',
-    title: 'GLOW Church Africa | More Than a Place to Gather. A Place to Belong.',
+    title: 'HIS AND HERS | A Care Family Home Connecting Lives to Hope',
     description:
-      'An interdenominational prayer and worship movement demonstrating God’s love through spiritual fellowship, compassionate service, and community outreach since 2024.',
+      'HIS AND HERS connects families, corporates, and communities to children’s homes, mental health counselling, nearby rehabilitation facilities, ASD family care, and safe refuge.',
   },
   {
     match: (p) => p === '/about',
-    title: 'About Us | GLOW Church Africa',
+    title: 'About Us | HIS AND HERS Care Family Home',
     description:
-      'Discover the story, mission, vision, and interdenominational identity of GLOW Church Africa—where faith meets practical compassion.',
+      'Learn about HIS AND HERS—a warm community-based care family hub touching lives through children’s home partnerships, rehabilitation support, mental health care, and prayer.',
+  },
+  {
+    match: (p) => p === '/home-visits',
+    title: 'Children’s Homes & Corporate Partner Visits | HIS AND HERS',
+    description:
+      'Book individual, group, or corporate CSR visits to verified children’s homes, or onboard your organisation to cooperate with HIS AND HERS.',
+  },
+  {
+    match: (p) => p === '/rehabilitation',
+    title: 'Rehabilitation & Recovery Facilities Near You | HIS AND HERS',
+    description:
+      'Find nearby addiction recovery, trauma healing, and youth rehabilitation centres sorted by proximity or county and connect confidentially.',
+  },
+  {
+    match: (p) => p === '/asd-support',
+    title: 'ASD Parents & Kids Living Support Hub | HIS AND HERS',
+    description:
+      'Easy, friendly guides and practical daily living tips for parents and families raising children on the autism spectrum, plus parent mentor support.',
+  },
+  {
+    match: (p) => p === '/counselling',
+    title: 'Mental Health & Counselling | HIS AND HERS',
+    description:
+      'Talk to a counsellor or mental health professional and lighten your burdens in a confidential, stigma-free space.',
+  },
+  {
+    match: (p) => p === '/find-my-home',
+    title: 'Find My Home · Safe Refuge Support | HIS AND HERS',
+    description:
+      'Confidential safe shelter referral and protection support for survivors fleeing gender-based violence and child abuse.',
   },
   {
     match: (p) => p === '/prayer-worship',
-    title: 'Prayer & Worship | GLOW Church Africa',
+    title: 'Prayer & Worship | HIS AND HERS',
     description:
-      'Explore prayer gatherings, corporate worship, and submit a confidential prayer request to be held in prayer by our team.',
+      'Explore prayer gatherings, worship fellowship, and submit a confidential prayer request.',
   },
   {
     match: (p) => p.startsWith('/impact'),
-    title: 'Our Impact Since 2024 | GLOW Church Africa',
+    title: 'Our Impact Since 2024 | HIS AND HERS',
     description:
-      'Documented community outreach, acts of compassion, and charitable initiatives carried out by GLOW Church Africa since 2024.',
+      'Documented children’s home visits, ASD workshops, rehabilitation partnerships, and community outreach carried out by HIS AND HERS.',
   },
   {
     match: (p) => p.startsWith('/events'),
-    title: 'Events & Gatherings | GLOW Church Africa',
+    title: 'Events & Gatherings | HIS AND HERS',
     description:
-      'View upcoming worship gatherings, prayer watches, special services, and community outreach activities.',
+      'View upcoming children’s home visit days, ASD family mornings, mental health circles, and worship gatherings.',
   },
   {
     match: (p) => p === '/get-involved',
-    title: 'Get Involved | GLOW Church Africa',
+    title: 'Get Involved | HIS AND HERS',
     description:
-      'Join the prayer movement, attend worship gatherings, volunteer in community initiatives, or partner with GLOW Church Africa.',
+      'Volunteer, sponsor a children’s home visit, onboard your company or NGO, or partner with HIS AND HERS.',
   },
   {
     match: (p) => p === '/contact',
-    title: 'Contact Us | GLOW Church Africa',
+    title: 'Contact Us | HIS AND HERS',
     description:
-      'Connect with GLOW Church Africa by email, phone, WhatsApp, or visit one of our gatherings.',
+      'Connect with HIS AND HERS by email, phone, WhatsApp, or visit our Care Family Hub.',
   },
   {
     match: (p) => p === '/privacy',
-    title: 'Privacy & Stewardship Policy | GLOW Church Africa',
+    title: 'Privacy & Safeguarding Policy | HIS AND HERS',
     description:
-      'How GLOW Church Africa safeguards prayer requests, personal contact details, and volunteer information.',
+      'How HIS AND HERS protects children’s homes, counselling disclosures, rehabilitation referrals, safe-refuge requests, and ASD families.',
   },
   {
     match: (p) => p === '/admin',
-    title: 'Stewardship CMS | GLOW Church Africa',
-    description: 'Authorised administrative portal for GLOW Church Africa.',
+    title: 'Stewardship CMS | HIS AND HERS',
+    description: 'Authorised care and administrative portal for HIS AND HERS.',
   },
 ];
 

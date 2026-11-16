@@ -22,24 +22,32 @@ import {
   cleanText,
   isHoneypotTriggered,
   slugify,
+  validateAsdSupportRequest,
   validateContactMessage,
+  validateCounsellingRequest,
   validateEventRegistration,
+  validateHomeVisitBooking,
+  validatePartnerOnboarding,
   validatePrayerRequest,
+  validateRehabReferral,
+  validateSafeHomeRequest,
   validateVolunteerEnquiry,
 } from './src/utils/validation.ts';
 import type {
   Announcement,
+  ChildrensHome,
   EventCategory,
   EventItem,
   ImpactCategory,
   ImpactProject,
+  RehabFacility,
   SiteSettings,
 } from './src/shared/types.ts';
 
 const PORT = 3000;
 const UPLOADS_DIR = path.resolve(process.cwd(), 'public', 'uploads');
+const VIDEOS_DIR = path.resolve(process.cwd(), 'public', 'videos');
 
-// Simple in-memory rate limiter per IP for public submission forms
 const rateBuckets = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(ip: string, maxRequests = 20, windowMs = 60_000): boolean {
@@ -62,13 +70,16 @@ async function startServer() {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
   }
   app.use('/uploads', express.static(UPLOADS_DIR));
+  if (fs.existsSync(VIDEOS_DIR)) {
+    app.use('/videos', express.static(VIDEOS_DIR));
+  }
 
-  // Public site data (never includes private prayer requests, volunteer enquiries, or contact messages)
+  // Public site data (never exposes private prayer, counselling, safe-home, volunteer, or contact submissions)
   app.get('/api/public-data', (_req, res) => {
     res.json(getPublicSiteData());
   });
 
-  // Public submission: Prayer Request (strictly private, never returned in public endpoints)
+  // Public submission: Prayer Request
   app.post('/api/prayer-requests', (req, res) => {
     const ip = req.ip || 'unknown';
     if (!checkRateLimit(ip, 15, 60_000)) {
@@ -96,7 +107,204 @@ async function startServer() {
     writeDatabase(db);
     res.status(201).json({
       received: true,
-      message: 'Your prayer request has been received privately by our prayer team.',
+      message: 'Your prayer request has been received privately by our care and prayer team.',
+    });
+  });
+
+  // Public submission: Talk to a Counsellor / Mental Health Space (Lighten Your Burden)
+  app.post('/api/counselling-requests', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please wait a moment before trying again.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateCounsellingRequest(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please review the highlighted fields.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.counsellingRequests.unshift({
+      id: generateId('cnsl'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message:
+        validation.data.isAnonymous
+          ? 'Thank you for sharing what you are carrying. Your burden is heard in strict confidence.'
+          : 'Your confidential counselling request has been received. A counsellor or trained care coordinator will reach out via your chosen method.',
+    });
+  });
+
+  // Public submission: Find My Home (Safe Refuge for GBV & Child Abuse)
+  app.post('/api/safe-home-requests', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please wait a moment before trying again.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateSafeHomeRequest(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please complete the required safety details.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.safeHomeRequests.unshift({
+      id: generateId('safe'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message:
+        'Your safe refuge request has been logged confidentially. Our protection desk will follow your safe contact instructions carefully.',
+    });
+  });
+
+  // Public submission: Book a Children's Home Visit (Individuals, Groups & Corporates)
+  app.post('/api/home-visits', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateHomeVisitBooking(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please review the highlighted fields.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.homeVisitBookings.unshift({
+      id: generateId('visit'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message: `Your visit request for ${validation.data.selectedHomeName} has been logged. Our partnership liaison will coordinate safeguarding briefing, children’s home confirmation, and supplies checklist.`,
+    });
+  });
+
+  // Public submission: Corporate / NGO / Children's Home Partner Onboarding
+  app.post('/api/partner-onboarding', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validatePartnerOnboarding(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please complete the organisation details.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.partnerOrganizations.unshift({
+      id: generateId('part'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message: `Thank you. ${validation.data.organizationName} has been submitted to our Partner Network desk for collaboration onboarding.`,
+    });
+  });
+
+  // Public submission: Rehabilitation Facility Referral Request
+  app.post('/api/rehab-referrals', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateRehabReferral(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please check the highlighted fields.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.rehabReferrals.unshift({
+      id: generateId('rehab'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message: `Your confidential referral request for ${validation.data.chosenFacilityName} has been received. A recovery coordinator will reach out discreetly.`,
+    });
+  });
+
+  // Public submission: ASD Parents & Kids Support Request
+  app.post('/api/asd-support', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateAsdSupportRequest(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please review the highlighted fields.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.asdSupportRequests.unshift({
+      id: generateId('asd'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message:
+        'Thank you for connecting with our ASD Family Hub. A parent mentor and care coordinator will follow up with tailored tips and community support.',
     });
   });
 
@@ -160,7 +368,7 @@ async function startServer() {
     writeDatabase(db);
     res.status(201).json({
       received: true,
-      message: 'Thank you for reaching out to GLOW Church Africa. We will respond as soon as possible.',
+      message: 'Thank you for reaching out to HIS AND HERS. We will respond as soon as possible.',
     });
   });
 
@@ -238,7 +446,15 @@ async function startServer() {
       announcements: db.announcements,
       impactProjects: db.impactProjects,
       events: db.events,
+      childrensHomes: db.childrensHomes,
+      rehabFacilities: db.rehabFacilities,
       prayerRequests: db.prayerRequests,
+      counsellingRequests: db.counsellingRequests,
+      safeHomeRequests: db.safeHomeRequests,
+      homeVisitBookings: db.homeVisitBookings,
+      partnerOrganizations: db.partnerOrganizations,
+      rehabReferrals: db.rehabReferrals,
+      asdSupportRequests: db.asdSupportRequests,
       volunteerEnquiries: db.volunteerEnquiries,
       contactMessages: db.contactMessages,
       eventRegistrations: db.eventRegistrations,
@@ -267,6 +483,8 @@ async function startServer() {
       contactEmail: cleanText(incoming.contactEmail, 160) || db.settings.contactEmail,
       contactPhone: cleanText(incoming.contactPhone, 60) || db.settings.contactPhone,
       whatsappNumber: cleanText(incoming.whatsappNumber, 40) || db.settings.whatsappNumber,
+      emergencyHotlineNote:
+        cleanText(incoming.emergencyHotlineNote, 500) || db.settings.emergencyHotlineNote,
       instagramUrl: cleanText(incoming.instagramUrl, 250),
       facebookUrl: cleanText(incoming.facebookUrl, 250),
       youtubeUrl: cleanText(incoming.youtubeUrl, 250),
@@ -278,7 +496,7 @@ async function startServer() {
     res.json({ settings: updated });
   });
 
-  // Admin: Upload Photograph (base64 data URL -> /uploads/<file>)
+  // Admin: Upload Photograph
   app.post('/api/admin/upload', requireAdmin, (req, res) => {
     const dataUrl = typeof req.body?.dataUrl === 'string' ? req.body.dataUrl : '';
     const match = /^data:image\/(png|jpeg|jpg|webp);base64,([A-Za-z0-9+/=]+)$/.exec(dataUrl);
@@ -292,7 +510,7 @@ async function startServer() {
       res.status(400).json({ error: 'Uploaded image must be smaller than 4 MB.' });
       return;
     }
-    const filename = `glow-${Date.now()}-${crypto.randomBytes(4).toString('hex')}.${ext}`;
+    const filename = `care-${Date.now()}-${crypto.randomBytes(4).toString('hex')}.${ext}`;
     fs.writeFileSync(path.join(UPLOADS_DIR, filename), buffer);
     res.status(201).json({ url: `/uploads/${filename}` });
   });
@@ -407,7 +625,7 @@ async function startServer() {
       whoItServed: cleanText(req.body?.whoItServed, 1000) || 'Local neighbours and families.',
       whatGlowHopedToAchieve:
         cleanText(req.body?.whatGlowHopedToAchieve, 1500) ||
-        'Demonstrating God’s love through compassionate, practical care.',
+        'Demonstrating compassionate care through practical community action.',
       documentedStory: cleanText(req.body?.documentedStory, 2500) || whatWasDone,
       imageUrl:
         cleanText(req.body?.imageUrl, 500) ||
@@ -477,7 +695,7 @@ async function startServer() {
     res.json({ deleted: true });
   });
 
-  // Admin: Update status of prayer requests / volunteers / contact messages
+  // Admin: Update status of submissions across all support & outreach queues
   app.patch('/api/admin/submissions/:type/:id', requireAdmin, (req, res) => {
     const { type, id } = req.params;
     const status = cleanText(req.body?.status, 30);
@@ -486,6 +704,66 @@ async function startServer() {
     if (type === 'prayer' && (status === 'new' || status === 'prayed' || status === 'archived')) {
       const target = db.prayerRequests.find((r) => r.id === id);
       if (!target) return res.status(404).json({ error: 'Prayer request not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'counselling' &&
+      (status === 'new' || status === 'assigned' || status === 'completed' || status === 'archived')
+    ) {
+      const target = db.counsellingRequests.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'Counselling request not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'safehome' &&
+      (status === 'new' || status === 'urgent-care' || status === 'sheltered' || status === 'archived')
+    ) {
+      const target = db.safeHomeRequests.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'Safe home request not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'homevisit' &&
+      (status === 'new' || status === 'scheduled' || status === 'completed' || status === 'archived')
+    ) {
+      const target = db.homeVisitBookings.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'Children home visit booking not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'partner' &&
+      (status === 'new' || status === 'onboarded' || status === 'archived')
+    ) {
+      const target = db.partnerOrganizations.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'Partner organisation not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'rehab' &&
+      (status === 'new' || status === 'matched' || status === 'in-care' || status === 'archived')
+    ) {
+      const target = db.rehabReferrals.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'Rehabilitation referral not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'asd' &&
+      (status === 'new' || status === 'answered' || status === 'connected' || status === 'archived')
+    ) {
+      const target = db.asdSupportRequests.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'ASD support request not found.' });
       target.status = status;
       writeDatabase(db);
       return res.json({ updated: true });
@@ -508,7 +786,83 @@ async function startServer() {
     res.status(400).json({ error: 'Invalid submission type or status.' });
   });
 
-  // Vite middleware in development or static dist in production
+  // Admin: Add / Remove Partner Children's Home
+  app.post('/api/admin/childrens-homes', requireAdmin, (req, res) => {
+    const name = cleanText(req.body?.name, 160);
+    const countyRegion = cleanText(req.body?.countyRegion, 80);
+    const townArea = cleanText(req.body?.townArea, 100);
+    const description = cleanText(req.body?.description, 600);
+    if (!name || !countyRegion || !description) {
+      res.status(400).json({ error: 'Home name, county, and description are required.' });
+      return;
+    }
+    const db = readDatabase();
+    const home: ChildrensHome = {
+      id: generateId('ch'),
+      name,
+      countyRegion,
+      townArea: townArea || countyRegion,
+      childrenAgeRange: cleanText(req.body?.childrenAgeRange, 80) || 'Ages 4 – 17',
+      currentNeeds: String(req.body?.currentNeeds || 'School Supplies, Groceries')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .slice(0, 5),
+      acceptsCorporateTeams: req.body?.acceptsCorporateTeams !== false,
+      acceptsIndividualGroups: req.body?.acceptsIndividualGroups !== false,
+      description,
+      imageUrl: '/src/assets/images/children_home_visit_joy_1794828208960.jpg',
+      imageAlt: `${name} partner children home courtyard`,
+    };
+    db.childrensHomes.unshift(home);
+    writeDatabase(db);
+    res.status(201).json({ home });
+  });
+
+  app.delete('/api/admin/childrens-homes/:id', requireAdmin, (req, res) => {
+    const db = readDatabase();
+    db.childrensHomes = db.childrensHomes.filter((h) => h.id !== req.params.id);
+    writeDatabase(db);
+    res.json({ deleted: true });
+  });
+
+  // Admin: Add / Remove Rehabilitation Facility
+  app.post('/api/admin/rehab-facilities', requireAdmin, (req, res) => {
+    const name = cleanText(req.body?.name, 160);
+    const countyRegion = cleanText(req.body?.countyRegion, 80);
+    const townArea = cleanText(req.body?.townArea, 100);
+    const summary = cleanText(req.body?.summary, 600);
+    if (!name || !countyRegion || !summary) {
+      res.status(400).json({ error: 'Facility name, county, and summary are required.' });
+      return;
+    }
+    const db = readDatabase();
+    const facility: RehabFacility = {
+      id: generateId('reh'),
+      name,
+      focusType: (cleanText(req.body?.focusType, 80) as RehabFacility['focusType']) || 'Family & Holistic Care',
+      careFormat: (cleanText(req.body?.careFormat, 80) as RehabFacility['careFormat']) || 'Residential & Outpatient',
+      countyRegion,
+      townArea: townArea || countyRegion,
+      lat: Number.isFinite(Number(req.body?.lat)) ? Number(req.body.lat) : -1.2921,
+      lng: Number.isFinite(Number(req.body?.lng)) ? Number(req.body.lng) : 36.8219,
+      acceptsCommunityReferrals: true,
+      summary,
+      imageUrl: '/src/assets/images/rehab_recovery_garden_1794828209576.jpg',
+      imageAlt: `${name} rehabilitation courtyard`,
+    };
+    db.rehabFacilities.unshift(facility);
+    writeDatabase(db);
+    res.status(201).json({ facility });
+  });
+
+  app.delete('/api/admin/rehab-facilities/:id', requireAdmin, (req, res) => {
+    const db = readDatabase();
+    db.rehabFacilities = db.rehabFacilities.filter((f) => f.id !== req.params.id);
+    writeDatabase(db);
+    res.json({ deleted: true });
+  });
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -524,7 +878,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`GLOW Church Africa server running on http://0.0.0.0:${PORT}`);
+    console.log(`HIS AND HERS server running on http://0.0.0.0:${PORT}`);
   });
 }
 

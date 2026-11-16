@@ -56,7 +56,7 @@ export function ContactPage() {
         return;
       }
       setConfirmation(
-        result.message || 'Thank you for reaching out to GLOW Church Africa. We will respond soon.'
+        result.message || 'Thank you for reaching out to HIS AND HERS. We will respond soon.'
       );
       setFullName('');
       setEmail('');
@@ -82,8 +82,9 @@ export function ContactPage() {
               We Would Love to Welcome You and Hear From You
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              Whether you are visiting for the first time, seeking information about gatherings, or
-              exploring community partnership, reach out through any of the channels below.
+              Whether you are seeking care, organizing a corporate or group visit to a children’s
+              home, or exploring community partnership with HIS AND HERS, reach out through any of
+              the channels below.
             </p>
           </div>
         </div>
@@ -104,7 +105,7 @@ export function ContactPage() {
                   <MapPin className="w-5 h-5 text-[#3B155F] shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
                     <p className="font-semibold text-[#1E0B2B]">
-                      {settings?.primaryLocationLabel || 'Primary Gathering Centre'}
+                      {settings?.primaryLocationLabel || 'Primary Community Centre'}
                     </p>
                     <p className="mt-0.5 text-[#665B73]">
                       {settings?.primaryAddress ||
@@ -118,10 +119,10 @@ export function ContactPage() {
                   <div>
                     <p className="font-semibold text-[#1E0B2B]">Email</p>
                     <a
-                      href={`mailto:${settings?.contactEmail || 'hello@glowchurchafrica.org'}`}
+                      href={`mailto:${settings?.contactEmail || 'care@hisandhers.org'}`}
                       className="text-[#3B155F] hover:text-[#7A5A10] underline underline-offset-4"
                     >
-                      {settings?.contactEmail || 'hello@glowchurchafrica.org'}
+                      {settings?.contactEmail || 'care@hisandhers.org'}
                     </a>
                   </div>
                 </div>

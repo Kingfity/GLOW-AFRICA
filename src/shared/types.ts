@@ -28,6 +28,7 @@ export interface SiteSettings {
   contactEmail: string;
   contactPhone: string;
   whatsappNumber: string;
+  emergencyHotlineNote: string;
   instagramUrl: string;
   facebookUrl: string;
   youtubeUrl: string;
@@ -82,6 +83,52 @@ export interface EventItem {
   createdAt: string;
 }
 
+export interface ChildrensHome {
+  id: string;
+  name: string;
+  countyRegion: string;
+  townArea: string;
+  childrenAgeRange: string;
+  currentNeeds: string[];
+  acceptsCorporateTeams: boolean;
+  acceptsIndividualGroups: boolean;
+  description: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
+export interface RehabFacility {
+  id: string;
+  name: string;
+  focusType:
+    | 'Substance & Addiction Recovery'
+    | 'Trauma & Crisis Rehabilitation'
+    | 'Youth & Adolescent Restoration'
+    | 'Family & Holistic Care';
+  careFormat: 'Residential & Outpatient' | 'Outpatient Counselling' | 'Detox & Medical Recovery';
+  countyRegion: string;
+  townArea: string;
+  lat: number;
+  lng: number;
+  acceptsCommunityReferrals: boolean;
+  summary: string;
+  imageUrl: string;
+  imageAlt: string;
+}
+
+export interface AsdGuideTip {
+  id: string;
+  pillar:
+    | 'Sensory-Friendly Home'
+    | 'Calm Overwhelm & Meltdowns'
+    | 'Visual Routines & Speech'
+    | 'Siblings, School & Faith';
+  title: string;
+  audienceTag: string;
+  summary: string;
+  practicalSteps: string[];
+}
+
 export interface PrayerRequest {
   id: string;
   name: string;
@@ -90,6 +137,114 @@ export interface PrayerRequest {
   isAnonymous: boolean;
   consentAccepted: boolean;
   status: 'new' | 'prayed' | 'archived';
+  createdAt: string;
+}
+
+export interface CounsellingRequest {
+  id: string;
+  name: string;
+  contact: string;
+  preferredMethod: 'Phone Call' | 'WhatsApp Chat' | 'Email' | 'In-Person / Video Session';
+  supportArea:
+    | 'Individual Counselling'
+    | 'Anxiety, Stress & Burnout'
+    | 'Grief & Loss Support'
+    | 'Family & Relationship Guidance'
+    | 'Youth Mental Health Support'
+    | 'Lighten Your Burden (Listening Ear)';
+  urgency: 'Routine (Within 48 hours)' | 'Priority (Within 24 hours)' | 'Urgent Today';
+  isAnonymous: boolean;
+  message: string;
+  consentAccepted: boolean;
+  status: 'new' | 'assigned' | 'completed' | 'archived';
+  createdAt: string;
+}
+
+export interface SafeHomeRequest {
+  id: string;
+  callerAlias: string;
+  safeContact: string;
+  safeToCall: boolean;
+  safeTimeWindow: string;
+  situationType:
+    | 'Gender-Based Violence'
+    | 'Child Abuse / Protection'
+    | 'Both / Family Safety'
+    | 'Other Urgent Safety Need';
+  peopleCount: number;
+  immediateNeeds: string;
+  consentAccepted: boolean;
+  status: 'new' | 'urgent-care' | 'sheltered' | 'archived';
+  createdAt: string;
+}
+
+export interface HomeVisitBooking {
+  id: string;
+  organizerType:
+    | 'Individual Visitor'
+    | 'Friend / Family Group'
+    | 'Corporate CSR Team'
+    | 'Faith / Fellowship Group'
+    | 'School / Youth Team';
+  selectedHomeId: string;
+  selectedHomeName: string;
+  coordinatorName: string;
+  groupName: string;
+  email: string;
+  phone: string;
+  groupSize: number;
+  focusArea: string;
+  preferredDate: string;
+  preferredTimeWindow: string;
+  locationArea: string;
+  notes: string;
+  status: 'new' | 'scheduled' | 'completed' | 'archived';
+  createdAt: string;
+}
+
+export interface PartnerOrganization {
+  id: string;
+  organizationName: string;
+  partnerType:
+    | 'Corporate CSR Partner'
+    | 'Registered Children’s Home'
+    | 'NGO / Community Organization'
+    | 'Rehabilitation Facility'
+    | 'Donor / Sponsor Network';
+  contactPerson: string;
+  email: string;
+  phone: string;
+  regionArea: string;
+  collaborationFocus: string;
+  websiteOrProfile: string;
+  status: 'new' | 'onboarded' | 'archived';
+  createdAt: string;
+}
+
+export interface RehabReferralRequest {
+  id: string;
+  applicantName: string;
+  relationship: 'Self' | 'Parent / Guardian' | 'Spouse / Family Member' | 'Community Referrer';
+  contact: string;
+  preferredCounty: string;
+  chosenFacilityId: string;
+  chosenFacilityName: string;
+  supportType: RehabFacility['focusType'];
+  notes: string;
+  consentAccepted: boolean;
+  status: 'new' | 'matched' | 'in-care' | 'archived';
+  createdAt: string;
+}
+
+export interface AsdSupportRequest {
+  id: string;
+  parentName: string;
+  childAgeGroup: 'Early Years (2–5)' | 'Primary Age (6–11)' | 'Teen & Adolescent (12–17)' | 'Young Adult / Caregiver';
+  contact: string;
+  topicNeeded: string;
+  questionOrStory: string;
+  consentAccepted: boolean;
+  status: 'new' | 'answered' | 'connected' | 'archived';
   createdAt: string;
 }
 
@@ -132,6 +287,9 @@ export interface PublicSiteData {
   announcements: Announcement[];
   impactProjects: ImpactProject[];
   events: EventItem[];
+  childrensHomes: ChildrensHome[];
+  rehabFacilities: RehabFacility[];
+  asdGuides: AsdGuideTip[];
 }
 
 export interface AdminUserSession {
@@ -142,6 +300,12 @@ export interface AdminUserSession {
 
 export interface AdminDashboardData {
   prayerRequests: PrayerRequest[];
+  counsellingRequests: CounsellingRequest[];
+  safeHomeRequests: SafeHomeRequest[];
+  homeVisitBookings: HomeVisitBooking[];
+  partnerOrganizations: PartnerOrganization[];
+  rehabReferrals: RehabReferralRequest[];
+  asdSupportRequests: AsdSupportRequest[];
   volunteerEnquiries: VolunteerEnquiry[];
   contactMessages: ContactMessage[];
   eventRegistrations: EventRegistration[];

@@ -10,61 +10,51 @@ export function AboutPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              About GLOW Church Africa
+              About HIS AND HERS
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
-              One Movement. Many Stories. One Expression of God’s Love.
+              Making the World Better by Touching Lives in Our Community
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              GLOW Church Africa is an interdenominational prayer and worship movement committed to
-              creating a spiritual home where worship and compassionate action walk hand in hand.
+              HIS AND HERS is a community-based organization shaped by faith, compassion, mental
+              health advocacy, and practical refuge—standing beside women, men, youth, and children
+              in moments of need.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Who We Are & Story Since 2024 */}
+      {/* Story & Core Commitments */}
       <section className="py-16 sm:py-24 bg-[#FAF7F2]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-7 space-y-8">
               <div className="space-y-4">
                 <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-                  Who We Are &amp; How Our Story Began
+                  Who We Are &amp; Why We Exist
                 </h2>
                 <p className="text-base text-[#3E3349] leading-relaxed">
-                  GLOW Church Africa began with a simple conviction: people do not need another
-                  exclusive institution—they need a sincere place of refuge where God is sought in
-                  prayer and neighbours are loved in practical ways.
+                  Born from a shared calling since 2024, HIS AND HERS brings together spiritual
+                  fellowship and front-line community care. We believe healing touches the whole
+                  person—mind, body, spirit, and home.
                 </p>
                 <p className="text-base text-[#3E3349] leading-relaxed">
-                  Since 2024, believers from varied Christian backgrounds have come together under
-                  this shared calling. Rather than operating solely inside four walls, GLOW has
-                  cultivated a rhythm of corporate prayer, heartfelt worship, and steady outreach into
-                  surrounding neighbourhoods.
-                </p>
-              </div>
-
-              <div className="pt-6 border-t border-[#3B155F]/15 space-y-4">
-                <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-                  Why GLOW Exists
-                </h2>
-                <p className="text-base text-[#3E3349] leading-relaxed">
-                  Too often, spiritual devotion and practical mercy are treated as separate worlds.
-                  GLOW exists to bring them back together—nurturing a community where intercession
-                  moves our feet toward people facing hardship, loneliness, or transition.
+                  That is why our work spans confidential mental health counselling to help people
+                  lighten silent burdens, our Find My Home desk supporting survivors fleeing
+                  gender-based violence and child abuse, rehabilitation facility referrals, ASD family
+                  guidance, prayer support, and organised children’s home visits for corporate teams
+                  and volunteers.
                 </p>
               </div>
 
               <div className="pt-6 border-t border-[#3B155F]/15 space-y-4">
                 <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-                  Our Interdenominational Identity
+                  Interdenominational &amp; Inclusive Welcome
                 </h2>
                 <p className="text-base text-[#3E3349] leading-relaxed">
-                  Whether you belong to a historic church tradition, attend a local fellowship, or
-                  are exploring Christian faith anew, you are welcome here. We honour the wider
-                  Body of Christ and invite people from every denomination, background, and walk of
-                  life to pray, worship, and serve together in unity.
+                  No one has to fit a single background, denomination, or circumstance to receive
+                  care or serve alongside us. Every neighbour—his and hers, young and old—deserves
+                  safety, encouragement, and belonging.
                 </p>
               </div>
             </div>
@@ -78,8 +68,8 @@ export function AboutPage() {
                 />
               </div>
               <figure className="text-xs text-[#665B73] italic">
-                Shared tables of encouragement and community partnership—reflecting GLOW’s belief
-                that belonging grows through authentic presence.
+                Shared tables of encouragement and community partnership—reflecting HIS AND HERS’s
+                commitment to dignity and human presence.
               </figure>
             </div>
           </div>
@@ -94,12 +84,12 @@ export function AboutPage() {
               Our Mission
             </p>
             <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-              Prayer, Fellowship &amp; Compassionate Action
+              Mental Wellbeing, Safe Refuge &amp; Living Compassion
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              To cultivate an interdenominational prayer and worship community where every person
-              can encounter God’s grace, find genuine belonging, and demonstrate Christ’s love
-              through meaningful service to vulnerable and local communities.
+              To stand alongside individuals and families through accessible counselling, protective
+              shelter coordination against abuse, prayer fellowship, and organised community
+              service visits.
             </p>
           </div>
           <div className="space-y-3">
@@ -107,12 +97,11 @@ export function AboutPage() {
               Our Vision
             </p>
             <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-              Communities Restored by Living Faith
+              Whole Hearts and Safe Homes in Every Neighbourhood
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              To see individuals, families, and neighbourhoods across Africa strengthened through
-              united prayer, spiritual renewal, and consistent acts of mercy that honour human
-              dignity.
+              A world made measurably kinder where emotional struggles are met with empathy, homes
+              are free from violence, and communities actively show up for one another.
             </p>
           </div>
         </div>
@@ -122,25 +111,22 @@ export function AboutPage() {
       <section className="py-16 sm:py-20 bg-[#FAF7F2]">
         <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center space-y-6">
           <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-            Walk With Us in Prayer and Service
+            Walk With Us or Reach Out Today
           </h2>
-          <p className="text-base text-[#3E3349] leading-relaxed">
-            Explore our documented outreach since 2024 or join us at an upcoming gathering.
-          </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <AppLink
-              href="/impact"
+              href="/counselling"
               className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors"
             >
-              See Our Impact
+              Talk to a Counsellor
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </AppLink>
-            <AppLink
-              href="/get-involved"
-              className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md hover:bg-[#F3EEF8] transition-colors"
-            >
-              Get Involved
-            </AppLink>
+              <AppLink
+                href="/home-visits"
+                className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md hover:bg-[#F3EEF8] transition-colors"
+              >
+                Organize a Children’s Home Visit
+              </AppLink>
           </div>
         </div>
       </section>

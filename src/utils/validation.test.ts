@@ -2,15 +2,23 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   validatePrayerRequest,
+  validateCounsellingRequest,
+  validateSafeHomeRequest,
+  validateHomeVisitBooking,
+  validatePartnerOnboarding,
+  validateRehabReferral,
+  validateAsdSupportRequest,
   validateVolunteerEnquiry,
   validateContactMessage,
   validateEventRegistration,
+  calculateDistanceKm,
+  sortFacilitiesByProximity,
   filterImpactProjects,
   filterAndSortEvents,
   formatEventDate,
   isHoneypotTriggered,
 } from './validation';
-import type { EventItem, ImpactProject } from '../shared/types';
+import type { EventItem, ImpactProject, RehabFacility } from '../shared/types';
 
 test('validatePrayerRequest rejects empty requests and missing consent', () => {
   const res = validatePrayerRequest({
@@ -36,6 +44,214 @@ test('validatePrayerRequest anonymizes identity when isAnonymous is true', () =>
   assert.equal(res.valid, true);
   assert.equal(res.data?.name, 'Anonymous');
   assert.equal(res.data?.contact, '');
+});
+
+test('validateCounsellingRequest enforces contact when non-anonymous and supports anonymous burden sharing', () => {
+  const missingContact = validateCounsellingRequest({
+    name: 'Faith',
+    contact: '',
+    preferredMethod: 'Phone Call',
+    supportArea: 'Anxiety, Stress & Burnout',
+    urgency: 'Routine (Within 48 hours)',
+    isAnonymous: false,
+    message: 'I have been feeling overwhelmed and need someone to speak with.',
+    consentAccepted: true,
+  });
+  assert.equal(missingContact.valid, false);
+  assert.ok(missingContact.errors.contact);
+
+  const anonValid = validateCounsellingRequest({
+    name: 'Faith',
+    contact: 'faith@example.com',
+    preferredMethod: 'WhatsApp Chat',
+    supportArea: 'Lighten Your Burden (Listening Ear)',
+    urgency: 'Priority (Within 24 hours)',
+    isAnonymous: true,
+    message: 'Sharing a heavy burden anonymously so someone can hold space and guide me.',
+    consentAccepted: true,
+  });
+  assert.equal(anonValid.valid, true);
+  assert.equal(anonValid.data?.name, 'Anonymous');
+  assert.equal(anonValid.data?.contact, '');
+});
+
+test('validateSafeHomeRequest validates safe contact and clamps peopleCount', () => {
+  const invalid = validateSafeHomeRequest({
+    callerAlias: '',
+    safeContact: '',
+    safeToCall: false,
+    situationType: 'Gender-Based Violence',
+    peopleCount: 2,
+    immediateNeeds: 'Help',
+    consentAccepted: false,
+  });
+  assert.equal(invalid.valid, false);
+  assert.ok(invalid.errors.safeContact);
+  assert.ok(invalid.errors.immediateNeeds);
+  assert.ok(invalid.errors.consentAccepted);
+
+  const valid = validateSafeHomeRequest({
+    callerAlias: 'Sister M.',
+    safeContact: 'WhatsApp text only +254 700 111 222',
+    safeToCall: false,
+    safeTimeWindow: '09:00 - 11:00',
+    situationType: 'Child Abuse / Protection',
+    peopleCount: 40,
+    immediateNeeds: 'Need safe temporary shelter for myself and two children tonight.',
+    consentAccepted: true,
+  });
+  assert.equal(valid.valid, true);
+  assert.equal(valid.data?.peopleCount, 20);
+  assert.equal(valid.data?.safeToCall, false);
+});
+
+test('validateHomeVisitBooking validates Children Home visit fields and clamps group size', () => {
+  const invalid = validateHomeVisitBooking({
+    organizerType: 'Corporate CSR Team',
+    coordinatorName: 'A',
+    email: 'invalid',
+    groupSize: 10,
+    focusArea: '',
+    preferredDate: '',
+    locationArea: '',
+  });
+  assert.equal(invalid.valid, false);
+  assert.ok(invalid.errors.coordinatorName);
+  assert.ok(invalid.errors.email);
+  assert.ok(invalid.errors.focusArea);
+  assert.ok(invalid.errors.preferredDate);
+  assert.ok(invalid.errors.locationArea);
+
+  const valid = validateHomeVisitBooking({
+    organizerType: 'Corporate CSR Team',
+    selectedHomeId: 'ch-1',
+    selectedHomeName: 'Amani Children’s Home (Sample Partner)',
+    coordinatorName: 'David Kamau',
+    groupName: 'Savannah Bank CSR Team',
+    email: 'david@example.org',
+    phone: '+254 700 222 333',
+    groupSize: 25,
+    focusArea: 'Corporate CSR Volunteering Day',
+    preferredDate: '2026-12-05',
+    preferredTimeWindow: 'Morning (09:30 – 12:30)',
+    locationArea: 'Nairobi West',
+    notes: 'Bringing school reading books, dry food hampers, and mentoring youth.',
+  });
+  assert.equal(valid.valid, true);
+  assert.equal(valid.data?.groupSize, 25);
+  assert.equal(valid.data?.selectedHomeId, 'ch-1');
+});
+
+test('validatePartnerOnboarding validates corporate and NGO onboarding fields', () => {
+  const bad = validatePartnerOnboarding({
+    organizationName: 'X',
+    partnerType: 'Corporate CSR Partner',
+    contactPerson: '',
+    email: 'not-valid',
+    regionArea: '',
+    collaborationFocus: 'Hi',
+  });
+  assert.equal(bad.valid, false);
+  assert.ok(bad.errors.organizationName);
+  assert.ok(bad.errors.contactPerson);
+  assert.ok(bad.errors.email);
+  assert.ok(bad.errors.regionArea);
+  assert.ok(bad.errors.collaborationFocus);
+
+  const ok = validatePartnerOnboarding({
+    organizationName: 'Horizon Foundation',
+    partnerType: 'Corporate CSR Partner',
+    contactPerson: 'Beatrice Wanjiku',
+    email: 'csr@horizon.org',
+    phone: '+254 711 999 000',
+    regionArea: 'Nairobi & Kiambu',
+    collaborationFocus: 'Sponsoring quarterly children home educational visits and nutrition packs.',
+    websiteOrProfile: 'https://horizon.org',
+  });
+  assert.equal(ok.valid, true);
+  assert.equal(ok.data?.partnerType, 'Corporate CSR Partner');
+});
+
+test('validateRehabReferral and proximity sorting work deterministically', () => {
+  const bad = validateRehabReferral({
+    applicantName: 'Peter',
+    relationship: 'Parent / Guardian',
+    contact: '12',
+    preferredCounty: '',
+    supportType: 'Substance & Addiction Recovery',
+    notes: 'help',
+    consentAccepted: false,
+  });
+  assert.equal(bad.valid, false);
+  assert.ok(bad.errors.contact);
+  assert.ok(bad.errors.preferredCounty);
+  assert.ok(bad.errors.notes);
+  assert.ok(bad.errors.consentAccepted);
+
+  const ok = validateRehabReferral({
+    applicantName: 'Peter M.',
+    relationship: 'Parent / Guardian',
+    contact: '+254 700 444 555',
+    preferredCounty: 'Kiambu',
+    chosenFacilityId: 'reh-2',
+    chosenFacilityName: 'Maji Mazuri Restoration Campus',
+    supportType: 'Youth & Adolescent Restoration',
+    notes: 'Seeking outpatient youth counselling and structured peer mentorship near Kiambu.',
+    consentAccepted: true,
+  });
+  assert.equal(ok.valid, true);
+  assert.equal(ok.data?.chosenFacilityId, 'reh-2');
+
+  const facilities = [
+    {
+      id: 'far',
+      name: 'Coast Care',
+      countyRegion: 'Mombasa',
+      focusType: 'Family & Holistic Care',
+      lat: -4.0435,
+      lng: 39.6682,
+    },
+    {
+      id: 'near',
+      name: 'Nairobi Hope',
+      countyRegion: 'Nairobi',
+      focusType: 'Family & Holistic Care',
+      lat: -1.2921,
+      lng: 36.8219,
+    },
+  ] as RehabFacility[];
+
+  const sorted = sortFacilitiesByProximity(facilities, { lat: -1.3, lng: 36.8 }, 'All', 'All');
+  assert.equal(sorted[0].id, 'near');
+  assert.ok((sorted[0].distanceKm ?? 999) < 10);
+  assert.ok(calculateDistanceKm(-1.2921, 36.8219, -4.0435, 39.6682) > 400);
+});
+
+test('validateAsdSupportRequest enforces parent details and consent', () => {
+  const bad = validateAsdSupportRequest({
+    parentName: '',
+    childAgeGroup: 'Early Years (2–5)',
+    contact: 'abc',
+    topicNeeded: 'Sensory Routines',
+    questionOrStory: 'short',
+    consentAccepted: false,
+  });
+  assert.equal(bad.valid, false);
+  assert.ok(bad.errors.parentName);
+  assert.ok(bad.errors.contact);
+  assert.ok(bad.errors.questionOrStory);
+  assert.ok(bad.errors.consentAccepted);
+
+  const ok = validateAsdSupportRequest({
+    parentName: 'Miriam K.',
+    childAgeGroup: 'Primary Age (6–11)',
+    contact: 'miriam@example.org',
+    topicNeeded: 'Calm Overwhelm & Meltdowns',
+    questionOrStory: 'Looking for practical visual routine cards and a local ASD parent circle.',
+    consentAccepted: true,
+  });
+  assert.equal(ok.valid, true);
+  assert.equal(ok.data?.childAgeGroup, 'Primary Age (6–11)');
 });
 
 test('validateVolunteerEnquiry validates email and area of interest', () => {
@@ -78,7 +294,7 @@ test('validateContactMessage and validateEventRegistration enforce required fiel
     attendeesCount: 25,
   });
   assert.equal(goodReg.valid, true);
-  assert.equal(goodReg.data?.attendeesCount, 20); // clamped safely
+  assert.equal(goodReg.data?.attendeesCount, 20);
 });
 
 test('isHoneypotTriggered detects filled bot field', () => {
