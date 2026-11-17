@@ -159,3 +159,71 @@ test('Care Village contribution validation, progress, and regional summaries cal
   assert.equal(nairobi.pledgesKes, 7000);
 });
 
+import {
+  ALL_47_COUNTY_NAMES,
+  ALL_KENYA_COUNTIES,
+  filterCountiesByRegion,
+  findKenyaCounty,
+  searchKenyaCounties,
+  validateEmergencyAuthorityAlert,
+} from './kenyaCounties';
+import { validateVolunteerEnquiry } from './validation';
+
+test('ALL_KENYA_COUNTIES covers all 47 unique Kenyan counties and region filters', () => {
+  assert.equal(ALL_KENYA_COUNTIES.length, 47);
+  assert.equal(new Set(ALL_47_COUNTY_NAMES).size, 47);
+  assert.equal(new Set(ALL_KENYA_COUNTIES.map((c) => c.code)).size, 47);
+
+  const turkana = findKenyaCounty('Turkana');
+  assert.equal(turkana.code, '023');
+  assert.equal(turkana.capitalTown, 'Lodwar');
+
+  const coastCounties = filterCountiesByRegion('Coast');
+  assert.equal(coastCounties.length, 6);
+
+  const searchResult = searchKenyaCounties('Eldoret');
+  assert.ok(searchResult.some((c) => c.name === 'Uasin Gishu'));
+});
+
+test('validateEmergencyAuthorityAlert enforces landmark and safe contact while resolving county details', () => {
+  const invalid = validateEmergencyAuthorityAlert({
+    county: 'Kisumu',
+    locationLandmark: 'A',
+    safeContact: '1',
+  });
+  assert.equal(invalid.valid, false);
+  assert.ok(invalid.errors.locationLandmark);
+  assert.ok(invalid.errors.safeContact);
+
+  const valid = validateEmergencyAuthorityAlert({
+    county: 'Nakuru',
+    emergencyType: 'Child Abuse / Child at Risk',
+    authorityTarget: 'Children Officer (116)',
+    locationLandmark: 'Milimani Gate 4',
+    safeContact: '+254 711 000111',
+    peopleAffected: 3,
+  });
+  assert.equal(valid.valid, true);
+  assert.equal(valid.data?.county, 'Nakuru');
+  assert.equal(valid.data?.peopleAffected, 3);
+});
+
+test('validateVolunteerEnquiry supports individual, team, and institution volunteer forms', () => {
+  const teamValid = validateVolunteerEnquiry({
+    fullName: 'Wanjiku Njoroge',
+    email: 'wanjiku@example.org',
+    phone: '+254700123456',
+    volunteerKind: 'team',
+    groupName: 'Savannah Builders Guild',
+    groupSize: '14 people',
+    pointOfContact: 'Wanjiku Njoroge',
+    areaOfInterest: 'Nov 28 Thanksgiving Feast & Relief Token Bundles',
+    availability: 'Saturdays',
+    message: 'Excited to pack relief bundles together.',
+  });
+  assert.equal(teamValid.valid, true);
+  assert.equal(teamValid.data?.volunteerKind, 'team');
+  assert.equal(teamValid.data?.groupName, 'Savannah Builders Guild');
+});
+
+

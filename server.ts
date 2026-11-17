@@ -11,6 +11,10 @@ import {
   validateVillageContribution,
 } from './src/utils/careTools.ts';
 import {
+  findKenyaCounty,
+  validateEmergencyAuthorityAlert,
+} from './src/utils/kenyaCounties.ts';
+import {
   clearSessionCookie,
   getSessionFromRequest,
   requireAdmin,
@@ -580,6 +584,48 @@ async function startServer() {
     });
   });
 
+  // Public submission: Regional Emergency Authority Alert (47 Counties)
+  app.post('/api/emergency-alerts', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 25, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Call 999 / 112 or 1195 immediately if in danger.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateEmergencyAuthorityAlert(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please complete your location and safe contact details.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    const countyInfo = findKenyaCounty(validation.data.county);
+    const alertRecord = {
+      id: generateId('emg'),
+      ...validation.data,
+      status: 'dispatched' as const,
+      createdAt: new Date().toISOString(),
+    };
+    db.emergencyAlerts.unshift(alertRecord);
+    writeDatabase(db);
+
+    res.status(201).json({
+      received: true,
+      alert: alertRecord,
+      localAuthorities: {
+        county: countyInfo.name,
+        police: countyInfo.emergencyPolice,
+        childProtection: countyInfo.childProtectionDesk,
+        gbvDesk: countyInfo.gbvDesk,
+      },
+      message: `Regional alert logged for ${countyInfo.name} County (${validation.data.authorityTarget}). Direct hotlines: 999 / 112 (Police), 1195 (GBV), 116 (Childline).`,
+    });
+  });
+
   // Admin Authentication Routes
   app.get('/api/admin/session', (req, res) => {
     const user = getSessionFromRequest(req);
@@ -623,6 +669,7 @@ async function startServer() {
       volunteerEnquiries: db.volunteerEnquiries,
       contactMessages: db.contactMessages,
       eventRegistrations: db.eventRegistrations,
+      emergencyAlerts: db.emergencyAlerts,
     });
   });
 
@@ -1029,17 +1076,64 @@ async function startServer() {
     res.json({ deleted: true });
   });
 
+  const isPrivacyHardenedPath = (reqPath: string) =>
+    reqPath === '/gbv' ||
+    reqPath.startsWith('/gbv/') ||
+    reqPath === '/recovery' ||
+    reqPath.startsWith('/recovery/');
+
+  const applyPrivacyHeaders = (res: express.Response) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+  };
+
+  const hardenIsolatedHtml = (html: string): string => {
+    // Strip any third-party external preconnects, external font stylesheets, or external analytics tags
+    const stripped = html
+      .replace(/<link[^>]*href=["']https:\/\/fonts\.(googleapis|gstatic)\.com[^"']*["'][^>]*\/?>/gi, '')
+      .replace(/<script[^>]*google-analytics|googletagmanager|gtag[^>]*>[\s\S]*?<\/script>/gi, '');
+    const noCacheMeta = [
+      '<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />',
+      '<meta http-equiv="Pragma" content="no-cache" />',
+      '<meta http-equiv="Expires" content="0" />',
+    ].join('\n    ');
+    return stripped.replace('<head>', `<head>\n    ${noCacheMeta}`);
+  };
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
+
+    app.get('*', async (req, res, next) => {
+      if (!isPrivacyHardenedPath(req.path)) {
+        return next();
+      }
+      try {
+        applyPrivacyHeaders(res);
+        const rawHtml = fs.readFileSync(path.resolve(process.cwd(), 'index.html'), 'utf8');
+        const transformed = await vite.transformIndexHtml(req.originalUrl, rawHtml);
+        res.status(200).type('html').send(hardenIsolatedHtml(transformed));
+      } catch (err) {
+        next(err);
+      }
+    });
+
     app.use(vite.middlewares);
   } else {
     const distDir = path.resolve(process.cwd(), 'dist');
     app.use(express.static(distDir));
-    app.get('*', (_req, res) => {
-      res.sendFile(path.join(distDir, 'index.html'));
+    app.get('*', (req, res) => {
+      const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf8');
+      if (isPrivacyHardenedPath(req.path)) {
+        applyPrivacyHeaders(res);
+        res.status(200).type('html').send(hardenIsolatedHtml(indexHtml));
+        return;
+      }
+      res.status(200).type('html').send(indexHtml);
     });
   }
 

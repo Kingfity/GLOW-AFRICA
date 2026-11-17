@@ -139,16 +139,16 @@ export function AsdSupportPage() {
                 videoSrc="/videos/asd_and_family_home_reel.mp4"
                 posterSrc="/src/assets/images/doc_asd_family_moment_1794832339166.jpg"
                 ariaLabel="Parent and young autistic child playing gently with wooden sensory blocks"
-                soundMoodLabel="Warm Marimba Lullaby"
+                soundMoodLabel="Soft Felt Piano"
                 chapters={[
                   { timeSeconds: 0, label: '01 · Sensory Play' },
-                  { timeSeconds: 3.6, label: '02 · Care Family' },
-                  { timeSeconds: 7.0, label: '03 · Fellowship' },
+                  { timeSeconds: 3.7, label: '02 · Care Family' },
+                  { timeSeconds: 7.4, label: '03 · Fellowship' },
                 ]}
               />
               <div className="px-5 py-3 bg-[#1B4A42] flex items-center justify-between text-xs text-[#FAF7F2]/85 border-t border-white/10">
                 <span>Sensory Routines &amp; Family Peace</span>
-                <span className="text-[#F3D79B] tabular-nums">0:10 Reel · Marimba Sound</span>
+                <span className="text-[#F3D79B] tabular-nums">0:12 Reel · Felt Piano Sound</span>
               </div>
             </div>
           </div>
@@ -257,6 +257,19 @@ export function AsdSupportPage() {
                   Talk to a Counsellor
                 </AppLink>{' '}
                 page anytime.
+              </p>
+            </div>
+
+            <div className="bg-[#EDF6F3] border border-[#256358]/20 rounded-xl p-6 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#256358]">
+                Kenya Inclusive Education Directory
+              </p>
+              <p className="text-sm text-[#3E3349] leading-relaxed">
+                Looking for schools equipped for autistic, deaf, blind, or physically differently
+                abled learners—like Jacaranda Special School or Sahajanand?{' '}
+                <AppLink href="/home-visits" className="underline text-[#256358] font-semibold">
+                  Explore Schools for Differently Abled &amp; Children’s Homes Across Kenya →
+                </AppLink>
               </p>
             </div>
           </div>

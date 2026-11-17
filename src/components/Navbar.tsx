@@ -5,10 +5,9 @@ import { AppLink, useRouter } from '../context/RouterContext';
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
   { label: 'Children’s Homes', href: '/home-visits' },
-  { label: 'Rehabilitation', href: '/rehabilitation' },
-  { label: 'ASD Family', href: '/asd-support' },
-  { label: 'Mental Health', href: '/counselling' },
-  { label: 'Safe Refuge', href: '/find-my-home' },
+  { label: 'Recovery', href: '/recovery' },
+  { label: 'Family Wellness', href: '/gbv' },
+  { label: 'Accountability', href: '/accountability' },
   { label: 'Events', href: '/events' },
 ];
 
@@ -195,6 +194,10 @@ export function Navbar() {
         >
           {[
             ...NAV_ITEMS,
+            { label: 'Rehabilitation', href: '/rehabilitation' },
+            { label: 'ASD Family', href: '/asd-support' },
+            { label: 'Mental Health & Counselling', href: '/counselling' },
+            { label: 'Find My Home · Calm Refuge', href: '/find-my-home' },
             { label: 'About Us', href: '/about' },
             { label: 'Our Impact', href: '/impact' },
             { label: 'Prayer & Worship', href: '/prayer-worship' },

@@ -131,7 +131,9 @@ export function CareGuideChatbot() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen]);
 
-  if (path.startsWith('/admin')) return null;
+  if (path.startsWith('/admin') || path.startsWith('/gbv') || path.startsWith('/recovery')) {
+    return null;
+  }
 
   const handleQuickExit = () => {
     window.location.replace('https://www.google.com');
@@ -195,7 +197,7 @@ export function CareGuideChatbot() {
   const activeStarters = mode === 'crisis' ? CRISIS_STARTER_PROMPTS : STARTER_PROMPTS;
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 print:hidden">
+    <div className="fixed bottom-5 right-24 sm:bottom-6 sm:right-28 z-40 print:hidden">
       {!isOpen ? (
         <button
           type="button"

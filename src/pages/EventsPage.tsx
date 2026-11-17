@@ -106,6 +106,40 @@ export function EventsPage() {
         </div>
       </section>
 
+      {/* Featured November 28 Thanksgiving Feast & Early Christmas Relief Spotlight */}
+      <section className="bg-gradient-to-r from-[#FDF6EE] via-[#FAF7F2] to-[#EAF6F2] border-b border-[#D4AF37]/30 py-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div className="lg:col-span-5 aspect-[16/10] rounded-xl overflow-hidden border border-[#D4AF37]/45 shadow-sm">
+            <SafeImage
+              src="/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg"
+              alt="Families sharing warm food and early Christmas relief parcels at the November 28 Thanksgiving Feast"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="lg:col-span-7 space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#C2593F]">
+              November 28 Special National Drive · All 47 Counties
+            </p>
+            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1E0B2B]">
+              Thanksgiving Feast &amp; Early Christmas Relief Bundles
+            </h2>
+            <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
+              Join us on November 28 to prepare warm shared meals and hand out small bundles of
+              practical relief tokens—cushioning families across Kenya ahead of the festive season.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-1">
+              <AppLink
+                href="/events/november-28-thanksgiving-feast-and-early-christmas-relief"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-[#C2593F] text-white hover:bg-[#A64831] rounded-md transition-colors"
+              >
+                RSVP for November 28 Feast
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </AppLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Events Calendar & Filter Controls */}
       <section id="helping-hand-events" className="py-16 sm:py-24 bg-[#FAF7F2]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-10">

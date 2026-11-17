@@ -63,6 +63,32 @@ export function PrivacyPage() {
               .
             </p>
           </section>
+
+          <section className="bg-[#EAF6F2] border border-[#256358]/25 rounded-xl p-6 space-y-3">
+            <h2 className="font-serif text-2xl font-semibold text-[#1D4E46]">
+              5. How We Protect You on Our Quiet Wellness &amp; Recovery Spaces
+            </h2>
+            <p className="text-sm text-[#3E3349]">
+              Every page inside our Family Wellness quiet corner (<code className="text-[#256358]">/gbv/</code>)
+              and substance use recovery space (<code className="text-[#256358]">/recovery/</code>)
+              runs under strict zero-trace isolation:
+            </p>
+            <ul className="space-y-2 text-sm text-[#1A1224]">
+              <li>
+                🚫 <strong>No Tracking or Analytics:</strong> Zero Google Analytics, zero third-party
+                scripts, zero image beacons, and zero cookies are ever loaded.
+              </li>
+              <li>
+                🔒 <strong>Client-Memory Only &amp; No-Cache Headers:</strong> Safety planners and
+                checklists run purely in browser memory while HTTP{' '}
+                <code>no-store, no-cache, must-revalidate</code> headers prevent sensitive history caching.
+              </li>
+              <li>
+                🗑️ <strong>Instant Screen Exit &amp; Wipe:</strong> Every isolated page displays a
+                high-contrast <em>Leave this site 🚪</em> escape button and one-tap memory clearing.
+              </li>
+            </ul>
+          </section>
         </div>
       </div>
     </div>

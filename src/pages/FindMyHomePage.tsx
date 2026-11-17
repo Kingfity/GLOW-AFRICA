@@ -3,6 +3,7 @@ import { CheckCircle2, LogOut, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import { openCrisisTextChat } from '../components/CareGuideChatbot';
+import { openEmergencyAlertModal } from '../components/EmergencyAuthorityAlert';
 import { SafeImage } from '../components/SafeImage';
 import type { SafeHomeRequest } from '../shared/types';
 import { validateSafeHomeRequest } from '../utils/validation';
@@ -140,6 +141,14 @@ export function FindMyHomePage() {
             <div className="flex flex-wrap gap-3.5 pt-1">
               <button
                 type="button"
+                onClick={() => openEmergencyAlertModal()}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#C2593F] hover:bg-[#A64831] rounded-md transition-colors shadow"
+              >
+                <ShieldAlert className="w-4 h-4 text-[#F3D79B]" aria-hidden="true" />
+                Alert Area Authorities Now
+              </button>
+              <button
+                type="button"
                 onClick={() => openCrisisTextChat()}
                 className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#160822] bg-[#D4AF37] hover:bg-[#E5CA7B] rounded-md transition-colors"
               >
@@ -151,6 +160,12 @@ export function FindMyHomePage() {
               >
                 Submit Safe Refuge Alert
               </a>
+              <AppLink
+                href="/gbv"
+                className="inline-flex items-center justify-center px-4 py-3 text-sm font-semibold text-[#F3D79B] underline underline-offset-4 hover:text-white"
+              >
+                Private Quiet-Care Planner →
+              </AppLink>
             </div>
           </div>
           <div className="lg:col-span-5">

@@ -90,6 +90,24 @@ const ROUTE_META: Array<{ match: (p: string) => boolean; title: string; descript
       'How HIS AND HERS protects children’s homes, counselling disclosures, rehabilitation referrals, safe-refuge requests, and ASD families.',
   },
   {
+    match: (p) => p === '/accountability',
+    title: 'Accountability — Open Books | HIS AND HERS',
+    description:
+      'We keep the books open. Inspect our 82% programs / 12% admin / 6% fundraising breakdown, Follow a Dollar breakdown, Annual Report, Audited Financials, and Form 990.',
+  },
+  {
+    match: (p) => p.startsWith('/gbv'),
+    title: 'Family Wellness & Quiet Notes | HIS AND HERS',
+    description:
+      'Calm household planning, wellness checklists, and county community contacts with zero tracking or cookies.',
+  },
+  {
+    match: (p) => p.startsWith('/recovery'),
+    title: 'Recovery Support & Family Care (Kenya & East Africa) | HIS AND HERS',
+    description:
+      'You do not have to do this alone. Confidential Kenyan & East African recovery pathways, peer stories, family guide, and 47-county support.',
+  },
+  {
     match: (p) => p === '/admin',
     title: 'Stewardship CMS | HIS AND HERS',
     description: 'Authorised care and administrative portal for HIS AND HERS.',
@@ -127,6 +145,25 @@ export function RouterProvider({ children }: { children: React.ReactNode }) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+    const currentlyIsolated =
+      window.location.pathname.startsWith('/gbv') ||
+      window.location.pathname.startsWith('/recovery');
+    const targetGbv = to.startsWith('/gbv');
+    const targetRecovery = to.startsWith('/recovery');
+
+    // Enforce true fresh HTTP request with no-store headers & zero third-party links when entering isolated hubs
+    if (!currentlyIsolated && (targetGbv || targetRecovery)) {
+      window.location.assign(to);
+      return;
+    }
+    if (
+      (window.location.pathname.startsWith('/gbv') && !targetGbv) ||
+      (window.location.pathname.startsWith('/recovery') && !targetRecovery)
+    ) {
+      window.location.assign(to);
+      return;
+    }
+
     window.history.pushState({}, '', to);
     setPath(to);
     window.scrollTo({ top: 0, behavior: 'auto' });

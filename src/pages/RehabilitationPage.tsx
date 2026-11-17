@@ -5,6 +5,7 @@ import { SafeImage } from '../components/SafeImage';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import type { RehabFacility, RehabReferralRequest } from '../shared/types';
+import { ALL_47_COUNTY_NAMES, ALL_KENYA_COUNTIES } from '../utils/kenyaCounties';
 import { sortFacilitiesByProximity, validateRehabReferral } from '../utils/validation';
 
 const FOCUS_FILTERS: Array<'All' | RehabFacility['focusType']> = [
@@ -15,13 +16,9 @@ const FOCUS_FILTERS: Array<'All' | RehabFacility['focusType']> = [
   'Family & Holistic Care',
 ];
 
-const TOWN_COORDS: Record<string, { lat: number; lng: number }> = {
-  Nairobi: { lat: -1.2921, lng: 36.8219 },
-  Kiambu: { lat: -1.1714, lng: 36.8356 },
-  Nakuru: { lat: -0.3031, lng: 36.08 },
-  Kisumu: { lat: -0.0917, lng: 34.768 },
-  Mombasa: { lat: -4.0435, lng: 39.6682 },
-};
+const TOWN_COORDS: Record<string, { lat: number; lng: number }> = Object.fromEntries(
+  ALL_KENYA_COUNTIES.map((c) => [c.name, { lat: c.lat, lng: c.lng }])
+);
 
 const RELATIONSHIPS: RehabReferralRequest['relationship'][] = [
   'Self',
@@ -60,10 +57,7 @@ export function RehabilitationPage() {
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<string | null>(null);
 
-  const counties = useMemo(() => {
-    const list = Array.from(new Set(facilities.map((f) => f.countyRegion)));
-    return ['All', ...list];
-  }, [facilities]);
+  const counties = useMemo(() => ['All', ...ALL_47_COUNTY_NAMES], []);
 
   const effectiveCoords = useMemo(() => {
     if (userCoords) return userCoords;
@@ -216,16 +210,16 @@ export function RehabilitationPage() {
                 videoSrc="/videos/healing_and_recovery_reel.mp4"
                 posterSrc="/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg"
                 ariaLabel="Counselling room and calm rehabilitation garden pathway"
-                soundMoodLabel="Serene Harp & Pad"
+                soundMoodLabel="Warm Rhodes Sanctuary"
                 chapters={[
                   { timeSeconds: 0, label: '01 · Garden Talk' },
-                  { timeSeconds: 3.6, label: '02 · Quiet Room' },
-                  { timeSeconds: 7.0, label: '03 · Safe Haven' },
+                  { timeSeconds: 3.7, label: '02 · Quiet Room' },
+                  { timeSeconds: 7.4, label: '03 · Safe Haven' },
                 ]}
               />
               <div className="px-5 py-3 bg-[#160822] flex items-center justify-between text-xs text-[#FAF7F2]/80 border-t border-white/10">
-                <span>Restoration &amp; Counselling Centres</span>
-                <span className="text-[#E5CA7B] tabular-nums">0:10 Reel · Serene Harp Sound</span>
+                <span>Restoration &amp; Counselling Centres (47 Counties)</span>
+                <span className="text-[#E5CA7B] tabular-nums">0:12 Reel · Warm Rhodes Sound</span>
               </div>
             </div>
           </div>

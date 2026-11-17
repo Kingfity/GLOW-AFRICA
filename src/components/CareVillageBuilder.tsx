@@ -8,8 +8,9 @@ import {
   VILLAGE_FUNDING_GOAL_KES,
   VILLAGE_SCENE_TIERS,
 } from '../utils/careTools';
+import { ALL_47_COUNTY_NAMES } from '../utils/kenyaCounties';
 
-const REGIONS = ['Nairobi', 'Kiambu', 'Nakuru', 'Kisumu', 'Mombasa'];
+const REGIONS = ALL_47_COUNTY_NAMES;
 
 export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
   const { data, refresh } = useSiteData();
@@ -132,7 +133,7 @@ export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
               />
             </div>
             <p className="text-xs text-[#665B73] tabular-nums">
-              {progress.pledgeCount} documented community pledges active across 5 counties
+              {progress.pledgeCount} documented community pledges active across all 47 Kenyan counties
             </p>
           </div>
         </div>

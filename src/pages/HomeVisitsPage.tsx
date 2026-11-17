@@ -4,8 +4,10 @@ import {
   Building2,
   CalendarCheck2,
   CheckCircle2,
+  GraduationCap,
   HeartHandshake,
   MapPin,
+  Search,
   Users,
 } from 'lucide-react';
 import { CommunityVideoPlayer } from '../components/CommunityVideoPlayer';
@@ -49,7 +51,11 @@ export function HomeVisitsPage() {
   const { data } = useSiteData();
   const homes = data?.childrensHomes || [];
 
+  const [typeFilter, setTypeFilter] = useState<
+    'All' | 'Children’s Home' | 'School for Differently Abled'
+  >('All');
   const [regionFilter, setRegionFilter] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [formMode, setFormMode] = useState<'visit' | 'partner'>('visit');
   const workspaceRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,7 +64,7 @@ export function HomeVisitsPage() {
     useState<HomeVisitBooking['organizerType']>('Corporate CSR Team');
   const [selectedHomeId, setSelectedHomeId] = useState<string>('any-partner-home');
   const [selectedHomeName, setSelectedHomeName] = useState<string>(
-    'Matched Partner Children’s Home'
+    'Matched Partner Children’s Home or Special School'
   );
   const [coordinatorName, setCoordinatorName] = useState('');
   const [groupName, setGroupName] = useState('');
@@ -94,14 +100,56 @@ export function HomeVisitsPage() {
   const [partnerConfirmation, setPartnerConfirmation] = useState<string | null>(null);
 
   const regions = useMemo(() => {
-    const unique = Array.from(new Set(homes.map((h) => h.countyRegion)));
-    return ['All', ...unique];
+    const preferredOrder = [
+      'Nairobi',
+      'Central',
+      'Coast',
+      'Rift Valley',
+      'Nyanza',
+      'Western',
+      'Eastern',
+      'North Eastern',
+    ];
+    const discovered = new Set(homes.map((h) => h.regionGroup || h.countyRegion));
+    const ordered = preferredOrder.filter((r) => discovered.has(r));
+    for (const r of discovered) {
+      if (!ordered.includes(r)) ordered.push(r);
+    }
+    return ['All', ...ordered];
+  }, [homes]);
+
+  const counts = useMemo(() => {
+    const childrensHomeCount = homes.filter(
+      (h) => (h.institutionType || 'Children’s Home') === 'Children’s Home'
+    ).length;
+    const schoolCount = homes.filter(
+      (h) => h.institutionType === 'School for Differently Abled'
+    ).length;
+    return {
+      all: homes.length,
+      childrensHomes: childrensHomeCount,
+      schools: schoolCount,
+    };
   }, [homes]);
 
   const filteredHomes = useMemo(() => {
-    if (regionFilter === 'All') return homes;
-    return homes.filter((h) => h.countyRegion === regionFilter);
-  }, [homes, regionFilter]);
+    const q = searchQuery.trim().toLowerCase();
+    return homes.filter((h) => {
+      const kind = h.institutionType || 'Children’s Home';
+      if (typeFilter !== 'All' && kind !== typeFilter) return false;
+      const group = h.regionGroup || h.countyRegion;
+      if (regionFilter !== 'All' && group !== regionFilter) return false;
+      if (!q) return true;
+      return (
+        h.name.toLowerCase().includes(q) ||
+        h.countyRegion.toLowerCase().includes(q) ||
+        h.townArea.toLowerCase().includes(q) ||
+        (h.specialization || '').toLowerCase().includes(q) ||
+        h.description.toLowerCase().includes(q) ||
+        h.currentNeeds.some((n) => n.toLowerCase().includes(q))
+      );
+    });
+  }, [homes, typeFilter, regionFilter, searchQuery]);
 
   const selectHomeForVisit = (home: ChildrensHome) => {
     setSelectedHomeId(home.id);
@@ -250,15 +298,15 @@ export function HomeVisitsPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-6 space-y-6">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#F3A683]">
-              Children’s Homes · Corporate CSR &amp; Partner Onboarding
+              National Directory · Kenya First · Expanding East &amp; Central Africa
             </p>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-[54px] font-semibold leading-[1.08]">
-              Visit a Children’s Home. Partner With Purpose.
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-[52px] font-semibold leading-[1.08]">
+              Children’s Homes &amp; Schools for the Differently Abled
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              We take individuals, friend circles, schools, and corporate CSR teams directly to
-              verified children’s homes—and onboard NGOs, children’s homes, and companies ready to
-              cooperate for sustained child dignity, mentorship, and care.
+              Explore children’s homes across every region of Kenya—and partner schools serving
+              autistic, blind, deaf, and physically differently abled learners. Plan structured CSR
+              visits, supply deliveries, and inclusive community mentorship with care.
             </p>
             <div className="flex flex-wrap gap-4 pt-1">
               <button
@@ -292,49 +340,125 @@ export function HomeVisitsPage() {
                 videoSrc="/videos/childrens_home_visits_reel.mp4"
                 posterSrc="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
                 ariaLabel="Volunteers and children reading storybooks together during a partner children home visit"
-                soundMoodLabel="Kalimba & Acoustic Chord"
+                soundMoodLabel="Warm Acoustic Guitar"
                 chapters={[
                   { timeSeconds: 0, label: '01 · Reading Circle' },
-                  { timeSeconds: 3.6, label: '02 · Mentorship' },
-                  { timeSeconds: 7.0, label: '03 · Care Packs' },
+                  { timeSeconds: 3.7, label: '02 · Mentorship' },
+                  { timeSeconds: 7.4, label: '03 · Care Packs' },
                 ]}
               />
               <div className="px-5 py-3 bg-[#1E0B2B] flex items-center justify-between text-xs text-[#FAF7F2]/80 border-t border-white/10">
                 <span>Partner Children’s Home Visit Highlights</span>
-                <span className="text-[#E5CA7B] tabular-nums">0:10 Reel · Acoustic Sound</span>
+                <span className="text-[#E5CA7B] tabular-nums">0:12 Reel · Acoustic Sound</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Partner Children's Homes Directory */}
+      {/* National Children's Homes & Schools for Differently Abled Directory */}
       <section className="py-16 sm:py-20 bg-[#FDF6EE] border-b border-[#C2593F]/15">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-8">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div className="max-w-2xl space-y-3">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
-                Verified Host Children’s Homes
+                All-Kenya Network · Children’s Homes &amp; Special Needs Schools
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-                Choose a Children’s Home for Your Visit or Corporate Team
+                Choose Any Children’s Home or Inclusive School Across Kenya
               </h2>
               <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
-                Every home below welcomes structured visits by individuals, community groups, or
-                corporate teams—guided by child safeguarding protocols and transparent wishlists.
+                Search beyond a shortlist—filter by children’s homes or schools for blind, deaf,
+                physically differently abled, and autistic learners across all 8 regions of Kenya.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 p-1 bg-white border border-[#3B155F]/15 rounded-lg self-start">
+            {/* Search Box */}
+            <div className="w-full lg:w-80 relative">
+              <Search
+                className="w-4 h-4 text-[#665B73] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+              />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search name, county, Braille, Deaf, ASD..."
+                aria-label="Search children's homes and schools for differently abled learners"
+                className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-[#3B155F]/20 rounded-lg text-[#1E0B2B] placeholder:text-[#665B73]"
+              />
+            </div>
+          </div>
+
+          {/* Filter Toolbar: Institution Type + Region */}
+          <div className="bg-white border border-[#3B155F]/12 rounded-xl p-4 sm:p-5 space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div
+                role="tablist"
+                aria-label="Filter by centre type"
+                className="flex flex-wrap gap-1.5"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={typeFilter === 'All'}
+                  onClick={() => setTypeFilter('All')}
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap ${
+                    typeFilter === 'All'
+                      ? 'bg-[#3B155F] text-[#FAF7F2]'
+                      : 'bg-[#FAF7F2] text-[#3E3349] hover:text-[#1E0B2B]'
+                  }`}
+                >
+                  All Centres ({counts.all})
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={typeFilter === 'Children’s Home'}
+                  onClick={() => setTypeFilter('Children’s Home')}
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap ${
+                    typeFilter === 'Children’s Home'
+                      ? 'bg-[#C2593F] text-white'
+                      : 'bg-[#FAF7F2] text-[#3E3349] hover:text-[#1E0B2B]'
+                  }`}
+                >
+                  Children’s Homes ({counts.childrensHomes})
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={typeFilter === 'School for Differently Abled'}
+                  onClick={() => setTypeFilter('School for Differently Abled')}
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap inline-flex items-center gap-1.5 ${
+                    typeFilter === 'School for Differently Abled'
+                      ? 'bg-[#256358] text-white'
+                      : 'bg-[#FAF7F2] text-[#3E3349] hover:text-[#1E0B2B]'
+                  }`}
+                >
+                  <GraduationCap className="w-3.5 h-3.5" aria-hidden="true" />
+                  Schools for Differently Abled ({counts.schools})
+                </button>
+              </div>
+
+              <p className="text-xs font-medium text-[#665B73] tabular-nums">
+                Showing {filteredHomes.length} of {homes.length} Children’s Homes &amp; Inclusive
+                Schools Across Kenya
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-1.5 pt-3 border-t border-[#3B155F]/10">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#665B73] mr-1">
+                Region:
+              </span>
               {regions.map((region) => (
                 <button
                   key={region}
                   type="button"
                   onClick={() => setRegionFilter(region)}
-                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap ${
+                  className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors whitespace-nowrap ${
                     regionFilter === region
                       ? 'bg-[#3B155F] text-[#FAF7F2]'
-                      : 'text-[#3E3349] hover:text-[#1E0B2B]'
+                      : 'bg-[#FAF7F2] text-[#3E3349] hover:text-[#1E0B2B]'
                   }`}
                 >
                   {region}
@@ -343,63 +467,105 @@ export function HomeVisitsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {filteredHomes.map((home) => (
-              <article
-                key={home.id}
-                className="bg-white border border-[#3B155F]/12 rounded-xl overflow-hidden flex flex-col"
+          {filteredHomes.length === 0 ? (
+            <div className="bg-white border border-[#3B155F]/12 rounded-xl p-10 text-center space-y-3">
+              <p className="font-serif text-xl font-semibold text-[#1E0B2B]">
+                No centres matched “{searchQuery || regionFilter}”.
+              </p>
+              <p className="text-sm text-[#3E3349]">
+                Clear filters to view all {homes.length} Children’s Homes and Schools for the
+                Differently Abled across Kenya.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setTypeFilter('All');
+                  setRegionFilter('All');
+                  setSearchQuery('');
+                }}
+                className="px-4 py-2 text-xs font-semibold bg-[#3B155F] text-[#FAF7F2] rounded-md"
               >
-                <div className="aspect-[16/9] bg-[#F3EEF8] overflow-hidden">
-                  <SafeImage
-                    src={home.imageUrl}
-                    alt={home.imageAlt}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-5">
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#665B73]">
-                      <span className="font-semibold text-[#C2593F] inline-flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5" aria-hidden="true" />
-                        {home.townArea}, {home.countyRegion}
+                Show All {homes.length} Centres
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredHomes.map((home) => {
+                const isSchool = home.institutionType === 'School for Differently Abled';
+                return (
+                  <article
+                    key={home.id}
+                    className="bg-white border border-[#3B155F]/12 rounded-xl overflow-hidden flex flex-col"
+                  >
+                    <div className="aspect-[16/9] bg-[#F3EEF8] overflow-hidden relative">
+                      <SafeImage
+                        src={home.imageUrl}
+                        alt={home.imageAlt}
+                        className="w-full h-full object-cover"
+                      />
+                      <span
+                        className={`absolute top-3 left-3 px-2.5 py-1 text-[11px] font-semibold rounded-md shadow-sm ${
+                          isSchool
+                            ? 'bg-[#256358] text-white'
+                            : 'bg-[#3B155F] text-[#FAF7F2]'
+                        }`}
+                      >
+                        {isSchool ? 'School for Differently Abled' : 'Children’s Home'}
                       </span>
-                      <span aria-hidden="true">·</span>
-                      <span className="tabular-nums">{home.childrenAgeRange}</span>
-                      {home.acceptsCorporateTeams && (
-                        <>
+                    </div>
+                    <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-5">
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-[#665B73]">
+                          <span className="font-semibold text-[#C2593F] inline-flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5" aria-hidden="true" />
+                            {home.townArea}, {home.countyRegion}
+                          </span>
                           <span aria-hidden="true">·</span>
-                          <span className="text-[#256358] font-medium">Corporate CSR Ready</span>
-                        </>
-                      )}
+                          <span className="tabular-nums">{home.childrenAgeRange}</span>
+                          {home.acceptsCorporateTeams && (
+                            <>
+                              <span aria-hidden="true">·</span>
+                              <span className="text-[#256358] font-medium">CSR Ready</span>
+                            </>
+                          )}
+                        </div>
+                        <h3 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
+                          {home.name}
+                        </h3>
+                        {home.specialization && (
+                          <p className="text-xs font-semibold text-[#256358]">
+                            Focus: {home.specialization}
+                          </p>
+                        )}
+                        <p className="text-sm text-[#3E3349] leading-relaxed">{home.description}</p>
+                        <div className="pt-1">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#7A5A10] mb-1.5">
+                            Priority Support &amp; Learning Needs
+                          </p>
+                          <p className="text-xs sm:text-sm text-[#3E3349]">
+                            {home.currentNeeds.join(' · ')}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="pt-2 flex items-center justify-between gap-4 border-t border-[#3B155F]/10">
+                        <span className="text-xs text-[#665B73]">
+                          Safeguarding briefed before arrival
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => selectHomeForVisit(home)}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold bg-[#3B155F] text-[#FAF7F2] hover:bg-[#2C1042] rounded-md transition-colors whitespace-nowrap shrink-0"
+                        >
+                          Visit / Support Here
+                          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                        </button>
+                      </div>
                     </div>
-                    <h3 className="font-serif text-2xl font-semibold text-[#1E0B2B]">{home.name}</h3>
-                    <p className="text-sm text-[#3E3349] leading-relaxed">{home.description}</p>
-                    <div className="pt-1">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#7A5A10] mb-1.5">
-                        Priority Home Needs
-                      </p>
-                      <p className="text-xs sm:text-sm text-[#3E3349]">
-                        {home.currentNeeds.join(' · ')}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="pt-2 flex items-center justify-between gap-4 border-t border-[#3B155F]/10">
-                    <span className="text-xs text-[#665B73]">
-                      Safeguarding briefed before arrival
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => selectHomeForVisit(home)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold bg-[#3B155F] text-[#FAF7F2] hover:bg-[#2C1042] rounded-md transition-colors whitespace-nowrap shrink-0"
-                    >
-                      Book Visit Here
-                      <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -564,7 +730,7 @@ export function HomeVisitsPage() {
                       htmlFor="visit-target-home"
                       className="block text-sm font-medium text-[#1E0B2B] mb-1.5"
                     >
-                      Target Children’s Home
+                      Target Children’s Home or Differently Abled School
                     </label>
                     <select
                       id="visit-target-home"
@@ -577,17 +743,19 @@ export function HomeVisitsPage() {
                           setSelectedHomeName(match.name);
                           setLocationArea(`${match.townArea}, ${match.countyRegion}`);
                         } else {
-                          setSelectedHomeName('Matched Partner Children’s Home');
+                          setSelectedHomeName(
+                            'Matched Partner Children’s Home or Special School'
+                          );
                         }
                       }}
                       className="w-full px-3.5 py-2.5 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
                     >
                       <option value="any-partner-home">
-                        Recommend Highest-Need Verified Children’s Home
+                        Recommend Highest-Need Children’s Home or Special School
                       </option>
                       {homes.map((home) => (
                         <option key={home.id} value={home.id}>
-                          {home.name} — {home.countyRegion}
+                          {home.name} ({home.institutionType === 'School for Differently Abled' ? 'Special School' : 'Children’s Home'}) — {home.countyRegion}
                         </option>
                       ))}
                     </select>

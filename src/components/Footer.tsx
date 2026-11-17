@@ -9,9 +9,9 @@ export function Footer() {
 
   return (
     <footer className="bg-[#1E0B2B] text-[#FAF7F2] border-t border-[#D4AF37]/25">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-18">
         {/* Closing Commitment Statement */}
-        <div className="pb-12 mb-12 border-b border-white/12 max-w-3xl">
+        <div className="pb-10 mb-10 border-b border-white/12 max-w-3xl">
           <p className="font-serif italic text-2xl sm:text-3xl leading-snug text-[#FAF7F2]">
             “
             {settings?.closingStatement ||
@@ -30,14 +30,14 @@ export function Footer() {
                   {settings?.organisationName || 'HIS AND HERS'}
                 </span>
                 <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#E5CA7B]">
-                  Care Family Home · Est. 2025
+                  Care Family Home · Est. 2025 · 47 Counties
                 </span>
               </span>
             </AppLink>
             <p className="text-sm leading-relaxed text-[#FAF7F2]/80 max-w-sm">
-              A care family community connecting individuals, parents, corporates, and partner
-              organisations to children’s homes, mental health counselling, rehabilitation centres,
-              ASD family resources, and safe refuge.
+              A care family community reaching all 47 counties—connecting individuals, parents,
+              corporates, and partner organisations to children’s homes, recovery care, ASD family
+              resources, open accountability, and safe refuge.
             </p>
           </div>
 
@@ -53,8 +53,13 @@ export function Footer() {
                 </AppLink>
               </li>
               <li>
+                <AppLink href="/recovery" className="hover:text-[#F3A683] transition-colors">
+                  Recovery &amp; Family Healing Hub
+                </AppLink>
+              </li>
+              <li>
                 <AppLink href="/rehabilitation" className="hover:text-[#F3A683] transition-colors">
-                  Rehabilitation Centres Near You
+                  Rehabilitation Centres Across 47 Counties
                 </AppLink>
               </li>
               <li>
@@ -68,13 +73,8 @@ export function Footer() {
                 </AppLink>
               </li>
               <li>
-                <AppLink href="/find-my-home" className="hover:text-[#F3A683] transition-colors">
-                  Find My Home (Safe Refuge)
-                </AppLink>
-              </li>
-              <li>
-                <AppLink href="/prayer-worship" className="hover:text-[#F3A683] transition-colors">
-                  Prayer &amp; Worship
+                <AppLink href="/gbv" className="hover:text-[#F3A683] transition-colors">
+                  Family Wellness &amp; Calm Corner
                 </AppLink>
               </li>
             </ul>
@@ -105,7 +105,12 @@ export function Footer() {
               </li>
               <li>
                 <AppLink href="/events" className="hover:text-[#E5CA7B] transition-colors">
-                  Events &amp; Gatherings
+                  Nov 28 Feast &amp; Community Events
+                </AppLink>
+              </li>
+              <li>
+                <AppLink href="/find-my-home" className="hover:text-[#E5CA7B] transition-colors">
+                  Find My Home · Safe Refuge
                 </AppLink>
               </li>
               <li>
@@ -119,9 +124,14 @@ export function Footer() {
           {/* Community & Governance */}
           <div className="lg:col-span-2 space-y-3">
             <h2 className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              Community
+              Trust &amp; Stewardship
             </h2>
             <ul className="space-y-2.5 text-sm text-[#FAF7F2]/85">
+              <li>
+                <AppLink href="/accountability" className="hover:text-[#E5CA7B] transition-colors">
+                  Accountability (Open Books)
+                </AppLink>
+              </li>
               <li>
                 <AppLink href="/about" className="hover:text-[#E5CA7B] transition-colors">
                   About Us
@@ -151,8 +161,55 @@ export function Footer() {
           </div>
         </div>
 
+        {/* "How We Protect You" Footer Block on EVERY Page (including /gbv/ and /recovery/) */}
+        <section
+          aria-label="How We Protect You"
+          className="mt-12 pt-8 border-t border-white/15 space-y-4"
+        >
+          <h2 className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
+            How We Protect You
+          </h2>
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#FAF7F2]/72 leading-relaxed">
+            <li className="flex items-start gap-2.5">
+              <span aria-hidden="true" className="text-sm shrink-0">
+                🚫
+              </span>
+              <span>
+                We never load third-party tracking scripts, analytics, or advertising cookies on your
+                visit.
+              </span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <span aria-hidden="true" className="text-sm shrink-0">
+                🔒
+              </span>
+              <span>
+                Our private safety and recovery planners stay strictly inside your browser memory
+                with zero server transmission.
+              </span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <span aria-hidden="true" className="text-sm shrink-0">
+                🗑️
+              </span>
+              <span>
+                Sensitive support pages enforce no-cache headers so you can erase local tools or
+                leave immediately at any moment.
+              </span>
+            </li>
+          </ul>
+          <div>
+            <AppLink
+              href="/privacy"
+              className="inline-flex items-center text-xs font-medium text-[#E5CA7B] hover:text-[#FAF7F2] transition-colors underline underline-offset-4 decoration-[#E5CA7B]/40"
+            >
+              Read our full privacy promise →
+            </AppLink>
+          </div>
+        </section>
+
         {/* Legal & Credit Row */}
-        <div className="mt-14 pt-6 border-t border-white/12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#FAF7F2]/70">
+        <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#FAF7F2]/65">
           <p className="tabular-nums">
             © {year} {settings?.organisationName || 'HIS AND HERS'}. All rights reserved.
           </p>

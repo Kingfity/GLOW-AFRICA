@@ -8,6 +8,7 @@ import type {
   ChildrensHome,
   ContactMessage,
   CounsellingRequest,
+  EmergencyAuthorityAlert,
   EventItem,
   EventRegistration,
   HomeVisitBooking,
@@ -43,6 +44,7 @@ export interface AppDatabase {
   volunteerEnquiries: VolunteerEnquiry[];
   contactMessages: ContactMessage[];
   eventRegistrations: EventRegistration[];
+  emergencyAlerts: EmergencyAuthorityAlert[];
 }
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
@@ -81,11 +83,21 @@ function createSeedDatabase(): AppDatabase {
     },
     announcements: [
       {
-        id: 'ann-1',
-        title: 'Care Family Hub Open',
+        id: 'ann-nov28',
+        title: 'Nov 28 Thanksgiving Feast & Early Christmas Initiative',
         message:
-          'Plan a corporate or group visit to a partner Children’s Home, connect with a nearby rehabilitation centre, or explore our ASD Parents & Kids support guides.',
-        linkLabel: 'Explore Children’s Homes',
+          'Join us on 28 November as we feed families across the community and share relief token bundles to cushion hard times.',
+        linkLabel: 'View Initiative & RSVP',
+        linkPath: '/events/november-28-thanksgiving-feast-and-early-christmas-relief',
+        isActive: true,
+        publishedAt: now,
+      },
+      {
+        id: 'ann-1',
+        title: 'Care Family Hub Open Across Kenya · Expanding East & Central Africa',
+        message:
+          'Plan a visit to Children’s Homes or Schools for the Differently Abled across Kenya, connect with rehabilitation across 47 counties, or explore Accountability, Recovery & Family Wellness.',
+        linkLabel: 'Explore Homes & Schools',
         linkPath: '/home-visits',
         isActive: true,
         publishedAt: now,
@@ -95,6 +107,9 @@ function createSeedDatabase(): AppDatabase {
       {
         id: 'ch-1',
         name: 'Amani Gardens Children’s Home',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Nairobi',
+        specialization: 'Family-Style Residential Care & Reading',
         countyRegion: 'Nairobi',
         townArea: 'Karen / Lang’ata',
         childrenAgeRange: 'Ages 3 – 16 (42 Children)',
@@ -109,6 +124,9 @@ function createSeedDatabase(): AppDatabase {
       {
         id: 'ch-2',
         name: 'Tumaini Bridge Haven',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Central',
+        specialization: 'Primary & Secondary Education Support',
         countyRegion: 'Kiambu',
         townArea: 'Thika / Ruiru',
         childrenAgeRange: 'Ages 5 – 17 (56 Children)',
@@ -123,6 +141,9 @@ function createSeedDatabase(): AppDatabase {
       {
         id: 'ch-3',
         name: 'Neema Cradle Care Home',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Rift Valley',
+        specialization: 'Infant & Early Childhood Sanctuary',
         countyRegion: 'Nakuru',
         townArea: 'Milimani / Nakuru',
         childrenAgeRange: 'Ages 0 – 10 (28 Children)',
@@ -137,6 +158,9 @@ function createSeedDatabase(): AppDatabase {
       {
         id: 'ch-4',
         name: 'Pwani Light Children’s Centre',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Coast',
+        specialization: 'Youth Life Skills & Coastal Care',
         countyRegion: 'Mombasa',
         townArea: 'Nyali / Bamburi',
         childrenAgeRange: 'Ages 6 – 18 (38 Children)',
@@ -147,6 +171,483 @@ function createSeedDatabase(): AppDatabase {
           'Coastal residential home preparing older teens and children for bright futures through corporate skills workshops, tutoring visits, and community support.',
         imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
         imageAlt: 'Caregivers and visitors seated warmly in fellowship conversation',
+      },
+      {
+        id: 'ch-5',
+        name: 'Kenya Children’s Homes (Thomas Barnardo House)',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Nairobi',
+        specialization: 'Rescue, Rehabilitation & Family Reintegration',
+        countyRegion: 'Nairobi',
+        townArea: 'Lang’ata Road',
+        childrenAgeRange: 'Ages 0 – 18 (120+ Children)',
+        currentNeeds: ['School Tuition Sponsorship', 'Fresh Food Supplies', 'Youth Mentors'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'One of Kenya’s historic child welfare homes running rescue care, community schooling, and dignified family reintegration programs.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Children and community mentors reading under courtyard shade',
+      },
+      {
+        id: 'ch-6',
+        name: 'Mama Ngina Children’s Home',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Nairobi',
+        specialization: 'Orphaned & Vulnerable Child Care',
+        countyRegion: 'Nairobi',
+        townArea: 'South C / Muhoho Avenue',
+        childrenAgeRange: 'Ages 0 – 14 (65 Children)',
+        currentNeeds: ['Nutritious Grain & Milk', 'Winter Pullovers', 'Storybooks'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Long-standing Nairobi residential care sanctuary sheltering abandoned and orphaned children in a warm family setting.',
+        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
+        imageAlt: 'Community pantry baskets and learning kits sorted warmly',
+      },
+      {
+        id: 'ch-7',
+        name: 'Nyumbani Children’s Home',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Nairobi',
+        specialization: 'Medical Care & Holistic Childhood Sanctuary',
+        countyRegion: 'Nairobi',
+        townArea: 'Dagoretti Road / Karen',
+        childrenAgeRange: 'Ages 0 – 18 (100+ Children)',
+        currentNeeds: ['Pediatric Nutrition', 'School Science Kits', 'Clean Energy Upkeep'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Renowned care sanctuary combining loving home cottages, pediatric wellness, and academic support for vulnerable children.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Youth and mentors gathered around wooden learning tables',
+      },
+      {
+        id: 'ch-8',
+        name: 'New Life Home Trust — Nairobi, Nakuru, Kisumu & Nyeri',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Nairobi',
+        specialization: 'Abandoned Infant Care & Foster Gateway',
+        countyRegion: 'Nairobi',
+        townArea: 'Kilimani & Regional Hubs',
+        childrenAgeRange: 'Infants 0 – 4 Years',
+        currentNeeds: ['Infant Care Supplies', 'Nurse Support Packs', 'Baby Cots & Linen'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Multi-county sanctuary network offering emergency medical care and tender nursery care for rescued newborn babies across Kenya.',
+        imageUrl: '/src/assets/images/safe_home_refuge_1794823558780.jpg',
+        imageAlt: 'Quiet warm nursery and living room welcoming infants',
+      },
+      {
+        id: 'ch-9',
+        name: 'SOS Children’s Village Nairobi & Eldoret',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Rift Valley',
+        specialization: 'Family-Like Cottage Care & Youth Empowerment',
+        countyRegion: 'Uasin Gishu',
+        townArea: 'Eldoret & Nairobi Cottages',
+        childrenAgeRange: 'Ages 1 – 18 (95+ Children)',
+        currentNeeds: ['Primary Learning Packs', 'Vocational Toolkits', 'Holiday Care Hampers'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Established family-based cottage villages nurturing orphaned and vulnerable children across Nairobi, Mombasa, Eldoret, Kisumu, and Meru.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Mentors and children sharing outdoor learning activities',
+      },
+      {
+        id: 'ch-10',
+        name: 'SOS Children’s Village Mombasa',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Coast',
+        specialization: 'Coastal Family Cottages & Schooling',
+        countyRegion: 'Mombasa',
+        townArea: 'Mombasa North',
+        childrenAgeRange: 'Ages 2 – 18 (80+ Children)',
+        currentNeeds: ['Solar Fan & Study Lighting', 'School Books', 'Sports Kits'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Supporting coastal children through mother-led family cottages, neighborhood strengthening, and youth career mentorship.',
+        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
+        imageAlt: 'Community group seated warmly during mentorship dialogue',
+      },
+      {
+        id: 'ch-11',
+        name: 'SOS Children’s Village Kisumu',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Nyanza',
+        specialization: 'Lake-Region Children’s Sanctuary & Learning',
+        countyRegion: 'Kisumu',
+        townArea: 'Milimani / Kisumu',
+        childrenAgeRange: 'Ages 2 – 18 (75+ Children)',
+        currentNeeds: ['Mosquito Nets', 'Library Books', 'Community Food Staples'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Welcoming corporate teams, church circles, and student volunteers to support long-term child care and youth education around Lake Victoria.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Students and mentors working together at wooden desks',
+      },
+      {
+        id: 'ch-12',
+        name: 'Nyumbani Village — Kitui County',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Eastern',
+        specialization: 'Intergenerational Child & Elder Eco-Village',
+        countyRegion: 'Kitui',
+        townArea: 'Kwa Vonza / Kitui',
+        childrenAgeRange: 'Ages 2 – 18 (400+ Children)',
+        currentNeeds: ['Water Harvesting Tanks', 'Drought-Resilient Seeds', 'Secondary Textbooks'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Self-sustaining Eastern Kenya community village pairing orphaned children with caring grandparents, vocational farming, and green energy.',
+        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
+        imageAlt: 'Fresh harvest baskets prepared by volunteers for community families',
+      },
+      {
+        id: 'ch-13',
+        name: 'Tumaini Sanctuary Children’s Home Nyeri',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Central',
+        specialization: 'Mt. Kenya Regional Child Care & Rescue',
+        countyRegion: 'Nyeri',
+        townArea: 'Nyeri Town',
+        childrenAgeRange: 'Ages 4 – 17 (44 Children)',
+        currentNeeds: ['Warm Woollen Blankets', 'Maize & Beans', 'Creative Arts Supplies'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Serving children across Nyeri, Kirinyaga, Murang’a, and Laikipia with warm residential care and structured weekend mentorship.',
+        imageUrl: '/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg',
+        imageAlt: 'Children seated together enjoying warm community meals outdoors',
+      },
+      {
+        id: 'ch-14',
+        name: 'Rehema Bukura Children’s Haven',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Western',
+        specialization: 'Western Kenya Child Shelter & Reintegration',
+        countyRegion: 'Kakamega',
+        townArea: 'Kakamega / Bukura',
+        childrenAgeRange: 'Ages 3 – 16 (52 Children)',
+        currentNeeds: ['School Shoes', 'Clean Water Filters', 'Cooking Fuel & Food'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Partner children’s haven serving Kakamega, Vihiga, Bungoma, and Busia families with safe boarding, tutoring, and family reunification.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Community helpers reading storybooks with young children',
+      },
+      {
+        id: 'ch-15',
+        name: 'Machakos Hope Rescue & Children’s Home',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Eastern',
+        specialization: 'Rescue Protection & Primary Schooling',
+        countyRegion: 'Machakos',
+        townArea: 'Machakos / Athi River',
+        childrenAgeRange: 'Ages 4 – 17 (48 Children)',
+        currentNeeds: ['Mattresses & Linen', 'Grain & Cooking Oil', 'Stationery Packs'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Working alongside County Children’s Officers across Machakos, Makueni, and Kajiado to shelter and educate vulnerable children.',
+        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
+        imageAlt: 'Fresh provisions and hampers sorted by community volunteers',
+      },
+      {
+        id: 'ch-16',
+        name: 'Garissa Oasis Children’s Sanctuary',
+        institutionType: 'Children’s Home',
+        regionGroup: 'North Eastern',
+        specialization: 'Arid-Region Child Care & Nutrition',
+        countyRegion: 'Garissa',
+        townArea: 'Garissa Town',
+        childrenAgeRange: 'Ages 3 – 16 (36 Children)',
+        currentNeeds: ['High-Protein Nutrition', 'Solar Cooling & Water', 'Exercise Books'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Community sanctuary supporting orphaned and pastoralist children across Garissa, Wajir, and Mandera with safe shelter and schooling.',
+        imageUrl: '/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg',
+        imageAlt: 'Community members sharing food hampers under acacia trees',
+      },
+      {
+        id: 'ch-17',
+        name: 'St. Monica Lodwar Children’s Sanctuary',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Rift Valley',
+        specialization: 'Turkana Nutrition & Girl-Child Education',
+        countyRegion: 'Turkana',
+        townArea: 'Lodwar',
+        childrenAgeRange: 'Ages 4 – 17 (60 Children)',
+        currentNeeds: ['Clean Water Storage', 'Sanitary & Dignity Packs', 'School Uniforms'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Northern Rift Valley haven providing safe boarding, nutritious meals, and secondary school pathways for girls and vulnerable youth.',
+        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
+        imageAlt: 'Caregivers and community visitors conversing warmly',
+      },
+      {
+        id: 'ch-18',
+        name: 'SOS Children’s Village Meru',
+        institutionType: 'Children’s Home',
+        regionGroup: 'Eastern',
+        specialization: 'Mt. Kenya East Family Care & Learning',
+        countyRegion: 'Meru',
+        townArea: 'Meru Town',
+        childrenAgeRange: 'Ages 2 – 18 (70 Children)',
+        currentNeeds: ['Textbooks & Readers', 'Warm Jackets', 'Youth Mentorship'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Family-centered cottages serving Meru, Tharaka-Nithi, and Embu communities with educational backing and youth transitions.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Students reading alongside volunteer mentors',
+      },
+      // SCHOOLS FOR THE DIFFERENTLY ABLED ACROSS KENYA
+      {
+        id: 'sch-1',
+        name: 'Jacaranda Special School',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Nairobi',
+        specialization: 'Autism (ASD), Down Syndrome & Intellectual Learning',
+        countyRegion: 'Nairobi',
+        townArea: 'Kilimani / Kileleshwa',
+        childrenAgeRange: 'Ages 4 – 19 (Day & Boarding)',
+        currentNeeds: ['Sensory Play Stations', 'Visual Communication Cards', 'Occupational Therapy Mats'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Leading public special education school equipping autistic learners and students with Down syndrome or developmental delays for joyful independence.',
+        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
+        imageAlt: 'Parent and autistic child arranging wooden sensory blocks and picture schedules',
+      },
+      {
+        id: 'sch-2',
+        name: 'Ngala School for the Deaf',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Nairobi',
+        specialization: 'Deaf & Hard-of-Hearing Education',
+        countyRegion: 'Nairobi',
+        townArea: 'Bahati / Nairobi',
+        childrenAgeRange: 'Early Years – Primary',
+        currentNeeds: ['Kenyan Sign Language Books', 'Visual Learning Projectors', 'Hearing Care Batteries'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Historic Nairobi public school empowering deaf and hard-of-hearing learners through Kenyan Sign Language literacy, creative arts, and life skills.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Students learning actively with teachers around wooden tables',
+      },
+      {
+        id: 'sch-3',
+        name: 'Salvation Army Joytown Special School',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Central',
+        specialization: 'Physical Disabilities, Cerebral Palsy & Spina Bifida',
+        countyRegion: 'Kiambu',
+        townArea: 'Thika',
+        childrenAgeRange: 'Primary & Secondary Residential',
+        currentNeeds: ['Custom Wheelchairs & Walkers', 'Physiotherapy Equipment', 'Accessible Desks'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Premier Kenyan primary and secondary campus combining academics, physiotherapy, orthopedic care, and vocational confidence for physically differently abled learners.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Volunteers collaborating warmly with students at a campus courtyard',
+      },
+      {
+        id: 'sch-4',
+        name: 'Salvation Army Thika School for the Blind',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Central',
+        specialization: 'Visual Impairment (Blind & Low Vision)',
+        countyRegion: 'Kiambu',
+        townArea: 'Thika',
+        childrenAgeRange: 'Primary & National High School',
+        currentNeeds: ['Braille Paper & Perkins Braillers', 'Screen-Reader Laptops', 'White Mobility Canes'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Kenya’s flagship national primary and high school for visually impaired learners—excelling in Braille literacy, music, athletics, and assistive coding.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Students engaged in guided reading and technology mentoring',
+      },
+      {
+        id: 'sch-5',
+        name: 'PCEA Kambui School for the Deaf',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Central',
+        specialization: 'Deaf & Hard-of-Hearing + Vocational Skills',
+        countyRegion: 'Kiambu',
+        townArea: 'Githunguri / Kambui',
+        childrenAgeRange: 'ECD, Primary & Junior Secondary',
+        currentNeeds: ['Sign-Language Flashcards', 'Tailoring & Woodwork Tools', 'Sports Uniforms'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Regional residential school celebrating deaf learners through Kenyan Sign Language mastery, drama, athletics, and practical vocational arts.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Smiling students and mentors gathered outdoors with learning supplies',
+      },
+      {
+        id: 'sch-6',
+        name: 'Salvation Army Likoni School for the Visually Impaired',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Coast',
+        specialization: 'Visual Impairment & Assistive Tech Coding',
+        countyRegion: 'Mombasa',
+        townArea: 'Likoni',
+        childrenAgeRange: 'Primary & High School',
+        currentNeeds: ['Refreshable Braille Displays', 'Audio Learning Headphones', 'Orientation Canes'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Renowned coastal campus providing Braille education, screen-reader digital labs, mobility training, and independent living preparation.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Mentors guiding coastal learners at classroom study desks',
+      },
+      {
+        id: 'sch-7',
+        name: 'Mombasa Secondary School for the Physically Handicapped',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Coast',
+        specialization: 'Physical & Orthopedic Accessibility Secondary Care',
+        countyRegion: 'Mombasa',
+        townArea: 'Nyali / Mombasa',
+        childrenAgeRange: 'National Secondary Students',
+        currentNeeds: ['Ramps & Dorm Accessibility Care', 'STEM Lab Equipment', 'Mobility Crutches'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Barrier-free coastal national secondary school equipping students with mobility challenges for university, technical trades, and leadership.',
+        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
+        imageAlt: 'Students and facilitators sharing encouragement in a courtyard circle',
+      },
+      {
+        id: 'sch-8',
+        name: 'Sahajanand Special School Mtwapa',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Coast',
+        specialization: 'Multi-Disability Inclusive Special Needs Centre',
+        countyRegion: 'Kilifi',
+        townArea: 'Mtwapa',
+        childrenAgeRange: 'Ages 5 – 18 (Multi-Unit Campus)',
+        currentNeeds: ['Hearing Aids', 'Tactile Sensory Kits', 'Boarding Pantry Supplies'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Coastal centre of excellence welcoming learners with hearing, visual, physical, and developmental differences under dedicated specialist care.',
+        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
+        imageAlt: 'Caregiver and child smiling while engaging with tactile wooden blocks',
+      },
+      {
+        id: 'sch-9',
+        name: 'St. Oda School for the Visually Impaired',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Nyanza',
+        specialization: 'Blind, Low Vision & Multi-Disability Support',
+        countyRegion: 'Siaya',
+        townArea: 'Aluor / Gem',
+        childrenAgeRange: 'Primary & Junior Secondary',
+        currentNeeds: ['Braille Textbooks', 'Solar Classroom Lighting', 'Digital Audio Recorders'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Historic Western-Nyanza boarding campus dedicated to visual-impairment excellence, mobility orientation, and accessible ICT training.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Learners seated warmly with mentors during study hours',
+      },
+      {
+        id: 'sch-10',
+        name: 'Mumias Primary & St. Angela Secondary Schools for the Deaf',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Western',
+        specialization: 'Deaf Learners & Vocational Empowerment',
+        countyRegion: 'Kakamega',
+        townArea: 'Mumias',
+        childrenAgeRange: 'Primary & Girls Secondary / Vocational',
+        currentNeeds: ['Sign-Language Dictionaries', 'Vocational Sewing Machines', 'Boarding Meals'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Sister primary and national girls secondary campuses empowering deaf learners across Western Kenya through academic and vocational mastery.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Students reading storybooks alongside community visitors',
+      },
+      {
+        id: 'sch-11',
+        name: 'Kapsabet School for the Deaf',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Rift Valley',
+        specialization: 'Hearing Impairment & Vocational Skills',
+        countyRegion: 'Nandi',
+        townArea: 'Kapsabet',
+        childrenAgeRange: 'Primary & Vocational Wing',
+        currentNeeds: ['Interactive Smartboards', 'Carpentry Kits', 'Warm School Sweaters'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Serving learners across Nandi, Uasin Gishu, and the wider North Rift with deaf-friendly instruction and hands-on skills training.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Youth mentored in small learning circles around tables',
+      },
+      {
+        id: 'sch-12',
+        name: 'Kuja Special Secondary School for the Deaf',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Nyanza',
+        specialization: 'Secondary Education for Deaf Youth',
+        countyRegion: 'Migori',
+        townArea: 'Rongo / Kuja',
+        childrenAgeRange: 'Secondary Youth',
+        currentNeeds: ['Science Lab Visual Kits', 'Textbooks', 'Sports Footwear'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Regional secondary sanctuary helping deaf teenagers achieve KCSE qualifications, arts confidence, and career mentorship.',
+        imageUrl: '/src/assets/images/prayer_fellowship_circle_1794821886765.jpg',
+        imageAlt: 'Students and teachers gathered together in supportive dialogue',
+      },
+      {
+        id: 'sch-13',
+        name: 'Joyland Special School Kisumu',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Nyanza',
+        specialization: 'Physical Disabilities & Inclusive Rehabilitation',
+        countyRegion: 'Kisumu',
+        townArea: 'Kisumu Town',
+        childrenAgeRange: 'Primary & Inclusive Special Units',
+        currentNeeds: ['Standing Frames', 'Physiotherapy Cushions', 'Accessible Sanitation'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Nyanza residential school supporting physically differently abled children alongside inclusive cerebral palsy therapy and recreation.',
+        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
+        imageAlt: 'Caregiver and child playing with tactile learning toys',
+      },
+      {
+        id: 'sch-14',
+        name: 'St. Lucy School for the Blind Igoji',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Eastern',
+        specialization: 'Visual Impairment & Braille Literacy',
+        countyRegion: 'Meru',
+        townArea: 'Igoji / Meru',
+        childrenAgeRange: 'Primary & Integrated Secondary',
+        currentNeeds: ['Braille Embossers', 'Audio Textbooks', 'Warm Bedding'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Mt. Kenya East residential special campus nurturing blind and low-vision students with Braille literacy, music, and digital tools.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Mentors and students collaborating at study tables',
       },
     ],
     rehabFacilities: [
@@ -380,13 +881,33 @@ function createSeedDatabase(): AppDatabase {
     ],
     events: [
       {
+        id: 'evt-nov28',
+        slug: 'november-28-thanksgiving-feast-and-early-christmas-relief',
+        title: 'November 28 Thanksgiving Feast & Early Christmas Relief Initiative',
+        category: 'Community Outreach',
+        dateISO: '2026-11-28',
+        timeLabel: '10:00 – 16:00',
+        venue: '47-County Community Tables & Karen Hub Courtyard',
+        summary:
+          'A joyful Thanksgiving Feast and Early Christmas outreach feeding families across communities and gifting small bundles of relief tokens to cushion hard economic times.',
+        description:
+          'On 28 November, HIS AND HERS hosts warm outdoor thanksgiving tables stocked with freshly prepared community meals alongside practical relief token bundles (essential grain staples, soap, school notebooks, and direct family vouchers) designed with dignity to cushion households heading into the festive season.',
+        registrationOpen: true,
+        registrationNote:
+          'Everyone is welcome to dine, volunteer, or sponsor relief token bundles for families across all 47 counties.',
+        imageUrl: '/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg',
+        imageAlt: 'Families and children seated joyfully at a sunlit community Thanksgiving feast beside neatly tied relief bundles',
+        featured: true,
+        createdAt: now,
+      },
+      {
         id: 'evt-1',
         slug: 'corporate-and-community-childrens-home-visit-day',
         title: 'Partner Children’s Home Visit & Mentorship Day',
         category: 'Children’s Home Visits',
-        dateISO: '2026-11-28',
+        dateISO: '2026-12-02',
         timeLabel: '09:30 – 14:30',
-        venue: 'Amani Gardens & Partner Homes (Nairobi & Kiambu)',
+        venue: 'Amani Gardens & Partner Homes (47-County Network)',
         summary:
           'Corporate CSR teams, friend groups, and individual volunteers join guided storytelling, youth mentorship, and care pack deliveries at verified children’s homes.',
         description:
@@ -543,6 +1064,7 @@ function createSeedDatabase(): AppDatabase {
     volunteerEnquiries: [],
     contactMessages: [],
     eventRegistrations: [],
+    emergencyAlerts: [],
   };
 }
 
@@ -621,15 +1143,34 @@ function ensureDatabaseExists(): AppDatabase {
       migrated = true;
     }
 
-    const migratedHomes = migrateList(
+    const existingHomes = migrateList(
       parsed.childrensHomes?.length ? parsed.childrensHomes : seed.childrensHomes
     ).map((h) => {
-      if (h.name.includes('(Partner Slot)')) {
+      const seedMatch = seed.childrensHomes.find((s) => s.id === h.id);
+      let next = h;
+      if (next.name.includes('(Partner Slot)')) {
         migrated = true;
-        return { ...h, name: h.name.replace(' (Partner Slot)', '').trim() };
+        next = { ...next, name: next.name.replace(' (Partner Slot)', '').trim() };
       }
-      return h;
+      if (seedMatch && (!next.institutionType || !next.regionGroup || !next.specialization)) {
+        migrated = true;
+        next = {
+          ...next,
+          institutionType: seedMatch.institutionType,
+          regionGroup: seedMatch.regionGroup,
+          specialization: seedMatch.specialization,
+        };
+      }
+      return next;
     });
+
+    const missingSeededHomes = seed.childrensHomes.filter(
+      (s) => !existingHomes.some((existing) => existing.id === s.id)
+    );
+    if (missingSeededHomes.length > 0) {
+      migrated = true;
+    }
+    const migratedHomes = [...existingHomes, ...missingSeededHomes];
 
     const migratedRehab = migrateList(
       parsed.rehabFacilities?.length ? parsed.rehabFacilities : seed.rehabFacilities
@@ -665,6 +1206,23 @@ function ensureDatabaseExists(): AppDatabase {
       return proj;
     });
 
+    if (!migratedEvents.some((e) => e.id === 'evt-nov28' || e.slug === 'november-28-thanksgiving-feast-and-early-christmas-relief')) {
+      migratedEvents = [seed.events[0], ...migratedEvents];
+      migrated = true;
+    }
+
+    let migratedAnnouncements = (parsed.announcements?.length ? parsed.announcements : seed.announcements).map((a) => {
+      if (a.id === 'ann-1' && a.message.includes('GBV Safety')) {
+        migrated = true;
+        return seed.announcements[1];
+      }
+      return a;
+    });
+    if (!migratedAnnouncements.some((a) => a.id === 'ann-nov28')) {
+      migratedAnnouncements = [seed.announcements[0], ...migratedAnnouncements];
+      migrated = true;
+    }
+
     const migratedContributions =
       Array.isArray(parsed.villageContributions) && parsed.villageContributions.length > 0
         ? parsed.villageContributions
@@ -677,6 +1235,7 @@ function ensureDatabaseExists(): AppDatabase {
       ...seed,
       ...parsed,
       settings: migratedSettings,
+      announcements: migratedAnnouncements,
       impactProjects: migratedImpact,
       events: migratedEvents,
       childrensHomes: migratedHomes,
@@ -689,6 +1248,7 @@ function ensureDatabaseExists(): AppDatabase {
       partnerOrganizations: parsed.partnerOrganizations || [],
       rehabReferrals: parsed.rehabReferrals || [],
       asdSupportRequests: parsed.asdSupportRequests || [],
+      emergencyAlerts: parsed.emergencyAlerts || [],
     };
 
     if (migrated) {

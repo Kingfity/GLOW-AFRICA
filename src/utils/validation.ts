@@ -107,6 +107,10 @@ export interface VolunteerInput {
   fullName: string;
   email: string;
   phone?: string;
+  volunteerKind?: 'individual' | 'team' | 'institution';
+  groupName?: string;
+  groupSize?: string;
+  pointOfContact?: string;
   areaOfInterest: string;
   availability?: string;
   message: string;
@@ -532,6 +536,10 @@ export function validateVolunteerEnquiry(input: VolunteerInput): ValidationResul
   fullName: string;
   email: string;
   phone: string;
+  volunteerKind?: 'individual' | 'team' | 'institution';
+  groupName?: string;
+  groupSize?: string;
+  pointOfContact?: string;
   areaOfInterest: string;
   availability: string;
   message: string;
@@ -540,7 +548,14 @@ export function validateVolunteerEnquiry(input: VolunteerInput): ValidationResul
   const fullName = cleanText(input.fullName, 120);
   const email = cleanText(input.email, 160);
   const phone = cleanText(input.phone, 40);
-  const areaOfInterest = cleanText(input.areaOfInterest, 120);
+  const volunteerKind =
+    input.volunteerKind === 'team' || input.volunteerKind === 'institution'
+      ? input.volunteerKind
+      : 'individual';
+  const groupName = cleanText(input.groupName, 140);
+  const groupSize = cleanText(input.groupSize, 60);
+  const pointOfContact = cleanText(input.pointOfContact, 120);
+  const areaOfInterest = cleanText(input.areaOfInterest, 180);
   const availability = cleanText(input.availability, 120);
   const message = cleanText(input.message, 2500);
 
@@ -549,6 +564,9 @@ export function validateVolunteerEnquiry(input: VolunteerInput): ValidationResul
   }
   if (!isValidEmail(email)) {
     errors.email = 'Please provide a valid email address.';
+  }
+  if ((volunteerKind === 'team' || volunteerKind === 'institution') && groupName.length < 2) {
+    errors.groupName = 'Please enter your team or institution name.';
   }
   if (!areaOfInterest) {
     errors.areaOfInterest = 'Please select an area where you would like to participate.';
@@ -562,7 +580,18 @@ export function validateVolunteerEnquiry(input: VolunteerInput): ValidationResul
     errors,
     data:
       Object.keys(errors).length === 0
-        ? { fullName, email, phone, areaOfInterest, availability, message }
+        ? {
+            fullName,
+            email,
+            phone,
+            volunteerKind,
+            ...(groupName ? { groupName } : {}),
+            ...(groupSize ? { groupSize } : {}),
+            ...(pointOfContact ? { pointOfContact } : {}),
+            areaOfInterest,
+            availability,
+            message,
+          }
         : undefined,
   };
 }

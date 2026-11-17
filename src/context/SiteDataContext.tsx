@@ -16,11 +16,24 @@ const SiteDataContext = createContext<SiteDataContextValue>({
 });
 
 export function SiteDataProvider({ children }: { children: React.ReactNode }) {
+  const isPrivacyIsolatedRoute =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.startsWith('/gbv') ||
+      window.location.pathname.startsWith('/recovery'));
+
   const [data, setData] = useState<PublicSiteData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!isPrivacyIsolatedRoute);
   const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
+    if (
+      typeof window !== 'undefined' &&
+      (window.location.pathname.startsWith('/gbv') ||
+        window.location.pathname.startsWith('/recovery'))
+    ) {
+      setLoading(false);
+      return;
+    }
     try {
       const res = await fetch('/api/public-data');
       if (!res.ok) {
@@ -37,8 +50,9 @@ export function SiteDataProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (isPrivacyIsolatedRoute) return;
     void refresh();
-  }, [refresh]);
+  }, [refresh, isPrivacyIsolatedRoute]);
 
   return (
     <SiteDataContext.Provider value={{ data, loading, error, refresh }}>

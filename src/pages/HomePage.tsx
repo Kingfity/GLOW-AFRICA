@@ -3,10 +3,10 @@ import {
   ArrowRight,
   Calendar,
   HeartHandshake,
-  LifeBuoy,
   MapPin,
   Pause,
   Play,
+  ShieldAlert,
   Sparkles,
 } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
@@ -15,7 +15,7 @@ import { SafeImage } from '../components/SafeImage';
 import { BrandMark } from '../components/Navbar';
 import { CareCompassSection } from '../components/CareCompassSection';
 import { CareVillageBuilder } from '../components/CareVillageBuilder';
-import { openCrisisTextChat } from '../components/CareGuideChatbot';
+import { openEmergencyAlertModal } from '../components/EmergencyAuthorityAlert';
 import { LivingPortfolioSection } from '../components/LivingPortfolioSection';
 import { ScrollReveal } from '../components/ScrollReveal';
 import { TransparentImpactDashboard } from '../components/TransparentImpactDashboard';
@@ -27,10 +27,10 @@ const CARE_PATHWAYS = [
     index: '01.',
     accent: 'text-[#C2593F]',
     borderColor: '#C2593F',
-    title: 'Children’s Homes & Corporate CSR Visits',
+    title: 'Children’s Homes & Schools for Differently Abled',
     description:
-      'We guide individuals, friend groups, schools, and corporate teams directly to verified children’s homes—and onboard partner NGOs and companies to cooperate sustainably.',
-    linkLabel: 'Explore Children’s Homes',
+      'Visit children’s homes across Kenya and inclusive schools for blind, deaf, autistic, and physically differently abled learners—plus corporate and NGO onboarding.',
+    linkLabel: 'Explore Homes & Special Schools',
     linkHref: '/home-visits',
   },
   {
@@ -67,10 +67,10 @@ const CARE_PATHWAYS = [
     index: '05.',
     accent: 'text-[#7A5A10]',
     borderColor: '#B85D19',
-    title: 'Find My Home · Safe Refuge',
+    title: 'Find My Home · Calm Refuge',
     description:
-      'Confidential safe-shelter coordination and protection support for women, men, and children fleeing gender-based violence or child abuse.',
-    linkLabel: 'Access Safe Refuge',
+      'Discreet, private family-shelter coordination and child safeguarding support whenever home no longer feels safe.',
+    linkLabel: 'Open Calm Refuge',
     linkHref: '/find-my-home',
   },
   {
@@ -135,7 +135,7 @@ export function HomePage() {
             <div className="flex flex-wrap items-center gap-3">
               <BrandMark light size="md" />
               <p className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#F3D79B]">
-                HIS AND HERS · Care Family Home Established 2025
+                HIS AND HERS · Kenya Care Family Hub · Expanding East &amp; Central Africa · Est. 2025
               </p>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[58px] font-semibold leading-[1.08] tracking-tight text-[#FAF7F2]">
@@ -161,11 +161,11 @@ export function HomePage() {
               </AppLink>
               <button
                 type="button"
-                onClick={() => openCrisisTextChat()}
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-xs sm:text-sm font-semibold text-[#FAF7F2] border border-[#F3D79B]/45 hover:bg-white/10 rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
+                onClick={() => openEmergencyAlertModal()}
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-xs sm:text-sm font-semibold text-[#FAF7F2] bg-[#C2593F] hover:bg-[#A64831] rounded-md transition-colors duration-150 whitespace-nowrap shrink-0 shadow-sm"
               >
-                <LifeBuoy className="w-4 h-4 text-[#F3D79B]" aria-hidden="true" />
-                Crisis Text Chat
+                <ShieldAlert className="w-4 h-4 text-[#F3D79B]" aria-hidden="true" />
+                Emergency Authority Alert
               </button>
             </div>
           </div>
@@ -444,6 +444,53 @@ export function HomePage() {
         </ScrollReveal>
       </section>
 
+      {/* 6b. November 28 Thanksgiving Feast & Early Christmas Relief Token Initiative */}
+      <section
+        aria-label="November 28 Thanksgiving Feast and Early Christmas Relief Initiative"
+        className="py-16 sm:py-20 bg-gradient-to-br from-[#FDF6EE] via-[#FAF7F2] to-[#FDF0D5] border-t border-[#D4AF37]/30"
+      >
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-6 space-y-5">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
+              November 28 National Initiative · All 47 Counties
+            </p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B] leading-tight">
+              Thanksgiving Feast &amp; Early Christmas Relief Bundles (Nov 28)
+            </h2>
+            <p className="text-base text-[#3E3349] leading-relaxed">
+              On November 28, HIS AND HERS hosts warm community tables to feed families together and
+              distribute small bundles of practical relief tokens—helping households cushion hard
+              economic times with food staples, children’s essentials, and early Christmas warmth.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-1">
+              <AppLink
+                href="/events/november-28-thanksgiving-feast-and-early-christmas-relief"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-[#C2593F] text-white hover:bg-[#A64831] rounded-md transition-colors"
+              >
+                RSVP or Sponsor Nov 28 Bundles
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </AppLink>
+              <AppLink
+                href="/accountability"
+                className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[#256358] border border-[#256358]/30 bg-white hover:bg-[#EDF6F3] rounded-md transition-colors"
+              >
+                See Our 82/12/6 Open Books
+              </AppLink>
+            </div>
+          </div>
+
+          <div className="lg:col-span-6">
+            <div className="aspect-[16/10] rounded-2xl overflow-hidden border-2 border-[#D4AF37]/50 shadow-md">
+              <SafeImage
+                src="/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg"
+                alt="Kenyan neighbours gathering outdoors for the November 28 Thanksgiving Feast with shared meals and neatly wrapped relief bundles"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 7. Upcoming Gatherings & Events */}
       <section className="py-16 sm:py-24 bg-[#F3EEF8]/65 border-y border-[#3B155F]/10">
         <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -546,8 +593,8 @@ export function HomePage() {
                   Need Safe Shelter, Prayer, or Ready to Volunteer?
                 </h2>
                 <p className="text-sm sm:text-base text-[#FAF7F2]/85 leading-relaxed">
-                  Access confidential protection away from gender-based violence and child abuse,
-                  share a private prayer need, or join our community volunteer family.
+                  Access calm, confidential family-protection pathways whenever home feels unsafe,
+                  share a private prayer need, or join our community volunteer family across Kenya.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">

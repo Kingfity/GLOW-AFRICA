@@ -89,6 +89,9 @@ export interface EventItem {
 export interface ChildrensHome {
   id: string;
   name: string;
+  institutionType?: 'Children’s Home' | 'School for Differently Abled';
+  regionGroup?: string;
+  specialization?: string;
   countyRegion: string;
   townArea: string;
   childrenAgeRange: string;
@@ -256,10 +259,28 @@ export interface VolunteerEnquiry {
   fullName: string;
   email: string;
   phone: string;
+  volunteerKind?: 'individual' | 'team' | 'institution';
+  groupName?: string;
+  groupSize?: string;
+  pointOfContact?: string;
   areaOfInterest: string;
   availability: string;
   message: string;
   status: 'new' | 'reviewed' | 'archived';
+  createdAt: string;
+}
+
+export interface EmergencyAuthorityAlert {
+  id: string;
+  county: string;
+  emergencyType: string;
+  authorityTarget: string;
+  locationLandmark: string;
+  callerAlias: string;
+  safeContact: string;
+  peopleAffected: number;
+  details: string;
+  status: 'dispatched' | 'acknowledged' | 'resolved';
   createdAt: string;
 }
 
