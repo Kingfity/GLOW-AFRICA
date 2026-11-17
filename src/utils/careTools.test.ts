@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {
   addCustomRoutineStep,
   buildPortfolioItemsFromSiteData,
+  buildRegionalCareSummary,
   calculateVisitKitPlan,
+  computeVillageProgress,
   filterPortfolioItems,
   getAsdRoutinePreset,
   getBreathPhaseAtSecond,
@@ -12,6 +14,7 @@ import {
   sanitizeAssistantResult,
   toggleRoutineStep,
   validateAssistantMessage,
+  validateVillageContribution,
 } from './careTools';
 import type { EventItem, ImpactProject } from '../shared/types';
 
@@ -111,5 +114,48 @@ test('getColourGradePreset and filterPortfolioItems resolve presets and visual k
   const uploadsOnly = filterPortfolioItems(merged, 'Community Upload');
   assert.equal(uploadsOnly.length, 2);
   assert.equal(merged.length, PORTFOLIO_SHOWCASE_ITEMS.length + 2);
+});
+
+test('Care Village contribution validation, progress, and regional summaries calculate accurately', () => {
+  const invalid = validateVillageContribution({
+    contributorName: 'A',
+    tierId: 'books',
+    encouragementNote: 'Hi',
+  });
+  assert.equal(invalid.valid, false);
+  assert.ok(invalid.errors.contributorName);
+  assert.ok(invalid.errors.encouragementNote);
+
+  const valid = validateVillageContribution({
+    contributorName: 'Aurel Tech Team',
+    region: 'Nairobi',
+    tierId: 'sensory',
+    units: 2,
+    encouragementNote: 'Supporting calm evenings for ASD families.',
+  });
+  assert.equal(valid.valid, true);
+  assert.equal(valid.data?.amountKes, 7000);
+  assert.equal(valid.data?.tierLabel, 'ASD Sensory Calm Kit');
+
+  const summary = computeVillageProgress([
+    { tierId: 'books', amountKes: 3000, units: 2 },
+    { tierId: 'sensory', amountKes: 7000, units: 2 },
+  ]);
+  assert.equal(summary.totalKes, 10000);
+  assert.equal(summary.pledgeCount, 2);
+  assert.deepEqual(summary.unlockedTierIds, ['books', 'sensory']);
+
+  const regions = buildRegionalCareSummary({
+    childrensHomes: [{ countyRegion: 'Nairobi' }, { countyRegion: 'Kiambu' }],
+    rehabFacilities: [{ countyRegion: 'Nairobi' }, { countyRegion: 'Kisumu' }],
+    events: [{ venue: 'Nairobi Sanctuary' }],
+    contributions: [{ region: 'Nairobi', amountKes: 7000 }],
+  });
+  const nairobi = regions.find((r) => r.county === 'Nairobi');
+  assert.ok(nairobi);
+  assert.equal(nairobi.homesCount, 1);
+  assert.equal(nairobi.rehabCount, 1);
+  assert.equal(nairobi.eventsCount, 1);
+  assert.equal(nairobi.pledgesKes, 7000);
 });
 

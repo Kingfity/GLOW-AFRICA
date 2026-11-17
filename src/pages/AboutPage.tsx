@@ -6,11 +6,11 @@ export function AboutPage() {
   return (
     <div>
       {/* Page Header */}
-      <section className="bg-[#1E0B2B] text-[#FAF7F2] py-16 sm:py-24">
+      <section className="bg-gradient-to-br from-[#1E0B2B] via-[#3B155F] to-[#7B2E3C] text-[#FAF7F2] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              About HIS AND HERS
+              About HIS AND HERS · Established 2025
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
               Making the World Better by Touching Lives in Our Community
@@ -34,7 +34,7 @@ export function AboutPage() {
                   Who We Are &amp; Why We Exist
                 </h2>
                 <p className="text-base text-[#3E3349] leading-relaxed">
-                  Born from a shared calling since 2024, HIS AND HERS brings together spiritual
+                  Born from a shared calling in 2025, HIS AND HERS brings together spiritual
                   fellowship and front-line community care. We believe healing touches the whole
                   person—mind, body, spirit, and home.
                 </p>

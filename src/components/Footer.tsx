@@ -23,10 +23,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
           {/* Identity & Mission */}
           <div className="lg:col-span-4 space-y-4">
-            <AppLink href="/" className="inline-flex items-center gap-2.5 text-[#FAF7F2]">
+            <AppLink href="/" className="inline-flex items-center gap-3 text-[#FAF7F2]">
               <BrandMark light />
-              <span className="font-serif text-xl font-semibold tracking-tight">
-                {settings?.organisationName || 'HIS AND HERS'}
+              <span className="flex flex-col leading-none">
+                <span className="font-serif text-xl font-semibold tracking-tight">
+                  {settings?.organisationName || 'HIS AND HERS'}
+                </span>
+                <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#E5CA7B]">
+                  Care Family Home · Est. 2025
+                </span>
               </span>
             </AppLink>
             <p className="text-sm leading-relaxed text-[#FAF7F2]/80 max-w-sm">
@@ -124,7 +129,7 @@ export function Footer() {
               </li>
               <li>
                 <AppLink href="/impact" className="hover:text-[#E5CA7B] transition-colors">
-                  Our Impact Since 2024
+                  Our Impact Since 2025
                 </AppLink>
               </li>
               <li>

@@ -19,6 +19,7 @@ import type {
   RehabReferralRequest,
   SafeHomeRequest,
   SiteSettings,
+  VillageContributionItem,
   VolunteerEnquiry,
 } from '../src/shared/types.ts';
 import { normalizeEventCategory } from '../src/utils/validation.ts';
@@ -31,6 +32,7 @@ export interface AppDatabase {
   childrensHomes: ChildrensHome[];
   rehabFacilities: RehabFacility[];
   asdGuides: AsdGuideTip[];
+  villageContributions: VillageContributionItem[];
   prayerRequests: PrayerRequest[];
   counsellingRequests: CounsellingRequest[];
   safeHomeRequests: SafeHomeRequest[];
@@ -284,7 +286,7 @@ function createSeedDatabase(): AppDatabase {
         slug: 'childrens-home-partnership-and-csr-day',
         title: 'Children’s Home Mentorship & Care Hamper Day',
         category: 'Community Outreach',
-        dateLabel: 'October 2024',
+        dateLabel: 'October 2025',
         locationLabel: 'Partner Children’s Home Courtyard',
         summary:
           'Corporate volunteers and community friends partnered together to spend a joyful day reading, playing, and equipping a partner children’s home.',
@@ -301,7 +303,7 @@ function createSeedDatabase(): AppDatabase {
         imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
         imageAlt: 'Corporate volunteers and community members reading with children at a partner children home',
         featured: true,
-        createdAt: '2024-10-18T10:00:00.000Z',
+        createdAt: '2025-10-18T10:00:00.000Z',
       },
       {
         id: 'imp-2',
@@ -474,6 +476,63 @@ function createSeedDatabase(): AppDatabase {
         createdAt: now,
       },
     ],
+    villageContributions: [
+      {
+        id: 'vc-1',
+        contributorName: 'Karanja & Family',
+        region: 'Nairobi',
+        tierId: 'books',
+        tierLabel: 'Reading & Stationery Pack',
+        units: 4,
+        amountKes: 6000,
+        encouragementNote: 'May every child at Amani Gardens love afternoon reading circles.',
+        createdAt: '2025-11-12T09:15:00.000Z',
+      },
+      {
+        id: 'vc-2',
+        contributorName: 'Mwangaza Wellness Group',
+        region: 'Kiambu',
+        tierId: 'sensory',
+        tierLabel: 'ASD Sensory Calm Kit',
+        units: 3,
+        amountKes: 10500,
+        encouragementNote: 'Standing beside autistic children and their dedicated parents.',
+        createdAt: '2026-01-19T14:20:00.000Z',
+      },
+      {
+        id: 'vc-3',
+        contributorName: 'Pwani Friends Circle',
+        region: 'Mombasa',
+        tierId: 'pantry',
+        tierLabel: 'Warm Family Pantry Basket',
+        units: 5,
+        amountKes: 12500,
+        encouragementNote: 'Fresh food baskets for coastal households rebuilding peace.',
+        createdAt: '2026-03-04T11:30:00.000Z',
+      },
+      {
+        id: 'vc-4',
+        contributorName: 'Hope Bridge Partners',
+        region: 'Nakuru',
+        tierId: 'counselling',
+        tierLabel: 'Counselling & Burden-Share Hour',
+        units: 4,
+        amountKes: 16000,
+        encouragementNote: 'Sponsored listening sessions and family rehab guidance in Rift Valley.',
+        createdAt: '2026-05-10T16:45:00.000Z',
+      },
+      {
+        id: 'vc-5',
+        contributorName: 'Amani Safeguard Allies',
+        region: 'Kisumu',
+        tierId: 'refuge',
+        tierLabel: 'Safe Refuge Emergency Night',
+        units: 2,
+        amountKes: 19000,
+        encouragementNote: 'Safe shelter and protection when women and children need it most.',
+        createdAt: '2026-08-21T08:10:00.000Z',
+      },
+    ],
     prayerRequests: [],
     counsellingRequests: [],
     safeHomeRequests: [],
@@ -592,15 +651,38 @@ function ensureDatabaseExists(): AppDatabase {
       migrated = true;
     }
 
+    const migratedImpact = migrateList(
+      parsed.impactProjects?.length ? parsed.impactProjects : seed.impactProjects
+    ).map((proj) => {
+      if (proj.id === 'imp-1' && (proj.dateLabel.includes('2024') || proj.createdAt.startsWith('2024'))) {
+        migrated = true;
+        return {
+          ...proj,
+          dateLabel: 'October 2025',
+          createdAt: '2025-10-18T10:00:00.000Z',
+        };
+      }
+      return proj;
+    });
+
+    const migratedContributions =
+      Array.isArray(parsed.villageContributions) && parsed.villageContributions.length > 0
+        ? parsed.villageContributions
+        : seed.villageContributions;
+    if (!parsed.villageContributions || parsed.villageContributions.length === 0) {
+      migrated = true;
+    }
+
     const db: AppDatabase = {
       ...seed,
       ...parsed,
       settings: migratedSettings,
-      impactProjects: migrateList(parsed.impactProjects?.length ? parsed.impactProjects : seed.impactProjects),
+      impactProjects: migratedImpact,
       events: migratedEvents,
       childrensHomes: migratedHomes,
       rehabFacilities: migratedRehab,
       asdGuides: parsed.asdGuides?.length ? parsed.asdGuides : seed.asdGuides,
+      villageContributions: migratedContributions,
       counsellingRequests: parsed.counsellingRequests || [],
       safeHomeRequests: parsed.safeHomeRequests || [],
       homeVisitBookings: parsed.homeVisitBookings || [],
@@ -646,6 +728,7 @@ export function getPublicSiteData(): PublicSiteData {
     childrensHomes: db.childrensHomes,
     rehabFacilities: db.rehabFacilities,
     asdGuides: db.asdGuides,
+    villageContributions: db.villageContributions,
   };
 }
 

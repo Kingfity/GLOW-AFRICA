@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
+import { CareVillageBuilder } from '../components/CareVillageBuilder';
 import { validateVolunteerEnquiry } from '../utils/validation';
 
 const PARTICIPATION_PATHS = [
@@ -124,7 +125,7 @@ export function GetInvolvedPage() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-[#1E0B2B] text-[#FAF7F2] py-16 sm:py-24">
+      <section className="bg-gradient-to-br from-[#1E0B2B] via-[#3B155F] to-[#C2593F] text-[#FAF7F2] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
@@ -179,6 +180,9 @@ export function GetInvolvedPage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Gamified Care Village Scene Builder & Live Support Feed */}
+      <CareVillageBuilder />
 
       {/* Volunteer Enquiry Form & Approved Resource Contribution Guidance */}
       <section id="volunteer-form" className="py-16 sm:py-24 bg-[#FAF7F2]">

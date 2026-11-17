@@ -5,7 +5,11 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
-import { sanitizeAssistantResult, validateAssistantMessage } from './src/utils/careTools.ts';
+import {
+  sanitizeAssistantResult,
+  validateAssistantMessage,
+  validateVillageContribution,
+} from './src/utils/careTools.ts';
 import {
   clearSessionCookie,
   getSessionFromRequest,
@@ -539,6 +543,40 @@ async function startServer() {
     res.status(201).json({
       received: true,
       message: `Your place is noted for ${event.title}. We look forward to welcoming you.`,
+    });
+  });
+
+  // Public submission: Care Family Village Builder contribution pledge
+  app.post('/api/contributions', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 20, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please pause briefly before pledging again.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateVillageContribution(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please check the highlighted fields.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    const newEntry = {
+      id: generateId('vc'),
+      ...validation.data,
+      createdAt: new Date().toISOString(),
+    };
+    db.villageContributions.unshift(newEntry);
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      contribution: newEntry,
+      villageContributions: db.villageContributions,
+      message: `Thank you, ${newEntry.contributorName}! Your ${newEntry.tierLabel} (${newEntry.units}x) just lit up our Care Family Village.`,
     });
   });
 

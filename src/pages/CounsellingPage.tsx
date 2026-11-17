@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, CheckCircle2, Lock, PhoneCall } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { CalmBreathWidget } from '../components/CalmBreathWidget';
+import { openCrisisTextChat } from '../components/CareGuideChatbot';
 import { useSiteData } from '../context/SiteDataContext';
 import { SafeImage } from '../components/SafeImage';
 import type { CounsellingRequest } from '../shared/types';
@@ -113,7 +114,7 @@ export function CounsellingPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-[#1E0B2B] text-[#FAF7F2] py-16 sm:py-24">
+      <section className="bg-gradient-to-br from-[#1E0B2B] via-[#3B155F] to-[#256358] text-[#FAF7F2] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7 space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
@@ -127,7 +128,7 @@ export function CounsellingPage() {
               silence. At HIS AND HERS, our counsellors and trained care companions hold a safe,
               stigma-free space where you can speak honestly and receive steady guidance.
             </p>
-            <div className="flex flex-wrap gap-4 pt-1">
+            <div className="flex flex-wrap gap-3.5 pt-1">
               <a
                 href="#counselling-form"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[#160822] bg-[#D4AF37] hover:bg-[#E5CA7B] rounded-md transition-colors"
@@ -135,9 +136,16 @@ export function CounsellingPage() {
                 Speak With a Counsellor
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </a>
+              <button
+                type="button"
+                onClick={() => openCrisisTextChat()}
+                className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#256358] hover:bg-[#1D4E46] rounded-md transition-colors"
+              >
+                Open Confidential Crisis Text Chat
+              </button>
               <AppLink
                 href="/prayer-worship"
-                className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-[#FAF7F2] border border-white/30 hover:bg-white/10 rounded-md transition-colors"
+                className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#FAF7F2] border border-white/30 hover:bg-white/10 rounded-md transition-colors"
               >
                 Prayer &amp; Spiritual Care
               </AppLink>

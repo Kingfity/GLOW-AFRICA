@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle2, LogOut, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
+import { openCrisisTextChat } from '../components/CareGuideChatbot';
 import { SafeImage } from '../components/SafeImage';
 import type { SafeHomeRequest } from '../shared/types';
 import { validateSafeHomeRequest } from '../utils/validation';
@@ -121,7 +122,7 @@ export function FindMyHomePage() {
       </div>
 
       {/* Hero */}
-      <section className="bg-[#1E0B2B] text-[#FAF7F2] py-16 sm:py-24">
+      <section className="bg-gradient-to-br from-[#1E0B2B] via-[#3B155F] to-[#7B2E3C] text-[#FAF7F2] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7 space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
@@ -136,6 +137,21 @@ export function FindMyHomePage() {
               coordination, protective relocation guidance, trauma-informed counselling, and trusted
               community refuge.
             </p>
+            <div className="flex flex-wrap gap-3.5 pt-1">
+              <button
+                type="button"
+                onClick={() => openCrisisTextChat()}
+                className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#160822] bg-[#D4AF37] hover:bg-[#E5CA7B] rounded-md transition-colors"
+              >
+                Open Discreet Crisis Text Chat
+              </button>
+              <a
+                href="#safe-refuge-form"
+                className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#FAF7F2] border border-white/30 hover:bg-white/10 rounded-md transition-colors"
+              >
+                Submit Safe Refuge Alert
+              </a>
+            </div>
           </div>
           <div className="lg:col-span-5">
             <div className="aspect-[4/3] rounded-lg overflow-hidden border border-white/15">
@@ -150,7 +166,7 @@ export function FindMyHomePage() {
       </section>
 
       {/* Safety Guidance & Safe Home Intake */}
-      <section className="py-16 sm:py-24 bg-[#FAF7F2]">
+      <section id="safe-refuge-form" className="py-16 sm:py-24 bg-[#FAF7F2]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-3">

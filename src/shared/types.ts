@@ -285,6 +285,26 @@ export interface EventRegistration {
   createdAt: string;
 }
 
+export type VillageTierId =
+  | 'books'
+  | 'pantry'
+  | 'sensory'
+  | 'counselling'
+  | 'mentorship'
+  | 'refuge';
+
+export interface VillageContributionItem {
+  id: string;
+  contributorName: string;
+  region: string;
+  tierId: VillageTierId;
+  tierLabel: string;
+  units: number;
+  amountKes: number;
+  encouragementNote: string;
+  createdAt: string;
+}
+
 export interface PublicSiteData {
   settings: SiteSettings;
   announcements: Announcement[];
@@ -293,6 +313,7 @@ export interface PublicSiteData {
   childrensHomes: ChildrensHome[];
   rehabFacilities: RehabFacility[];
   asdGuides: AsdGuideTip[];
+  villageContributions: VillageContributionItem[];
 }
 
 export interface AdminUserSession {

@@ -61,9 +61,9 @@ const ROUTE_META: Array<{ match: (p: string) => boolean; title: string; descript
   },
   {
     match: (p) => p.startsWith('/impact'),
-    title: 'Our Impact Since 2024 | HIS AND HERS',
+    title: 'Our Impact Since 2025 | HIS AND HERS',
     description:
-      'Documented children’s home visits, ASD workshops, rehabilitation partnerships, and community outreach carried out by HIS AND HERS.',
+      'Documented children’s home visits, ASD workshops, rehabilitation partnerships, and live transparent stewardship carried out by HIS AND HERS since 2025.',
   },
   {
     match: (p) => p.startsWith('/events'),

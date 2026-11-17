@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import { SafeImage } from '../components/SafeImage';
+import { TransparentImpactDashboard } from '../components/TransparentImpactDashboard';
 import { filterImpactProjects } from '../utils/validation';
 
 const CATEGORIES = [
@@ -22,23 +23,26 @@ export function ImpactPage() {
   return (
     <div>
       {/* Header */}
-      <section className="bg-[#1E0B2B] text-[#FAF7F2] py-16 sm:py-24">
+      <section className="bg-gradient-to-br from-[#1E0B2B] via-[#3B155F] to-[#256358] text-[#FAF7F2] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              Our Impact Since 2024
+              Our Impact Since 2025
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
-              Compassion Expressed Through Presence and Practical Care
+              Compassion Expressed Through Presence and Open Accountability
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              From neighbourhood food sharing to youth mentorship and home prayer visits, our
-              community work since 2024 reflects our core conviction: faith is lived through love,
-              dignity, and steady service.
+              From neighbourhood food sharing and children’s home CSR partnerships to mental health
+              circles and ASD parent workshops, our community work since 2025 is tracked transparently
+              across our regional care hubs.
             </p>
           </div>
         </div>
       </section>
+
+      {/* Transparent Financial Ledger, Regional Care Map & 2025-2026 Field Tour */}
+      <TransparentImpactDashboard />
 
       {/* Filter & Impact Gallery */}
       <section className="py-16 sm:py-24 bg-[#FAF7F2]">

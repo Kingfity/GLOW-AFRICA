@@ -454,4 +454,308 @@ export function filterPortfolioItems(
   return items.filter((item) => item.kind === kind);
 }
 
+export interface VillageSceneTier {
+  id:
+    | 'books'
+    | 'pantry'
+    | 'sensory'
+    | 'counselling'
+    | 'mentorship'
+    | 'refuge';
+  label: string;
+  sceneElementName: string;
+  missionFocus: string;
+  unitAmountKes: number;
+  beneficiaryImpact: string;
+  accentHex: string;
+}
+
+export const VILLAGE_SCENE_TIERS: VillageSceneTier[] = [
+  {
+    id: 'books',
+    label: 'Reading & Stationery Pack',
+    sceneElementName: 'Courtyard Library Gazebo',
+    missionFocus: 'Children’s Homes',
+    unitAmountKes: 1500,
+    beneficiaryImpact: 'Equips 5 children with storybooks, crayons & solar reading light.',
+    accentHex: '#D4AF37',
+  },
+  {
+    id: 'pantry',
+    label: 'Warm Family Pantry Basket',
+    sceneElementName: 'Shared Harvest Table',
+    missionFocus: 'Community Outreach',
+    unitAmountKes: 2500,
+    beneficiaryImpact: 'Provides fresh greens, grain staples & fruit for a household week.',
+    accentHex: '#C2593F',
+  },
+  {
+    id: 'sensory',
+    label: 'ASD Sensory Calm Kit',
+    sceneElementName: 'Quiet Eucalyptus Pavilion',
+    missionFocus: 'ASD Parents & Kids',
+    unitAmountKes: 3500,
+    beneficiaryImpact: 'Supplies visual routine cards, weighted wrap & ear defenders.',
+    accentHex: '#256358',
+  },
+  {
+    id: 'counselling',
+    label: 'Counselling & Burden-Share Hour',
+    sceneElementName: 'Listening Garden Lanterns',
+    missionFocus: 'Mental Health & Rehab',
+    unitAmountKes: 4000,
+    beneficiaryImpact: 'Sponsors confidential counselling & rehab liaison accompaniment.',
+    accentHex: '#59217C',
+  },
+  {
+    id: 'mentorship',
+    label: 'Children’s Home Mentorship Day',
+    sceneElementName: 'Unity Play & Music Court',
+    missionFocus: 'Children’s Home Visits',
+    unitAmountKes: 6500,
+    beneficiaryImpact: 'Co-funds a safe, joyful group mentorship workshop & sports gear.',
+    accentHex: '#B85D19',
+  },
+  {
+    id: 'refuge',
+    label: 'Safe Refuge Emergency Night',
+    sceneElementName: 'Royal Sanctuary Hearth Beacon',
+    missionFocus: 'Find My Home Protection',
+    unitAmountKes: 9500,
+    beneficiaryImpact: 'Covers urgent emergency shelter, hygiene packs & child safety care.',
+    accentHex: '#3B155F',
+  },
+];
+
+export const VILLAGE_FUNDING_GOAL_KES = 180000;
+
+export interface VillageProgressSummary {
+  totalKes: number;
+  pledgeCount: number;
+  goalPercent: number;
+  unlockedTierIds: VillageSceneTier['id'][];
+  countsByTier: Record<VillageSceneTier['id'], number>;
+}
+
+export function computeVillageProgress(
+  contributions: Array<{ tierId: VillageSceneTier['id']; amountKes: number; units: number }>
+): VillageProgressSummary {
+  const countsByTier: Record<VillageSceneTier['id'], number> = {
+    books: 0,
+    pantry: 0,
+    sensory: 0,
+    counselling: 0,
+    mentorship: 0,
+    refuge: 0,
+  };
+  let totalKes = 0;
+
+  for (const item of contributions) {
+    if (item.tierId in countsByTier) {
+      countsByTier[item.tierId] += Math.max(1, item.units || 1);
+      totalKes += Math.max(0, item.amountKes || 0);
+    }
+  }
+
+  const unlockedTierIds = (Object.keys(countsByTier) as VillageSceneTier['id'][]).filter(
+    (id) => countsByTier[id] > 0
+  );
+  const goalPercent = Math.min(100, Math.round((totalKes / VILLAGE_FUNDING_GOAL_KES) * 100));
+
+  return {
+    totalKes,
+    pledgeCount: contributions.length,
+    goalPercent,
+    unlockedTierIds,
+    countsByTier,
+  };
+}
+
+export function validateVillageContribution(raw: Record<string, unknown>): {
+  valid: boolean;
+  errors: Record<string, string>;
+  data?: {
+    contributorName: string;
+    region: string;
+    tierId: VillageSceneTier['id'];
+    tierLabel: string;
+    units: number;
+    amountKes: number;
+    encouragementNote: string;
+  };
+} {
+  const errors: Record<string, string> = {};
+  const contributorName =
+    typeof raw.contributorName === 'string' ? raw.contributorName.trim().slice(0, 100) : '';
+  const region = typeof raw.region === 'string' ? raw.region.trim().slice(0, 60) : 'Nairobi';
+  const tierId = typeof raw.tierId === 'string' ? (raw.tierId.trim() as VillageSceneTier['id']) : 'books';
+  const tier = VILLAGE_SCENE_TIERS.find((t) => t.id === tierId);
+  const unitsNum = Number(raw.units || 1);
+  const units = Number.isFinite(unitsNum) ? Math.max(1, Math.min(20, Math.round(unitsNum))) : 1;
+  const encouragementNote =
+    typeof raw.encouragementNote === 'string' ? raw.encouragementNote.trim().slice(0, 220) : '';
+
+  if (contributorName.length < 2) {
+    errors.contributorName = 'Please enter your name, family name, or organization.';
+  }
+  if (!tier) {
+    errors.tierId = 'Please choose a valid Care Family contribution kit.';
+  }
+  if (encouragementNote.length < 4) {
+    errors.encouragementNote = 'Please share a brief word of encouragement for the care home.';
+  }
+
+  if (Object.keys(errors).length > 0 || !tier) {
+    return { valid: false, errors };
+  }
+
+  return {
+    valid: true,
+    errors: {},
+    data: {
+      contributorName,
+      region: region || 'Nairobi',
+      tierId: tier.id,
+      tierLabel: tier.label,
+      units,
+      amountKes: tier.unitAmountKes * units,
+      encouragementNote,
+    },
+  };
+}
+
+export interface TransparentStewardshipItem {
+  id: string;
+  label: string;
+  percent: number;
+  colorHex: string;
+  detail: string;
+}
+
+export const TRANSPARENT_STEWARDSHIP_ALLOCATIONS: TransparentStewardshipItem[] = [
+  {
+    id: 'homes',
+    label: 'Partner Children’s Homes & Meals',
+    percent: 34,
+    colorHex: '#C2593F',
+    detail: 'School books, nutritious food baskets, uniforms, and supervised mentorship visit kits.',
+  },
+  {
+    id: 'mental-rehab',
+    label: 'Mental Health & Rehab Access',
+    percent: 26,
+    colorHex: '#256358',
+    detail: 'Licensed counsellor sessions, listening circles, and proximity rehabilitation referrals.',
+  },
+  {
+    id: 'refuge',
+    label: 'Find My Home Safe Refuge',
+    percent: 22,
+    colorHex: '#3B155F',
+    detail: 'Confidential emergency shelter stays, child safeguarding, and relocation care packs.',
+  },
+  {
+    id: 'asd',
+    label: 'ASD Family Toolkits & Workshops',
+    percent: 12,
+    colorHex: '#D4AF37',
+    detail: 'Sensory calm boxes, printed visual schedules, and monthly ASD parent coffee mornings.',
+  },
+  {
+    id: 'ops',
+    label: 'Verified Safeguarding & Hub Ops',
+    percent: 6,
+    colorHex: '#7A5A10',
+    detail: 'Transparent audit recordkeeping, vetting of partner homes, and helpline coordination.',
+  },
+];
+
+export interface CareRegionNode {
+  county: 'Nairobi' | 'Kiambu' | 'Nakuru' | 'Kisumu' | 'Mombasa';
+  hubSubtitle: string;
+  mapX: number;
+  mapY: number;
+  safeRefugeActive: boolean;
+  highlightNote: string;
+}
+
+export const KENYA_CARE_REGIONS: CareRegionNode[] = [
+  {
+    county: 'Kisumu',
+    hubSubtitle: 'Lakeside Family Care & Youth Hub',
+    mapX: 98,
+    mapY: 162,
+    safeRefugeActive: true,
+    highlightNote: 'Lakeside Wholeness outpatient rehab circles & ASD parent outreach.',
+  },
+  {
+    county: 'Nakuru',
+    hubSubtitle: 'Rift Valley Renewal & Early Care',
+    mapX: 168,
+    mapY: 158,
+    safeRefugeActive: true,
+    highlightNote: 'Neema Cradle infant care partnerships & Trauma Sanctuary desk.',
+  },
+  {
+    county: 'Kiambu',
+    hubSubtitle: 'Highland Youth & Bridge Haven',
+    mapX: 215,
+    mapY: 178,
+    safeRefugeActive: true,
+    highlightNote: 'Tumaini Bridge Haven school kits & Maji Mazuri Youth Recovery Hub.',
+  },
+  {
+    county: 'Nairobi',
+    hubSubtitle: 'Karen & Lang’ata Founding Sanctuary (Est. 2025)',
+    mapX: 222,
+    mapY: 204,
+    safeRefugeActive: true,
+    highlightNote: 'Primary Counselling Hub, Amani Gardens CSR visits & 24/7 Find My Home desk.',
+  },
+  {
+    county: 'Mombasa',
+    hubSubtitle: 'Coastal Light & New Dawn Wing',
+    mapX: 332,
+    mapY: 286,
+    safeRefugeActive: true,
+    highlightNote: 'Pwani Light teen vocational skills & coastal medical detox referrals.',
+  },
+];
+
+export interface RegionalCareSummary extends CareRegionNode {
+  homesCount: number;
+  rehabCount: number;
+  eventsCount: number;
+  pledgesKes: number;
+}
+
+export function buildRegionalCareSummary(input: {
+  childrensHomes: Array<{ countyRegion: string }>;
+  rehabFacilities: Array<{ countyRegion: string }>;
+  events: Array<{ venue: string }>;
+  contributions: Array<{ region: string; amountKes: number }>;
+}): RegionalCareSummary[] {
+  return KENYA_CARE_REGIONS.map((node) => {
+    const lower = node.county.toLowerCase();
+    const homesCount = input.childrensHomes.filter((h) =>
+      h.countyRegion.toLowerCase().includes(lower)
+    ).length;
+    const rehabCount = input.rehabFacilities.filter((f) =>
+      f.countyRegion.toLowerCase().includes(lower)
+    ).length;
+    const eventsCount = input.events.filter((e) => e.venue.toLowerCase().includes(lower)).length;
+    const pledgesKes = input.contributions
+      .filter((c) => c.region.toLowerCase().includes(lower))
+      .reduce((acc, c) => acc + (c.amountKes || 0), 0);
+
+    return {
+      ...node,
+      homesCount,
+      rehabCount,
+      eventsCount,
+      pledgesKes,
+    };
+  });
+}
+
 

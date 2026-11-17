@@ -1,9 +1,24 @@
-import { ArrowRight, Calendar, HeartHandshake, MapPin, Sparkles } from 'lucide-react';
+import { useRef, useState } from 'react';
+import {
+  ArrowRight,
+  Calendar,
+  HeartHandshake,
+  LifeBuoy,
+  MapPin,
+  Pause,
+  Play,
+  Sparkles,
+} from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import { SafeImage } from '../components/SafeImage';
+import { BrandMark } from '../components/Navbar';
 import { CareCompassSection } from '../components/CareCompassSection';
+import { CareVillageBuilder } from '../components/CareVillageBuilder';
+import { openCrisisTextChat } from '../components/CareGuideChatbot';
 import { LivingPortfolioSection } from '../components/LivingPortfolioSection';
+import { ScrollReveal } from '../components/ScrollReveal';
+import { TransparentImpactDashboard } from '../components/TransparentImpactDashboard';
 import { VideoShowcaseSection } from '../components/VideoShowcaseSection';
 import { formatEventDate } from '../utils/validation';
 
@@ -11,6 +26,7 @@ const CARE_PATHWAYS = [
   {
     index: '01.',
     accent: 'text-[#C2593F]',
+    borderColor: '#C2593F',
     title: 'Children’s Homes & Corporate CSR Visits',
     description:
       'We guide individuals, friend groups, schools, and corporate teams directly to verified children’s homes—and onboard partner NGOs and companies to cooperate sustainably.',
@@ -20,6 +36,7 @@ const CARE_PATHWAYS = [
   {
     index: '02.',
     accent: 'text-[#256358]',
+    borderColor: '#256358',
     title: 'Rehabilitation Centres Near You',
     description:
       'Connect loved ones navigating addiction, trauma, or youth crisis with verified rehabilitation facilities sorted by proximity and chosen care format.',
@@ -29,6 +46,7 @@ const CARE_PATHWAYS = [
   {
     index: '03.',
     accent: 'text-[#256358]',
+    borderColor: '#D4AF37',
     title: 'ASD Parents & Kids Care Hub',
     description:
       'Simple, welcoming daily living points, sensory corner setups, visual routine guides, and parent mentors for families raising autistic children.',
@@ -38,6 +56,7 @@ const CARE_PATHWAYS = [
   {
     index: '04.',
     accent: 'text-[#3B155F]',
+    borderColor: '#3B155F',
     title: 'Talk to a Counsellor & Lighten Your Burden',
     description:
       'A stigma-free mental health and listening space where you can speak with a counsellor, process grief or burnout, or share anonymously in confidence.',
@@ -47,6 +66,7 @@ const CARE_PATHWAYS = [
   {
     index: '05.',
     accent: 'text-[#7A5A10]',
+    borderColor: '#B85D19',
     title: 'Find My Home · Safe Refuge',
     description:
       'Confidential safe-shelter coordination and protection support for women, men, and children fleeing gender-based violence or child abuse.',
@@ -56,6 +76,7 @@ const CARE_PATHWAYS = [
   {
     index: '06.',
     accent: 'text-[#3B155F]',
+    borderColor: '#59217C',
     title: 'Interdenominational Prayer & Worship',
     description:
       'Rooted in our prayer movement heritage, we gather across backgrounds to seek God together and uphold one another in confidential prayer.',
@@ -71,27 +92,52 @@ export function HomePage() {
   const featuredImpact = (data?.impactProjects || []).slice(0, 3);
   const upcomingEvents = (data?.events || []).slice(0, 3);
 
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [heroMotionPaused, setHeroMotionPaused] = useState(false);
+
+  const toggleHeroMotion = () => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      void video.play().catch(() => {});
+      setHeroMotionPaused(false);
+    } else {
+      video.pause();
+      setHeroMotionPaused(true);
+    }
+  };
+
   return (
     <div>
-      {/* 1. Full-Width Atmospheric Hero */}
+      {/* 1. Immersive Video-Background Hero */}
       <section className="relative bg-[#160822] text-[#FAF7F2] overflow-hidden">
         <div className="absolute inset-0">
-          <SafeImage
-            src="/src/assets/images/hero_worship_community_1794821886213.jpg"
-            alt="Community gathered together in warmth, prayer, and fellowship at HIS AND HERS"
+          <video
+            ref={heroVideoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/src/assets/images/hero_worship_community_1794821886213.jpg"
             className="w-full h-full object-cover object-center"
-          />
+            aria-hidden="true"
+          >
+            <source src="/videos/childrens_home_visits_reel.mp4" type="video/mp4" />
+          </video>
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[#160822]/78 sm:bg-transparent sm:bg-gradient-to-r sm:from-[#160822]/92 sm:via-[#2C1042]/76 sm:to-[#C2593F]/35"
+            className="absolute inset-0 bg-[#160822]/80 sm:bg-transparent sm:bg-gradient-to-r sm:from-[#160822]/94 sm:via-[#3B155F]/80 sm:to-[#C2593F]/45"
           />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-24 lg:py-32">
           <div className="max-w-2xl space-y-6">
-            <p className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#F3A683]">
-              HIS AND HERS · Care Family Home &amp; Community Hub Since 2024
-            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <BrandMark light size="md" />
+              <p className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#F3D79B]">
+                HIS AND HERS · Care Family Home Established 2025
+              </p>
+            </div>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[58px] font-semibold leading-[1.08] tracking-tight text-[#FAF7F2]">
               {settings?.heroHeadline || 'A Care Family Home That Connects Everyone to Hope.'}
             </h1>
@@ -99,7 +145,7 @@ export function HomePage() {
               {settings?.heroSubheadline ||
                 'HIS AND HERS is a vibrant community-based organization rooted in prayer, mental wellbeing, safe refuge, children’s home partnerships, rehabilitation support, and autism family care—uniting individuals, families, and organisations to touch lives together.'}
             </p>
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-3.5">
               <AppLink
                 href="/home-visits"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-[#160822] bg-[#D4AF37] hover:bg-[#E5CA7B] rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
@@ -109,12 +155,40 @@ export function HomePage() {
               </AppLink>
               <AppLink
                 href="/counselling"
-                className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-[#FAF7F2] border border-[#FAF7F2]/45 hover:bg-white/10 rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
+                className="inline-flex items-center justify-center px-5 py-3.5 text-sm font-semibold text-[#FAF7F2] bg-[#256358] hover:bg-[#1D4E46] rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
               >
                 Talk to a Counsellor
               </AppLink>
+              <button
+                type="button"
+                onClick={() => openCrisisTextChat()}
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-xs sm:text-sm font-semibold text-[#FAF7F2] border border-[#F3D79B]/45 hover:bg-white/10 rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
+              >
+                <LifeBuoy className="w-4 h-4 text-[#F3D79B]" aria-hidden="true" />
+                Crisis Text Chat
+              </button>
             </div>
           </div>
+
+          {/* Ambient Video Motion Accessibility Toggle */}
+          <button
+            type="button"
+            onClick={toggleHeroMotion}
+            aria-pressed={heroMotionPaused}
+            className="mt-8 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-black/35 hover:bg-black/55 border border-white/20 text-[11px] font-medium text-[#FAF7F2]/90 transition-colors"
+          >
+            {heroMotionPaused ? (
+              <>
+                <Play className="w-3 h-3 text-[#E5CA7B]" aria-hidden="true" />
+                Play Background Motion
+              </>
+            ) : (
+              <>
+                <Pause className="w-3 h-3 text-[#E5CA7B]" aria-hidden="true" />
+                Pause Background Motion
+              </>
+            )}
+          </button>
         </div>
       </section>
 
@@ -122,9 +196,9 @@ export function HomePage() {
       {activeAnnouncement && (
         <section
           aria-label="Community announcement"
-          className="bg-[#FDF6EE] border-b border-[#C2593F]/20"
+          className="bg-gradient-to-r from-[#FDF6EE] via-[#FAF7F2] to-[#EAF6F2] border-b border-[#C2593F]/20"
         >
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:pr-72 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
             <p className="text-[#1E0B2B]">
               <span className="font-semibold text-[#C2593F]">{activeAnnouncement.title}:</span>{' '}
               {activeAnnouncement.message}
@@ -146,8 +220,8 @@ export function HomePage() {
       <CareCompassSection />
 
       {/* 2. Welcome & Care Family Home Identity */}
-      <section className="py-16 sm:py-24 bg-[#FAF7F2]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <section className="py-16 sm:py-24 bg-[#FDF4EB]">
+        <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
@@ -180,7 +254,7 @@ export function HomePage() {
             </div>
 
             <div className="lg:col-span-6">
-              <div className="h-full min-h-[320px] rounded-xl overflow-hidden border border-[#C2593F]/20">
+              <div className="h-full min-h-[320px] rounded-xl overflow-hidden border border-[#C2593F]/25 shadow-sm">
                 <SafeImage
                   src="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
                   alt="Volunteers and children sharing books and fresh mango beneath sunlit acacia trees"
@@ -189,12 +263,12 @@ export function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 3. Six Care Family Pathways */}
       <section className="py-16 sm:py-24 bg-white border-y border-[#3B155F]/10">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-2xl space-y-3 mb-12">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#7A5A10]">
               How Our Care Family Connects You
@@ -209,7 +283,11 @@ export function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
             {CARE_PATHWAYS.map((item) => (
-              <div key={item.index} className="pt-6 border-t border-[#3B155F]/15 space-y-3 flex flex-col justify-between">
+              <div
+                key={item.index}
+                style={{ borderTopColor: item.borderColor }}
+                className="pt-6 border-t-2 space-y-3 flex flex-col justify-between"
+              >
                 <div className="space-y-3">
                   <p className={`text-xs font-semibold tracking-wider tabular-nums ${item.accent}`}>
                     {item.index}
@@ -229,7 +307,7 @@ export function HomePage() {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 4. Interactive Video Stories in Motion */}
@@ -238,9 +316,12 @@ export function HomePage() {
       {/* 4b. Realistic Photo & Lifelike Artwork Portfolio + Interactive Colour Grading */}
       <LivingPortfolioSection />
 
+      {/* 4c. Gamified Care Family Village Scene Builder + Real-Time Supporter Stream */}
+      <CareVillageBuilder compact />
+
       {/* 5. ASD Family Care & Rehabilitation Spotlight */}
       <section className="py-16 sm:py-24 bg-[#256358] text-[#FAF7F2]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
             <div className="lg:col-span-6 order-2 lg:order-1">
               <div className="h-full min-h-[300px] rounded-xl overflow-hidden border border-white/20">
@@ -286,16 +367,19 @@ export function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      {/* 6. Community Impact & Featured Outreach Since 2024 */}
+      {/* 5b. Live Transparent Impact Dashboard & Kenya Care Network Map */}
+      <TransparentImpactDashboard compact />
+
+      {/* 6. Community Impact & Featured Outreach Since 2025 */}
       <section className="py-16 sm:py-24 bg-[#FAF7F2]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div className="max-w-2xl space-y-3">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
-                Community Impact Since 2024
+                Community Impact Since 2025
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
                 Touching Lives Across Homes &amp; Neighbourhoods
@@ -357,12 +441,12 @@ export function HomePage() {
               </article>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 7. Upcoming Gatherings & Events */}
       <section className="py-16 sm:py-24 bg-[#F3EEF8]/65 border-y border-[#3B155F]/10">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div className="max-w-2xl space-y-3">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#7A5A10]">
@@ -422,7 +506,7 @@ export function HomePage() {
               </div>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 8. Corporate CSR / Children's Home Partner & Prayer Invitation */}
@@ -452,7 +536,7 @@ export function HomePage() {
               </div>
             </div>
 
-            <div className="bg-[#3B155F] text-[#FAF7F2] rounded-xl p-8 sm:p-10 space-y-5 flex flex-col justify-between">
+            <div className="bg-gradient-to-br from-[#3B155F] to-[#1E0B2B] text-[#FAF7F2] rounded-xl p-8 sm:p-10 space-y-5 flex flex-col justify-between">
               <div className="space-y-3">
                 <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B] inline-flex items-center gap-2">
                   <HeartHandshake className="w-4 h-4" aria-hidden="true" />
