@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, HeartHandshake, Users } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { SafeImage } from '../components/SafeImage';
 
@@ -10,66 +10,105 @@ export function AboutPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              About HIS AND HERS · Established 2025
+              About His &amp; Hers Circle of Hope · Ruiru, Kiambu County · Est. 2025
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
-              Making the World Better by Touching Lives in Our Community
+              Bringing Neighbours Together Long After an Outreach Day Ends
             </h1>
-            <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              HIS AND HERS is a community-based organization shaped by faith, compassion, mental
-              health advocacy, and practical refuge—standing beside women, men, youth, and children
-              in moments of need.
+            <p className="text-base sm:text-lg text-[#FAF7F2]/88 leading-relaxed">
+              We are a community-based organisation born from Christian faith and neighbourly love—so
+              an elder living alone knows whom to call, and a family carrying quiet weight never has
+              to stand unseen.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Story & Core Commitments */}
+      {/* Continuous Origin & Ongoing Movement Story */}
       <section className="py-16 sm:py-24 bg-[#FAF7F2]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-7 space-y-8">
               <div className="space-y-4">
+                <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
+                  Where Our Circle Began (2025) &amp; Keeps Growing
+                </p>
                 <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-                  Who We Are &amp; Why We Exist
+                  From Quiet Need Next Door to an Ongoing Circle of Care
                 </h2>
                 <p className="text-base text-[#3E3349] leading-relaxed">
-                  Born from a shared calling in 2025, HIS AND HERS brings together spiritual
-                  fellowship and front-line community care. We believe healing touches the whole
-                  person—mind, body, spirit, and home.
+                  Here in <strong>Ruiru, Kiambu County</strong>, an elder may be wondering what to
+                  cook for supper while a neighbour just a few doors away has spare <em>unga</em>{' '}
+                  ready to share. Often the neighbour never knows, and the elder finds it hard to ask.
+                  In <strong>2025</strong>, we founded <strong>His &amp; Hers Circle of Hope</strong>{' '}
+                  to close that quiet distance and bring those neighbours together.
                 </p>
                 <p className="text-base text-[#3E3349] leading-relaxed">
-                  That is why our work spans confidential mental health counselling to help people
-                  lighten silent burdens, our Find My Home desk supporting survivors fleeing
-                  gender-based violence and child abuse, rehabilitation facility referrals, ASD family
-                  guidance, prayer support, and organised children’s home visits for corporate teams
-                  and volunteers.
+                  Moved by our Christian faith, we wanted to build a steady community-based
+                  organisation people could rely on long after a single outreach day had ended. We
+                  wanted an older neighbour living alone to always know whom to call—and a mother or
+                  guardian caring for a child with a disability, or someone carrying heavy trauma
+                  and stress, to have someone sit beside them and genuinely ask,{' '}
+                  <em>“And how are you doing?”</em>
+                </p>
+                <p className="text-base text-[#3E3349] leading-relaxed">
+                  That commitment keeps unfolding step by step. In <strong>2026</strong>, our
+                  conveners <strong>Nancy Kariuki</strong> and the{' '}
+                  <strong>GLOW Prayer Movement</strong>, together with neighbours and well-wishers,
+                  walked and prayed across <strong>four Ruiru wards</strong>. Along that walk, our
+                  community gathered warm blankets for our elders alongside maize flour, rice, and
+                  sugar for student homes at <strong>Ruiru Boys</strong>—sharing unhurried meals
+                  and words of encouragement together.
+                </p>
+                <p className="text-base text-[#3E3349] leading-relaxed">
+                  The same steady rhythm guides us every season—from mental health, trauma &amp;
+                  stress care, dedicated special needs family accompaniment, rehabilitation
+                  referrals, and safe refuge coordination across all 47 counties, to preparing for
+                  our annual <strong>Christmas of Hope</strong> and Nov 28 tables where we sit down
+                  to share a warm meal with our elders, listen to their stories, and pack
+                  nourishing food for them to carry home.
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-[#3B155F]/15 space-y-4">
-                <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-                  Interdenominational &amp; Inclusive Welcome
-                </h2>
-                <p className="text-base text-[#3E3349] leading-relaxed">
-                  No one has to fit a single background, denomination, or circumstance to receive
-                  care or serve alongside us. Every neighbour—his and hers, young and old—deserves
-                  safety, encouragement, and belonging.
+              <div className="p-6 sm:p-8 rounded-xl bg-white border border-[#D4AF37]/45 space-y-3">
+                <p className="font-serif italic text-2xl sm:text-[26px] text-[#1E0B2B] leading-snug">
+                  “Whether you come because you could use a hand or because you have one to offer,{' '}
+                  <span className="text-[#C2593F]">karibu sana</span>. There is room for you in our
+                  circle.”
                 </p>
               </div>
             </div>
 
             <div className="lg:col-span-5 space-y-6">
-              <div className="aspect-[4/3] rounded-lg overflow-hidden border border-[#3B155F]/12">
+              <div className="aspect-[4/3] rounded-xl overflow-hidden border border-[#3B155F]/15 shadow-sm">
                 <SafeImage
-                  src="/src/assets/images/lifelike_care_family_art_1794832340734.jpg"
-                  alt="Lifelike painterly illustration of the HIS AND HERS Care Family Home courtyard with elders, parents, and children walking beneath acacia and jacaranda trees"
+                  src="/src/assets/images/ruiru_elder_outreach_1795094869017.jpg"
+                  alt="Kenyan neighbour handing warm folded blankets and staple food parcels of maize flour and sugar to a smiling elder on a sunlit veranda in Ruiru"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <figure className="text-xs text-[#665B73] italic">
-                Lifelike Care Family Home courtyard artwork—warmth, open doors, and generational belonging at HIS AND HERS.
+              <figure className="text-xs text-[#665B73] leading-relaxed">
+                35mm field documentary capture: sharing warm blankets, maize flour, and company on a
+                sunlit veranda in Ruiru, Kiambu County—turning quiet distance into neighbourly care.
               </figure>
+
+              <div className="bg-[#FDF6EE] border border-[#C2593F]/20 rounded-xl p-6 space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#C2593F] inline-flex items-center gap-1.5">
+                  <Users className="w-4 h-4" aria-hidden="true" />
+                  Meet Our Conveners &amp; Administrators
+                </p>
+                <p className="text-sm text-[#3E3349] leading-relaxed">
+                  Reach Nancy Kariuki, the GLOW Prayer Movement conveners, or our care and admin
+                  help desks coordinating ongoing ward visits and support.
+                </p>
+                <AppLink
+                  href="/leadership"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#3B155F] hover:text-[#C2593F]"
+                >
+                  Open Administrators &amp; Help Desk
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </AppLink>
+              </div>
             </div>
           </div>
         </div>
@@ -83,12 +122,13 @@ export function AboutPage() {
               Our Mission
             </p>
             <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-              Mental Wellbeing, Safe Refuge &amp; Living Compassion
+              Calm Hearts, Safe Refuge &amp; Steady Neighbourly Care
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              To stand alongside individuals and families through accessible counselling, protective
-              shelter coordination against abuse, prayer fellowship, and organised community
-              service visits.
+              To stand alongside elders, youth, mothers, and families long after outreach days
+              conclude through accessible counselling, trauma &amp; mental health care, special
+              needs family accompaniment, protective shelter coordination, rehabilitation bridges,
+              and children’s home partnerships.
             </p>
           </div>
           <div className="space-y-3">
@@ -96,11 +136,12 @@ export function AboutPage() {
               Our Vision
             </p>
             <h2 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
-              Whole Hearts and Safe Homes in Every Neighbourhood
+              Whole Hearts and Warm Tables in Every Neighbourhood
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              A world made measurably kinder where emotional struggles are met with empathy, homes
-              are free from violence, and communities actively show up for one another.
+              Communities across Ruiru, Kenya’s 47 counties, and East and Central Africa where
+              nobody eats in silent hunger, trauma and special-needs caregiving are met with steady
+              support, and every home walks in safety and dignity.
             </p>
           </div>
         </div>
@@ -109,23 +150,34 @@ export function AboutPage() {
       {/* Commitment CTA */}
       <section className="py-16 sm:py-20 bg-[#FAF7F2]">
         <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center space-y-6">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#256358]">
+            <HeartHandshake className="w-4 h-4" aria-hidden="true" />
+            His &amp; Hers Circle of Hope
+          </p>
           <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
             Walk With Us or Reach Out Today
           </h2>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <AppLink
-              href="/counselling"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors"
+              href="/special-needs-families"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#C2593F] hover:bg-[#A64831] rounded-md transition-colors"
             >
-              Talk to a Counsellor
+              Special Needs Kids &amp; Families
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </AppLink>
-              <AppLink
-                href="/home-visits"
-                className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md hover:bg-[#F3EEF8] transition-colors"
-              >
-                Organize a Children’s Home Visit
-              </AppLink>
+            <AppLink
+              href="/mental-health"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#256358] hover:bg-[#1D4E46] rounded-md transition-colors"
+            >
+              Mental Health &amp; Trauma Care
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </AppLink>
+            <AppLink
+              href="/leadership"
+              className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md hover:bg-[#F3EEF8] transition-colors"
+            >
+              Administrators &amp; Help
+            </AppLink>
           </div>
         </div>
       </section>

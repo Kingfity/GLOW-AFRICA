@@ -93,7 +93,7 @@ export function ImpactDetailPage({ slug }: { slug: string }) {
             </div>
             <div className="space-y-2.5 pt-6 border-t border-[#3B155F]/10">
               <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
-                What HIS AND HERS Hoped to Achieve
+                What His &amp; Hers Circle of Hope Hoped to Achieve
               </h2>
               <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
                 {project.whatGlowHopedToAchieve}

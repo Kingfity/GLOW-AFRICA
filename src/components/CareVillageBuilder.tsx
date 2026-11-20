@@ -89,7 +89,7 @@ export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
   return (
     <section
       id="care-village-builder"
-      aria-label="Build the HIS AND HERS Care Family Village"
+      aria-label="Build the His & Hers Circle of Hope Care Family Village"
       className="py-16 sm:py-24 bg-gradient-to-br from-[#F7F1FC] via-[#FDF7F0] to-[#EEF7F4] border-y border-[#3B155F]/12"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-10">
@@ -104,10 +104,10 @@ export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
               Build Our Care Family Village Together
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              Every contribution lights up another living space in our Care Family Sanctuary—from
-              children’s home library gazebos and ASD calm pavilions to safe refuge emergency care.
-              Select a kit below to preview it inside the courtyard scene and pledge alongside real
-              community supporters.
+              Every contribution lights up another living space in our Circle of Hope Sanctuary—from
+              children’s home library gazebos and trauma healing rooms to elder pantry baskets and
+              safe refuge care. Select a kit below to preview it inside the courtyard scene and
+              pledge alongside real community supporters.
             </p>
           </div>
 
@@ -148,7 +148,7 @@ export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
                 <svg
                   viewBox="0 0 720 380"
                   role="img"
-                  aria-label="Interactive HIS AND HERS Care Family Village Sanctuary Scene"
+                  aria-label="Interactive His & Hers Circle of Hope Care Family Village Sanctuary Scene"
                   className="w-full h-auto block"
                 >
                   <defs>
@@ -242,7 +242,7 @@ export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
                     </text>
                   </g>
 
-                  {/* 3. ASD QUIET EUCALYPTUS PAVILION (sensory) */}
+                  {/* 3. QUIET EUCALYPTUS TRAUMA LISTENING PAVILION (sensory) */}
                   <g
                     style={{
                       opacity: isLayerActive('sensory') ? 1 : 0.3,
@@ -253,11 +253,11 @@ export function CareVillageBuilder({ compact = false }: { compact?: boolean }) {
                     {/* Canopy Acacia / Eucalyptus tree */}
                     <rect x="592" y="185" width="14" height="86" fill="#5A3928" />
                     <ellipse cx="598" cy="176" rx="58" ry="30" fill="#256358" stroke="#84B5A9" strokeWidth="2" />
-                    {/* Sensory Dome Pavilion */}
+                    {/* Listening Dome Pavilion */}
                     <path d="M510 278 C514 226 588 226 592 278 Z" fill="#EAF6F2" stroke="#256358" strokeWidth="2.5" />
                     <circle cx="551" cy="258" r="10" fill="#84B5A9" />
                     <text x="556" y="302" textAnchor="middle" fill="#FAF7F2" fontSize="11" fontWeight="600">
-                      ASD Sensory Calm ({progress.countsByTier.sensory})
+                      Trauma Healing ({progress.countsByTier.sensory})
                     </text>
                   </g>
 

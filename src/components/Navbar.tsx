@@ -5,9 +5,9 @@ import { AppLink, useRouter } from '../context/RouterContext';
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
   { label: 'Children’s Homes', href: '/home-visits' },
+  { label: 'Special Needs', href: '/special-needs-families' },
+  { label: 'Mental Health', href: '/mental-health' },
   { label: 'Recovery', href: '/recovery' },
-  { label: 'Family Wellness', href: '/gbv' },
-  { label: 'Accountability', href: '/accountability' },
   { label: 'Events', href: '/events' },
 ];
 
@@ -132,10 +132,10 @@ export function Navbar() {
           <BrandMark />
           <span className="flex flex-col leading-none">
             <span className="font-serif text-xl sm:text-[22px] font-semibold tracking-tight whitespace-nowrap">
-              HIS AND HERS
+              HIS &amp; HERS
             </span>
             <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#7A5A10]">
-              Care Family · Est. 2025
+              Circle of Hope · Est. 2025
             </span>
           </span>
         </AppLink>
@@ -194,15 +194,19 @@ export function Navbar() {
         >
           {[
             ...NAV_ITEMS,
-            { label: 'Rehabilitation', href: '/rehabilitation' },
-            { label: 'ASD Family', href: '/asd-support' },
-            { label: 'Mental Health & Counselling', href: '/counselling' },
-            { label: 'Find My Home · Calm Refuge', href: '/find-my-home' },
-            { label: 'About Us', href: '/about' },
-            { label: 'Our Impact', href: '/impact' },
+            { label: 'Special Needs Kids & Families', href: '/special-needs-families' },
+            { label: 'Mental Health, Trauma & Stress', href: '/mental-health' },
+            { label: 'Rehabilitation Across 47 Counties', href: '/rehabilitation' },
+            { label: 'Family Wellness · Calm Corner', href: '/gbv' },
+            { label: 'Accountability (Open Books)', href: '/accountability' },
+            { label: 'Talk to a Counsellor', href: '/counselling' },
+            { label: 'Find My Home · Safe Refuge', href: '/find-my-home' },
+            { label: 'About Us (Ruiru Story)', href: '/about' },
+            { label: 'Administrators & Help Desk', href: '/leadership' },
+            { label: 'Our Impact Since 2025', href: '/impact' },
             { label: 'Prayer & Worship', href: '/prayer-worship' },
-            { label: 'Contact', href: '/contact' },
-          ].map((item) => {
+            { label: 'Contact Us', href: '/contact' },
+          ].filter((item, idx, arr) => arr.findIndex((x) => x.href === item.href) === idx).map((item) => {
             const active = isActive(item.href);
             return (
               <AppLink

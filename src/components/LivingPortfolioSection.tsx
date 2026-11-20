@@ -25,8 +25,8 @@ export function LivingPortfolioSection() {
   const kindFilters = useMemo<PortfolioKind[]>(() => {
     const hasUploads = allItems.some((item) => item.kind === 'Community Upload');
     return hasUploads
-      ? ['All', 'Documentary Photo', 'Lifelike Illustration', 'Community Upload']
-      : ['All', 'Documentary Photo', 'Lifelike Illustration'];
+      ? ['All', 'Documentary Photo', 'Community Upload']
+      : ['All', 'Documentary Photo'];
   }, [allItems]);
 
   const visibleItems = useMemo(
@@ -57,13 +57,12 @@ export function LivingPortfolioSection() {
               Curated Visual Portfolio · Growing With Community Moments
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-              Realistic Photography, Lifelike Art &amp; Colour That Communicates
+              Documentary Community Photography &amp; Colour That Communicates
             </h2>
             <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
-              Explore our documentary photography and lifelike Care Family artwork while new field
-              photos are added through the Admin Portal. Choose a communicative colour atmosphere
-              below to experience how light shapes warmth, sensory calm, or dignity across every
-              frame.
+              Explore lifelike 35mm documentary photography across Ruiru, children’s homes, special
+              needs mothers’ circles, and listening rooms—alongside uploaded community photos from
+              our Admin Portal.
             </p>
           </div>
 
@@ -172,7 +171,10 @@ export function LivingPortfolioSection() {
         </div>
 
         {/* Portfolio Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          key={kindFilter}
+          className="tab-panel-smooth grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {visibleItems.map((item) => (
             <article
               key={item.id}

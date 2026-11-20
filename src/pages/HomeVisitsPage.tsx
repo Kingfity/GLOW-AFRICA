@@ -4,17 +4,20 @@ import {
   Building2,
   CalendarCheck2,
   CheckCircle2,
+  ExternalLink,
   GraduationCap,
   HeartHandshake,
+  Mail,
   MapPin,
+  PhoneCall,
   Search,
   Users,
 } from 'lucide-react';
-import { CommunityVideoPlayer } from '../components/CommunityVideoPlayer';
 import { SafeImage } from '../components/SafeImage';
 import { VisitKitEstimator } from '../components/VisitKitEstimator';
 import { useSiteData } from '../context/SiteDataContext';
 import type { ChildrensHome, HomeVisitBooking, PartnerOrganization } from '../shared/types';
+import { searchKenyaCounties } from '../utils/kenyaCounties';
 import { validateHomeVisitBooking, validatePartnerOnboarding } from '../utils/validation';
 
 const ORGANIZER_TYPES: HomeVisitBooking['organizerType'][] = [
@@ -55,7 +58,10 @@ export function HomeVisitsPage() {
     'All' | 'Children’s Home' | 'School for Differently Abled'
   >('All');
   const [regionFilter, setRegionFilter] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(() => {
+    if (typeof window === 'undefined') return '';
+    return new URLSearchParams(window.location.search).get('county') || '';
+  });
   const [formMode, setFormMode] = useState<'visit' | 'partner'>('visit');
   const workspaceRef = useRef<HTMLDivElement | null>(null);
 
@@ -150,6 +156,13 @@ export function HomeVisitsPage() {
       );
     });
   }, [homes, typeFilter, regionFilter, searchQuery]);
+
+  const matchedCountyHub = useMemo(() => {
+    const q = searchQuery.trim();
+    if (!q) return null;
+    const results = searchKenyaCounties(q);
+    return results.length > 0 && results.length <= 4 ? results[0] : null;
+  }, [searchQuery]);
 
   const selectHomeForVisit = (home: ChildrensHome) => {
     setSelectedHomeId(home.id);
@@ -305,8 +318,8 @@ export function HomeVisitsPage() {
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
               Explore children’s homes across every region of Kenya—and partner schools serving
-              autistic, blind, deaf, and physically differently abled learners. Plan structured CSR
-              visits, supply deliveries, and inclusive community mentorship with care.
+              neurodiverse, blind, deaf, and physically differently abled learners. Plan structured
+              CSR visits, supply deliveries, and inclusive community mentorship with care.
             </p>
             <div className="flex flex-wrap gap-4 pt-1">
               <button
@@ -335,23 +348,17 @@ export function HomeVisitsPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="rounded-xl overflow-hidden border border-white/15 bg-[#160822]">
-              <CommunityVideoPlayer
-                videoSrc="/videos/childrens_home_visits_reel.mp4"
-                posterSrc="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
-                ariaLabel="Volunteers and children reading storybooks together during a partner children home visit"
-                soundMoodLabel="Warm Acoustic Guitar"
-                chapters={[
-                  { timeSeconds: 0, label: '01 · Reading Circle' },
-                  { timeSeconds: 3.7, label: '02 · Mentorship' },
-                  { timeSeconds: 7.4, label: '03 · Care Packs' },
-                ]}
+            <figure className="rounded-xl overflow-hidden border border-white/15 bg-[#160822] shadow-xl">
+              <SafeImage
+                src="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
+                alt="Kenyan volunteers and children reading storybooks on woven mats beneath sunny courtyard acacia trees"
+                className="w-full aspect-[4/3] object-cover"
               />
-              <div className="px-5 py-3 bg-[#1E0B2B] flex items-center justify-between text-xs text-[#FAF7F2]/80 border-t border-white/10">
-                <span>Partner Children’s Home Visit Highlights</span>
-                <span className="text-[#E5CA7B] tabular-nums">0:12 Reel · Acoustic Sound</span>
-              </div>
-            </div>
+              <figcaption className="px-5 py-3.5 bg-[#1E0B2B] flex items-center justify-between text-xs text-[#FAF7F2]/85 border-t border-white/10">
+                <span>Partner Children’s Homes &amp; Inclusive Schools (47 Counties)</span>
+                <span className="text-[#E5CA7B]">Safeguarded Visits</span>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
@@ -369,7 +376,8 @@ export function HomeVisitsPage() {
               </h2>
               <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
                 Search beyond a shortlist—filter by children’s homes or schools for blind, deaf,
-                physically differently abled, and autistic learners across all 8 regions of Kenya.
+                physically differently abled, and neurodiverse learners across Kenya’s regions and
+                all 47 counties.
               </p>
             </div>
 
@@ -383,7 +391,7 @@ export function HomeVisitsPage() {
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search name, county, Braille, Deaf, ASD..."
+                placeholder="Search name, county, Braille, Deaf, Inclusive..."
                 aria-label="Search children's homes and schools for differently abled learners"
                 className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-[#3B155F]/20 rounded-lg text-[#1E0B2B] placeholder:text-[#665B73]"
               />
@@ -467,6 +475,48 @@ export function HomeVisitsPage() {
             </div>
           </div>
 
+          {matchedCountyHub && (
+            <div className="bg-white border-2 border-[#D4AF37]/50 rounded-xl p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#7A5A10]">
+                  County {matchedCountyHub.code} · {matchedCountyHub.name} Guardian &amp; Placement Desk
+                </p>
+                <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1E0B2B]">
+                  {matchedCountyHub.facilityHubName}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#3E3349]">
+                  <strong>Address:</strong> {matchedCountyHub.physicalAddress} ·{' '}
+                  <strong>Programmes:</strong> {matchedCountyHub.partnerProgrammes}
+                </p>
+                <div className="flex flex-wrap gap-4 pt-1 text-xs font-semibold">
+                  <a
+                    href={`tel:${matchedCountyHub.facilityPhone.replace(/\s+/g, '')}`}
+                    className="inline-flex items-center gap-1 text-[#256358] hover:underline tabular-nums"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
+                    {matchedCountyHub.facilityPhone}
+                  </a>
+                  <a
+                    href={`mailto:${matchedCountyHub.facilityEmail}`}
+                    className="inline-flex items-center gap-1 text-[#3B155F] hover:underline"
+                  >
+                    <Mail className="w-3.5 h-3.5" aria-hidden="true" />
+                    {matchedCountyHub.facilityEmail}
+                  </a>
+                </div>
+              </div>
+              <a
+                href={matchedCountyHub.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold bg-[#3B155F] text-[#FAF7F2] hover:bg-[#2C1042] rounded-md whitespace-nowrap shrink-0"
+              >
+                Open County Webpage
+                <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            </div>
+          )}
+
           {filteredHomes.length === 0 ? (
             <div className="bg-white border border-[#3B155F]/12 rounded-xl p-10 text-center space-y-3">
               <p className="font-serif text-xl font-semibold text-[#1E0B2B]">
@@ -489,7 +539,10 @@ export function HomeVisitsPage() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div
+              key={`${typeFilter}-${regionFilter}-${searchQuery}`}
+              className="tab-panel-smooth grid grid-cols-1 md:grid-cols-2 gap-8"
+            >
               {filteredHomes.map((home) => {
                 const isSchool = home.institutionType === 'School for Differently Abled';
                 return (
@@ -546,11 +599,54 @@ export function HomeVisitsPage() {
                             {home.currentNeeds.join(' · ')}
                           </p>
                         </div>
+
+                        {(home.physicalAddress || home.contactPhone || home.contactEmail) && (
+                          <div className="p-3 rounded-lg bg-[#FAF7F2] border border-[#3B155F]/10 space-y-1.5 text-xs text-[#3E3349]">
+                            {home.physicalAddress && (
+                              <p>
+                                <strong className="text-[#1E0B2B]">Address:</strong>{' '}
+                                {home.physicalAddress}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 font-semibold">
+                              {home.contactPhone && (
+                                <a
+                                  href={`tel:${home.contactPhone.replace(/\s+/g, '')}`}
+                                  className="inline-flex items-center gap-1 text-[#256358] hover:underline tabular-nums"
+                                >
+                                  <PhoneCall className="w-3 h-3" aria-hidden="true" />
+                                  {home.contactPhone}
+                                </a>
+                              )}
+                              {home.contactEmail && (
+                                <a
+                                  href={`mailto:${home.contactEmail}`}
+                                  className="inline-flex items-center gap-1 text-[#3B155F] hover:underline"
+                                >
+                                  <Mail className="w-3 h-3" aria-hidden="true" />
+                                  {home.contactEmail}
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="pt-2 flex items-center justify-between gap-4 border-t border-[#3B155F]/10">
-                        <span className="text-xs text-[#665B73]">
-                          Safeguarding briefed before arrival
-                        </span>
+                      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#3B155F]/10">
+                        {home.websiteUrl ? (
+                          <a
+                            href={home.websiteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-[#256358] hover:underline"
+                          >
+                            Facility Webpage
+                            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                          </a>
+                        ) : (
+                          <span className="text-xs text-[#665B73]">
+                            Safeguarding briefed before arrival
+                          </span>
+                        )}
                         <button
                           type="button"
                           onClick={() => selectHomeForVisit(home)}
@@ -665,6 +761,7 @@ export function HomeVisitsPage() {
               </button>
             </div>
 
+            <div key={formMode} className="tab-panel-smooth">
             {formMode === 'visit' ? (
               confirmation ? (
                 <div
@@ -1242,6 +1339,7 @@ export function HomeVisitsPage() {
                 </button>
               </form>
             )}
+            </div>
           </div>
         </div>
       </section>

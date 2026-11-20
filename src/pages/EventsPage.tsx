@@ -36,15 +36,15 @@ export function EventsPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
           <div className="lg:col-span-8 space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#F3D79B]">
-              HIS AND HERS · Helping Hand Community Calendar
+              His &amp; Hers Circle of Hope · Helping Hand Community Calendar
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
               Community Action Days, Support Circles &amp; Family Gatherings
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/88 leading-relaxed max-w-2xl">
-              Lend a helping hand across our partner children’s homes, sensory-friendly ASD parent
-              mornings, mental health listening circles, and neighbourhood outreach drives. Every
-              gathering is open to caring individuals, families, and partner teams.
+              Lend a helping hand across our partner children’s homes, quiet tea &amp; listening
+              evenings, elder food tables, and Ruiru &amp; national outreach drives. Every gathering
+              is open to caring individuals, families, and partner teams.
             </p>
             <div className="pt-1 flex flex-wrap gap-3">
               <a
@@ -92,7 +92,7 @@ export function EventsPage() {
               5 Helping-Hand Focus Areas
             </p>
             <p className="text-xs text-[#665B73] mt-0.5">
-              Children’s homes, mental health, ASD families, outreach &amp; safe refuge
+              Children’s homes, quiet listening evenings, outreach &amp; refuge
             </p>
           </div>
           <div className="py-5 sm:pl-6">
@@ -253,7 +253,10 @@ export function EventsPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-8">
+            <div
+              key={`${selectedCategory}-${searchQuery}`}
+              className="tab-panel-smooth space-y-8"
+            >
               {events.map((evt) => {
                 const upcoming = isUpcomingEvent(evt.dateISO);
                 return (

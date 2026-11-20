@@ -102,17 +102,38 @@ const COMPASS_NEEDS: CompassNeed[] = [
     icon: MapPin,
   },
   {
-    id: 'asd-family',
-    label: 'ASD Tips for Parents & Kids',
-    eyebrow: 'Gentle, Everyday Autism Family Guidance',
-    headline: 'Calm Visual Routines, Sensory Ideas & Parent Mentors',
+    id: 'special-needs-families',
+    label: 'Special Needs Kids & Families',
+    eyebrow: 'Single-Parent & Two-Parent Mothers & Guardians Desk',
+    headline: 'Speak Directly With Our Mother & Guardian Care Lead',
     reassurance:
-      'Designed for parents, siblings, and kids: easy-to-follow sensory calm steps, an interactive visual routine builder you can print, and warm mentor chat.',
-    stepOne: 'Build or filter daily sensory and visual routine cards tailored to your child.',
-    stepTwo: 'Send a private question to our ASD parent mentors whenever you need ideas.',
-    responseWindow: 'Warm mentor reply within 24–48 hours',
-    primaryCta: 'Open ASD Parents & Kids Hub',
-    primaryHref: '/asd-support',
+      'Whether raising a child with disability as a single mother, sole father, grandparent, or two-parent family, access monthly respite hours, maize flour & hygiene bundles, and 47-county inclusive schools.',
+    stepOne: 'Use the Household Support Estimator for single-parent or two-parent families.',
+    stepTwo: 'Send a direct conversation note straight to our Mother & Guardian Care Lead.',
+    responseWindow: 'Mother-to-mother or guardian follow-up within 24 hours',
+    primaryCta: 'Open Special Needs Families Hub',
+    primaryHref: '/special-needs-families',
+    accentHex: '#7A5A10',
+    moodGradeId: 'golden-hope',
+    moodLabel: 'Golden Hour Warmth',
+    panelBgClass: 'bg-gradient-to-br from-[#FFF9ED] via-white to-[#FDF1E8] border-[#D4AF37]/35',
+    stepOneBgClass: 'bg-[#FDF4DC] border-[#D4AF37]/30',
+    stepTwoBgClass: 'bg-[#FFF3EB] border-[#C2593F]/20',
+    tabActiveBgClass: 'bg-[#7A5A10] text-white border-[#7A5A10]',
+    icon: Users,
+  },
+  {
+    id: 'mental-health-trauma',
+    label: 'Mental Health, Trauma & Stress',
+    eyebrow: 'Trauma-Informed Listening & Nervous-System Healing',
+    headline: 'Gentle 4-4-6 Grounding Plans & Trauma-Informed Support',
+    reassurance:
+      'Whether carrying unresolved trauma, panic, grief, sleepless nights, or caregiver exhaustion, explore nervous-system grounding exercises and talk privately with trauma-informed counsellors.',
+    stepOne: 'Practise Morning Steadiness, Panic Reset, or Evening Unload grounding steps.',
+    stepTwo: 'Send a confidential note or reach Kenyan crisis lines (+254 722 178 177 / 1199).',
+    responseWindow: 'Trauma-informed coordinator response within 24 hours',
+    primaryCta: 'Open Mental Health & Trauma Wing',
+    primaryHref: '/mental-health',
     accentHex: '#256358',
     moodGradeId: 'sage-calm',
     moodLabel: 'Calm Sage Sanctuary',
@@ -209,7 +230,7 @@ export function CareCompassSection() {
           {/* Left selector list */}
           <div
             role="tablist"
-            aria-label="Select how HIS AND HERS can help"
+            aria-label="Select how His & Hers Circle of Hope can help"
             className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5"
           >
             {COMPASS_NEEDS.map((item) => {
@@ -253,7 +274,7 @@ export function CareCompassSection() {
               key={activeNeed.id}
               role="tabpanel"
               aria-label={activeNeed.label}
-              className={`w-full border rounded-xl p-6 sm:p-9 flex flex-col justify-between gap-6 transition-all duration-200 ${activeNeed.panelBgClass}`}
+              className={`tab-panel-smooth w-full border rounded-xl p-6 sm:p-9 flex flex-col justify-between gap-6 transition-all duration-200 ${activeNeed.panelBgClass}`}
             >
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#3B155F]/10">

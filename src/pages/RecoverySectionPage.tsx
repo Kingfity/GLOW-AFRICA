@@ -2,13 +2,16 @@ import { useMemo, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   ChevronDown,
   ChevronUp,
   Compass,
+  ExternalLink,
   HeartPulse,
+  Mail,
   MapPin,
   PhoneCall,
-  Play,
+  ShieldCheck,
   Sparkles,
   Users,
 } from 'lucide-react';
@@ -152,6 +155,8 @@ interface PeerStory {
   headline: string;
   summary: string;
   transcript: string;
+  imageUrl: string;
+  imageAlt: string;
 }
 
 const PEER_STORIES: PeerStory[] = [
@@ -159,34 +164,43 @@ const PEER_STORIES: PeerStory[] = [
     id: 'story-david',
     name: 'David M.',
     county: 'Kiambu County',
-    duration: '1:18 (78 sec)',
+    duration: '2 min written story',
     headline: '“Asking one honest question opened a door I thought was locked.”',
     summary:
       'After four exhausting years trying to cope silently, David shares how his first calm phone call with a care coordinator felt completely different from what he feared.',
     transcript:
       'I expected a lecture. Instead, the counsellor asked if I had eaten that day and helped my family map a quiet three-week outpatient plan near Thika. Today I am two years in recovery and coaching younger carpenters.',
+    imageUrl: '/src/assets/images/peer_story_david_1795094868646.jpg',
+    imageAlt:
+      'Illustrative community portrait representing David M. standing beside a wooden workbench in morning daylight (protected identity portrait)',
   },
   {
     id: 'story-grace',
     name: 'Grace W.',
     county: 'Nakuru County',
-    duration: '1:05 (65 sec)',
+    duration: '2 min written story',
     headline: '“A return to use was not the end of my daughter’s story—or mine.”',
     summary:
       'A mother speaks tenderly about shifting from fear and shouting to steady boundaries and open morning tea.',
     transcript:
-      'When my daughter experienced a return to use after five months, I panicked at first. Our HIS AND HERS family group walked me through how to respond with warmth rather than shame. That week changed everything between us.',
+      'When my daughter experienced a return to use after five months, I panicked at first. Our His & Hers Circle of Hope family group walked me through how to respond with warmth rather than shame. That week changed everything between us.',
+    imageUrl: '/src/assets/images/peer_story_grace_1795094868372.jpg',
+    imageAlt:
+      'Illustrative community portrait representing Grace W. holding a ceramic mug in morning light (protected identity portrait)',
   },
   {
     id: 'story-hassan',
     name: 'Hassan K.',
     county: 'Mombasa County',
-    duration: '1:24 (84 sec)',
+    duration: '2 min written story',
     headline: '“Having somewhere purposeful to go at 8 AM gave me my dignity back.”',
     summary:
       'Hassan reflects on rebuilding structure through community carpentry mentorship and steady evening peer check-ins along the coast.',
     transcript:
       'For a long time I felt invisible. Finding a mentor who treated me as a whole person with a substance use disorder—someone with gifts to offer—reminded me I belonged to a neighbourhood again.',
+    imageUrl: '/src/assets/images/peer_story_hassan_1795094868470.jpg',
+    imageAlt:
+      'Illustrative community portrait representing Hassan K. sitting in warm coastal shade (protected identity portrait)',
   },
 ];
 
@@ -291,6 +305,10 @@ interface LocalRecoveryResource {
   type: Exclude<ResourceCategory, 'All'>;
   description: string;
   format: string;
+  physicalAddress: string;
+  phone: string;
+  email: string;
+  websiteUrl: string;
 }
 
 const CURATED_RECOVERY_RESOURCES: LocalRecoveryResource[] = [
@@ -302,6 +320,10 @@ const CURATED_RECOVERY_RESOURCES: LocalRecoveryResource[] = [
     type: 'Medical & Detox Care',
     description: 'Nurse-supported medical assessment and respectful comfort protocols.',
     format: 'Outpatient & short-stay medical unit',
+    physicalAddress: 'Hospital Road, Upper Hill · KNH Recovery Wing Liaison, Nairobi',
+    phone: '+254 20 272 6300',
+    email: 'recovery@knh.or.ke',
+    websiteUrl: 'https://knh.or.ke',
   },
   {
     id: 'rec-kiambu-circles',
@@ -311,6 +333,10 @@ const CURATED_RECOVERY_RESOURCES: LocalRecoveryResource[] = [
     type: 'Peer Circles',
     description: 'Walk-in coffee & tea peer gathering led by long-term community mentors.',
     format: 'In-person & phone bridge · Free',
+    physicalAddress: 'Ruiru Eastern Bypass Community Hall, Kiambu County',
+    phone: '+254 711 220 402',
+    email: 'kiambucare@hisandhers.org',
+    websiteUrl: 'https://www.nacada.go.ke',
   },
   {
     id: 'rec-nakuru-home',
@@ -320,6 +346,10 @@ const CURATED_RECOVERY_RESOURCES: LocalRecoveryResource[] = [
     type: 'Family & Transitional Housing',
     description: 'Calm 60-to-90 day shared housing with vocational carpentry and garden rhythm.',
     format: 'Supported communal housing',
+    physicalAddress: 'Milimani Quiet Lane, Plot 14, Nakuru',
+    phone: '+254 51 221 5580',
+    email: 'nakurucare@hisandhers.org',
+    websiteUrl: 'https://nakuru.go.ke',
   },
   {
     id: 'rec-kisumu-care',
@@ -329,6 +359,10 @@ const CURATED_RECOVERY_RESOURCES: LocalRecoveryResource[] = [
     type: 'Outpatient Counselling',
     description: 'Trauma-informed individual sessions plus calm family dialogue support.',
     format: 'Evening & Saturday flexible hours',
+    physicalAddress: 'Angawa Avenue, Near Jaramogi Referral Hospital, Kisumu',
+    phone: '+254 57 202 0801',
+    email: 'kisumucare@hisandhers.org',
+    websiteUrl: 'https://www.befrienderskenya.org',
   },
   {
     id: 'rec-mombasa-detox',
@@ -338,6 +372,10 @@ const CURATED_RECOVERY_RESOURCES: LocalRecoveryResource[] = [
     type: 'Medical & Detox Care',
     description: 'Confidential coastal medical screening and gentle step-down recovery planning.',
     format: 'Confidential walk-in & hotline',
+    physicalAddress: 'Links Road, Nyali / Coast General Referral Wing, Mombasa',
+    phone: '+254 41 231 4201',
+    email: 'coastcare@hisandhers.org',
+    websiteUrl: 'https://www.mombasa.go.ke',
   },
 ];
 
@@ -357,7 +395,7 @@ export function RecoverySectionPage() {
   const [bannerClosed, setBannerClosed] = useState(false);
   const [expandedDimensions, setExpandedDimensions] = useState<string[]>(['health']);
   const [activeFamilyTab, setActiveFamilyTab] = useState<FamilyTabId>('say');
-  const [activeStoryId, setActiveStoryId] = useState<string | null>(null);
+  const [expandedStoryId, setExpandedStoryId] = useState<string | null>(null);
   const [mapTypeFilter, setMapTypeFilter] = useState<ResourceCategory>('All');
   const [mapRegionFilter, setMapRegionFilter] = useState<string>('All');
   const [selectedCounty, setSelectedCounty] = useState<string>('Nairobi');
@@ -388,12 +426,16 @@ export function RecoverySectionPage() {
   const filteredResources = useMemo(() => {
     const countyResource: LocalRecoveryResource = {
       id: `county-desk-${activeCountyInfo.code}`,
-      name: `${activeCountyInfo.name} County Recovery Liaison & Referral Hospital Desk`,
+      name: `${activeCountyInfo.name} · ${activeCountyInfo.facilityHubName}`,
       county: activeCountyInfo.name,
       region: activeCountyInfo.region,
       type: 'Outpatient Counselling',
       description: `Local county linkage: ${activeCountyInfo.partnerProgrammes}. Walk-in or telephone guidance tailored to ${activeCountyInfo.capitalTown}.`,
       format: 'Active across all 47 counties · Private intake',
+      physicalAddress: activeCountyInfo.physicalAddress,
+      phone: activeCountyInfo.facilityPhone,
+      email: activeCountyInfo.facilityEmail,
+      websiteUrl: activeCountyInfo.websiteUrl,
     };
 
     const combined = [countyResource, ...CURATED_RECOVERY_RESOURCES];
@@ -443,7 +485,7 @@ export function RecoverySectionPage() {
               className="font-serif text-lg sm:text-xl font-semibold text-[#1D4E46] inline-flex items-center gap-2"
             >
               <HeartPulse className="w-5 h-5 text-[#256358]" aria-hidden="true" />
-              <span>HIS AND HERS · Recovery Hub (Kenya · East &amp; Central Africa)</span>
+              <span>His &amp; Hers Circle of Hope · Recovery Hub</span>
             </button>
             {/* Kenyan & Regional Crisis Lines Always Visible in Header */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
@@ -810,68 +852,105 @@ export function RecoverySectionPage() {
         </div>
       </section>
 
-      {/* 4. PEER STORIES (3 VIDEO ITEMS, 60–90 SEC EACH) */}
+      {/* 4. PEER STORIES (3 REPRESENTATIVE PORTRAITS + WRITTEN STORIES ONLY) */}
       <section aria-label="Peer recovery stories" className="py-14 sm:py-20 bg-[#FAF7F2] border-b border-[#D4AF37]/25">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-8">
-          <div className="max-w-2xl space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#256358]">
-              Peer Voices (60 – 90 Seconds Each)
-            </p>
-            <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1A1224]">
-              Honest Stories From People in Recovery &amp; Families
-            </h2>
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="max-w-2xl space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#256358]">
+                Peer Voices · Written Community Write-Ups
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1A1224]">
+                Honest Written Stories From People in Recovery &amp; Families
+              </h2>
+            </div>
+
+            {/* Data Protection & Confidentiality Notice */}
+            <div className="bg-[#EDF6F3] border border-[#256358]/25 rounded-xl px-4 py-3 max-w-md flex items-start gap-2.5 text-xs text-[#1D4E46] leading-relaxed">
+              <ShieldCheck className="w-4 h-4 text-[#256358] shrink-0 mt-0.5" aria-hidden="true" />
+              <p>
+                <strong>Data Protection &amp; Identity Privacy:</strong> Portraits shown below are{' '}
+                <strong>representative photographs—not the speakers’ actual faces</strong>—to
+                safeguard peer confidentiality. All peer stories are shared cleanly in writing for
+                private reading.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PEER_STORIES.map((story) => {
-              const playing = activeStoryId === story.id;
+              const isExpanded = expandedStoryId === story.id;
+
               return (
                 <article
                   key={story.id}
-                  className="bg-white border border-[#256358]/18 rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm"
+                  className="bg-white border border-[#256358]/20 rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm"
                 >
                   <div>
-                    <div className="aspect-[16/10] bg-gradient-to-br from-[#1D4E46] to-[#256358] p-5 flex flex-col justify-between text-[#FAF7F2] relative">
-                      <div className="flex items-center justify-between text-[11px] text-[#F3D79B] font-semibold">
-                        <span>{story.county}</span>
-                        <span className="tabular-nums">{story.duration}</span>
+                    {/* Documentary Representative Portrait */}
+                    <div className="relative aspect-[4/3] bg-[#1D4E46] overflow-hidden">
+                      <img
+                        src={story.imageUrl}
+                        alt={story.imageAlt}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-gradient-to-t from-[#160822]/90 via-[#160822]/25 to-transparent"
+                      />
+
+                      <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 text-[11px] font-semibold">
+                        <span className="px-2.5 py-1 rounded bg-[#160822]/75 text-[#F3D79B]">
+                          {story.county}
+                        </span>
+                        <span className="px-2.5 py-1 rounded bg-[#160822]/75 text-[#FAF7F2]">
+                          {story.duration}
+                        </span>
                       </div>
 
-                      {playing ? (
-                        <div className="bg-black/35 rounded-xl p-3 text-xs leading-relaxed text-[#FAF7F2]">
-                          <p className="text-[#F3D79B] font-semibold mb-1">Audio / Story Transcript:</p>
-                          <p>{story.transcript}</p>
+                      <div className="absolute bottom-3 inset-x-3 flex items-end justify-between gap-3">
+                        <div className="text-[#FAF7F2]">
+                          <p className="font-serif text-lg font-semibold leading-tight">
+                            {story.name}
+                          </p>
+                          <p className="text-[10px] text-[#E5CA7B]">
+                            Representative photo · Protected identity
+                          </p>
                         </div>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setActiveStoryId(story.id)}
-                          aria-label={`Play peer story by ${story.name}`}
-                          className="self-center inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#D4AF37] text-[#160822] text-xs font-bold hover:bg-[#E5CA7B] transition-colors shadow"
-                        >
-                          <Play className="w-3.5 h-3.5" aria-hidden="true" />
-                          Play Story ({story.duration})
-                        </button>
-                      )}
-
-                      <p className="text-xs font-semibold text-[#FAF7F2]">{story.name}</p>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#160822]/80 text-[#E5CA7B] text-[11px] font-semibold">
+                          <BookOpen className="w-3 h-3" aria-hidden="true" />
+                          Written Story
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="p-5 space-y-2">
+                    <div className="p-5 space-y-2.5">
                       <h3 className="font-serif text-xl font-semibold text-[#1A1224] leading-snug">
                         {story.headline}
                       </h3>
                       <p className="text-sm text-[#3E3349] leading-relaxed">{story.summary}</p>
                     </div>
+
+                    {isExpanded && (
+                      <div className="tab-panel-smooth mx-5 mb-4 p-4 rounded-xl bg-[#EDF6F3] border border-[#256358]/20 space-y-2">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[#256358]">
+                          Full Written Account
+                        </p>
+                        <p className="text-xs sm:text-sm leading-relaxed text-[#1A1224]">
+                          “{story.transcript}”
+                        </p>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="px-5 pb-5">
+                  <div className="px-5 pb-5 pt-2 border-t border-[#256358]/10">
                     <button
                       type="button"
-                      onClick={() => setActiveStoryId(playing ? null : story.id)}
-                      className="text-xs font-semibold text-[#256358] hover:underline"
+                      aria-expanded={isExpanded}
+                      onClick={() => setExpandedStoryId(isExpanded ? null : story.id)}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#256358] hover:underline"
                     >
-                      {playing ? 'Close transcript preview' : 'Read & listen to peer story →'}
+                      {isExpanded ? 'Hide full written story' : 'Read Full Written Story →'}
                     </button>
                   </div>
                 </article>
@@ -917,9 +996,10 @@ export function RecoverySectionPage() {
           </div>
 
           <div
+            key={activeFamilyTab}
             role="tabpanel"
             aria-label={activeFamilyContent.label}
-            className="bg-[#FAF7F2] border border-[#D4AF37]/45 rounded-2xl p-6 sm:p-8 space-y-5"
+            className="tab-panel-smooth bg-[#FAF7F2] border border-[#D4AF37]/45 rounded-2xl p-6 sm:p-8 space-y-5"
           >
             <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1A1224]">
               {activeFamilyContent.heading}
@@ -1066,10 +1146,41 @@ export function RecoverySectionPage() {
                   );
                 })}
               </svg>
-              <p className="text-xs text-[#FAF7F2]/85">
-                Tap any county dot or choose from the dropdown to preview confidential local
-                outpatient, medical, and peer care in <strong>{activeCountyInfo.name}</strong>.
-              </p>
+              <div className="p-3.5 rounded-xl bg-[#153B35] border border-[#D4AF37]/35 space-y-2 text-xs">
+                <p className="font-semibold text-[#F8DF8C]">
+                  {activeCountyInfo.facilityHubName}
+                </p>
+                <p className="text-[#FAF7F2]/85 leading-relaxed">
+                  <strong>Address:</strong> {activeCountyInfo.physicalAddress}
+                </p>
+                <div className="flex flex-wrap gap-3 pt-0.5 font-semibold">
+                  <a
+                    href={`tel:${activeCountyInfo.facilityPhone.replace(/\s+/g, '')}`}
+                    className="inline-flex items-center gap-1 text-[#9FD6C8] hover:underline tabular-nums"
+                  >
+                    <PhoneCall className="w-3 h-3" aria-hidden="true" />
+                    {activeCountyInfo.facilityPhone}
+                  </a>
+                  <a
+                    href={`mailto:${activeCountyInfo.facilityEmail}`}
+                    className="inline-flex items-center gap-1 text-[#F8DF8C] hover:underline"
+                  >
+                    <Mail className="w-3 h-3" aria-hidden="true" />
+                    {activeCountyInfo.facilityEmail}
+                  </a>
+                </div>
+                <div className="pt-1">
+                  <a
+                    href={activeCountyInfo.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#D4AF37] text-[#160822] hover:bg-[#E5CA7B] font-semibold transition-colors"
+                  >
+                    Visit {activeCountyInfo.name} Webpage
+                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Filtered Local Resource Cards */}
@@ -1077,7 +1188,7 @@ export function RecoverySectionPage() {
               {filteredResources.map((res) => (
                 <div
                   key={res.id}
-                  className="bg-white border border-[#256358]/20 rounded-xl p-5 space-y-2 shadow-sm"
+                  className="bg-white border border-[#256358]/20 rounded-xl p-5 space-y-3 shadow-sm"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                     <span className="font-semibold text-[#256358] inline-flex items-center gap-1">
@@ -1091,6 +1202,38 @@ export function RecoverySectionPage() {
                   <h3 className="font-serif text-xl font-semibold text-[#1A1224]">{res.name}</h3>
                   <p className="text-sm text-[#3E3349] leading-relaxed">{res.description}</p>
                   <p className="text-xs font-medium text-[#256358]">{res.format}</p>
+                  <div className="p-3 rounded-lg bg-[#EDF6F3]/80 border border-[#256358]/15 text-xs space-y-1.5 text-[#3E3349]">
+                    <p>
+                      <strong className="text-[#1D4E46]">Address:</strong> {res.physicalAddress}
+                    </p>
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-0.5 font-semibold">
+                      <div className="flex flex-wrap gap-4">
+                        <a
+                          href={`tel:${res.phone.replace(/\s+/g, '')}`}
+                          className="inline-flex items-center gap-1 text-[#256358] hover:underline tabular-nums"
+                        >
+                          <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
+                          {res.phone}
+                        </a>
+                        <a
+                          href={`mailto:${res.email}`}
+                          className="inline-flex items-center gap-1 text-[#3B155F] hover:underline"
+                        >
+                          <Mail className="w-3.5 h-3.5" aria-hidden="true" />
+                          {res.email}
+                        </a>
+                      </div>
+                      <a
+                        href={res.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[#7A5A10] hover:underline"
+                      >
+                        Visit Webpage
+                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

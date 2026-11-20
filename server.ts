@@ -42,9 +42,11 @@ import {
   validatePrayerRequest,
   validateRehabReferral,
   validateSafeHomeRequest,
+  validateSpecialNeedsSupport,
   validateVolunteerEnquiry,
 } from './src/utils/validation.ts';
 import type {
+  AdministratorDeskProfile,
   Announcement,
   ChildrensHome,
   EventCategory,
@@ -126,7 +128,7 @@ async function startServer() {
     const rehabSummary = publicData.rehabFacilities
       .map((f) => `${f.name} (${f.countyRegion}, ${f.focusType}, ${f.careFormat})`)
       .join('; ');
-    const asdSummary = publicData.asdGuides
+    const traumaGuideSummary = publicData.asdGuides
       .map((g) => `${g.pillar}: ${g.title}`)
       .join('; ');
 
@@ -143,22 +145,26 @@ async function startServer() {
       : '';
 
     const systemInstruction = [
-      'You are the warm, compassionate HIS AND HERS Care Family Guide.',
-      'Your role is to listen briefly to what a visitor, parent, corporate team, or loved one needs and guide them directly to the right verified HIS AND HERS page or resource.',
+      'You are the warm, compassionate His & Hers Circle of Hope Care Guide.',
+      'Established in 2025 in Ruiru, Kiambu County, our community-based organisation connects neighbours across Kenya (and East Africa) so no elder, parent, youth, or household carries silent hardship alone.',
       'Available routes (ONLY recommend href values from this exact list):',
-      '- /home-visits: Book individuals, friend groups, or corporate CSR teams to visit Children’s Homes, OR onboard a Corporate/NGO/Children’s Home partner.',
-      '- /rehabilitation: Search verified rehabilitation facilities sorted by proximity and submit a confidential referral.',
-      '- /asd-support: ASD Parents & Kids Support Hub with interactive Visual Daily Routine Builder, calming sensory tips, and ASD parent mentors.',
-      '- /counselling: Talk to a Counsellor, Lighten Your Burden (anonymous or callback), and 60-second grounding breath tool.',
-      '- /find-my-home: Urgent safe refuge coordination for individuals/children fleeing gender-based violence or child abuse (with Quick Exit safety).',
-      '- /prayer-worship: Confidential prayer request & interdenominational fellowship details.',
-      '- /events: Upcoming Children’s Home visit days, ASD play mornings, and gatherings.',
+      '- /home-visits: Book individuals, friend groups, or corporate CSR teams to visit verified Children’s Homes & Schools for the Differently Abled across Kenya.',
+      '- /special-needs-families: Dedicated hub for Single-Parent & Two-Parent families raising children or dependants with disabilities—talking directly with mothers and guardians in charge, offering support kits, respite care, and inclusive 47-county schools.',
+      '- /rehabilitation: Search rehabilitation centres sorted by proximity and submit a confidential referral.',
+      '- /mental-health: Mental Health, Trauma & Stress Healing Wing with an interactive 4-4-6 Trauma & Stress Grounding Planner, nervous-system reset steps, and confidential callbacks.',
+      '- /counselling: Talk to a Counsellor, Lighten Your Burden (anonymous or callback), and 60-second breathing space.',
+      '- /find-my-home: Discreet safe refuge & family protection coordination (with Quick Exit safety).',
+      '- /recovery: Peer recovery voices & confidential community accompaniment.',
+      '- /prayer-worship: Confidential prayer request & GLOW Prayer Movement fellowship details.',
+      '- /events: Upcoming Children’s Home visit days, Trauma & Stress Circles, and the Nov 28 Christmas of Hope feast.',
+      '- /leadership: Meet our conveners (Nancy Kariuki & GLOW Prayer Movement) and Administrators & Help Desk.',
       '- /get-involved: Volunteer and stewardship pathways.',
+      '- /about: Our continuous Ruiru story since 2025, Ruiru Boys fellowship, and mission.',
       '- /contact: Direct contact channels.',
-      `Current Children’s Homes: ${homesSummary}`,
+      `Current Partner Homes & Schools: ${homesSummary}`,
       `Current Rehabilitation Centres: ${rehabSummary}`,
-      `Current ASD Guides: ${asdSummary}`,
-      'Guidelines: Be concise (2–4 gentle sentences), never invent fake phone numbers or addresses, never claim medical diagnoses, and if abuse or acute crisis is mentioned include urgentSafetyNote guiding them to /find-my-home or emergency services.',
+      `Current Mental Health & Trauma Guides: ${traumaGuideSummary}`,
+      'Guidelines: Be concise (2–4 gentle sentences), never invent fake phone numbers or addresses, never claim medical diagnoses, and if abuse or acute crisis is mentioned include urgentSafetyNote guiding them to /find-my-home or Kenyan emergency lines (999 / 112 / 1195 / 116).',
     ].join('\n');
 
     const promptContents = historyItems
@@ -410,7 +416,7 @@ async function startServer() {
     });
   });
 
-  // Public submission: ASD Parents & Kids Support Request
+  // Public submission: Mental Health, Trauma & Stress Care Support Request
   app.post('/api/asd-support', (req, res) => {
     const ip = req.ip || 'unknown';
     if (!checkRateLimit(ip, 15, 60_000)) {
@@ -430,7 +436,7 @@ async function startServer() {
 
     const db = readDatabase();
     db.asdSupportRequests.unshift({
-      id: generateId('asd'),
+      id: generateId('mh'),
       ...validation.data,
       status: 'new',
       createdAt: new Date().toISOString(),
@@ -439,7 +445,39 @@ async function startServer() {
     res.status(201).json({
       received: true,
       message:
-        'Thank you for connecting with our ASD Family Hub. A parent mentor and care coordinator will follow up with tailored tips and community support.',
+        'Thank you for reaching out to our Mental Health & Trauma Care Desk. A trained counsellor and peer listener will follow up gently with confidential support.',
+    });
+  });
+
+  // Public submission: Special Needs Kids & Families (Mother / Guardian Direct Support)
+  app.post('/api/special-needs-support', (req, res) => {
+    const ip = req.ip || 'unknown';
+    if (!checkRateLimit(ip, 15, 60_000)) {
+      res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+      return;
+    }
+    if (isHoneypotTriggered(req.body?.website_url)) {
+      res.status(201).json({ received: true });
+      return;
+    }
+
+    const validation = validateSpecialNeedsSupport(req.body || {});
+    if (!validation.valid || !validation.data) {
+      res.status(400).json({ error: 'Please review the highlighted fields.', errors: validation.errors });
+      return;
+    }
+
+    const db = readDatabase();
+    db.specialNeedsRequests.unshift({
+      id: generateId('snf'),
+      ...validation.data,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    writeDatabase(db);
+    res.status(201).json({
+      received: true,
+      message: `Karibu sana, ${validation.data.guardianName}. Our Mother & Guardian Care Lead has received your note for your ${validation.data.householdStructure.toLowerCase()} and will connect via ${validation.data.preferredContactMethod}.`,
     });
   });
 
@@ -503,7 +541,7 @@ async function startServer() {
     writeDatabase(db);
     res.status(201).json({
       received: true,
-      message: 'Thank you for reaching out to HIS AND HERS. We will respond as soon as possible.',
+      message: 'Thank you for reaching out to His & Hers Circle of Hope. We will respond as soon as possible.',
     });
   });
 
@@ -666,10 +704,12 @@ async function startServer() {
       partnerOrganizations: db.partnerOrganizations,
       rehabReferrals: db.rehabReferrals,
       asdSupportRequests: db.asdSupportRequests,
+      specialNeedsRequests: db.specialNeedsRequests,
       volunteerEnquiries: db.volunteerEnquiries,
       contactMessages: db.contactMessages,
       eventRegistrations: db.eventRegistrations,
       emergencyAlerts: db.emergencyAlerts,
+      administrators: db.administrators,
     });
   });
 
@@ -976,7 +1016,17 @@ async function startServer() {
       (status === 'new' || status === 'answered' || status === 'connected' || status === 'archived')
     ) {
       const target = db.asdSupportRequests.find((r) => r.id === id);
-      if (!target) return res.status(404).json({ error: 'ASD support request not found.' });
+      if (!target) return res.status(404).json({ error: 'Mental health & trauma care request not found.' });
+      target.status = status;
+      writeDatabase(db);
+      return res.json({ updated: true });
+    }
+    if (
+      type === 'specialneeds' &&
+      (status === 'new' || status === 'connected' || status === 'supported' || status === 'archived')
+    ) {
+      const target = db.specialNeedsRequests.find((r) => r.id === id);
+      if (!target) return res.status(404).json({ error: 'Special needs family request not found.' });
       target.status = status;
       writeDatabase(db);
       return res.json({ updated: true });
@@ -999,6 +1049,91 @@ async function startServer() {
     res.status(400).json({ error: 'Invalid submission type or status.' });
   });
 
+  // Admin: Administrators & Help Desk Particulars CRUD
+  app.post('/api/admin/administrators', requireAdmin, (req, res) => {
+    const fullName = cleanText(req.body?.fullName, 140) || 'Particulars Updating';
+    const roleTitle = cleanText(req.body?.roleTitle, 160);
+    const deskCode = cleanText(req.body?.deskCode, 40) || 'Desk';
+    if (!roleTitle) {
+      res.status(400).json({ error: 'Role title is required.' });
+      return;
+    }
+    const db = readDatabase();
+    const item: AdministratorDeskProfile = {
+      id: generateId('adm'),
+      deskCode,
+      fullName,
+      roleTitle,
+      department: cleanText(req.body?.department, 140) || 'Community Care Coordination',
+      status:
+        req.body?.status === 'Active' ? 'Active' : 'Awaiting Staff Particulars',
+      wardLocation: cleanText(req.body?.wardLocation, 140) || 'Ruiru, Kiambu County',
+      officeHours: cleanText(req.body?.officeHours, 100) || 'Mon – Sat · 09:00 – 17:00',
+      phone: cleanText(req.body?.phone, 60) || db.settings.contactPhone,
+      whatsapp: cleanText(req.body?.whatsapp, 40) || db.settings.whatsappNumber,
+      email: cleanText(req.body?.email, 140) || db.settings.contactEmail,
+      photoUrl: cleanText(req.body?.photoUrl, 500) || '',
+      focusSummary:
+        cleanText(req.body?.focusSummary, 500) ||
+        'Coordinating neighbourhood hospitality, families, and open community care.',
+      routingHref: cleanText(req.body?.routingHref, 100) || '/contact',
+      routingLabel: cleanText(req.body?.routingLabel, 80) || 'Reach This Desk',
+      accentHex: cleanText(req.body?.accentHex, 20) || '#3B155F',
+    };
+    db.administrators.push(item);
+    writeDatabase(db);
+    res.status(201).json({ administrator: item });
+  });
+
+  app.put('/api/admin/administrators/:id', requireAdmin, (req, res) => {
+    const db = readDatabase();
+    const idx = db.administrators.findIndex((a) => a.id === req.params.id);
+    if (idx === -1) {
+      res.status(404).json({ error: 'Administrator entry not found.' });
+      return;
+    }
+    const existing = db.administrators[idx];
+    const updated: AdministratorDeskProfile = {
+      ...existing,
+      deskCode: cleanText(req.body?.deskCode, 40) || existing.deskCode,
+      fullName: cleanText(req.body?.fullName, 140) || existing.fullName,
+      roleTitle: cleanText(req.body?.roleTitle, 160) || existing.roleTitle,
+      department: cleanText(req.body?.department, 140) || existing.department,
+      status:
+        req.body?.status === 'Active' || req.body?.status === 'Awaiting Staff Particulars'
+          ? req.body.status
+          : existing.status,
+      wardLocation: cleanText(req.body?.wardLocation, 140) || existing.wardLocation,
+      officeHours: cleanText(req.body?.officeHours, 100) || existing.officeHours,
+      phone: cleanText(req.body?.phone, 60) || existing.phone,
+      whatsapp: cleanText(req.body?.whatsapp, 40) ?? existing.whatsapp,
+      email: cleanText(req.body?.email, 140) || existing.email,
+      photoUrl:
+        typeof req.body?.photoUrl === 'string'
+          ? cleanText(req.body.photoUrl, 500)
+          : existing.photoUrl,
+      focusSummary: cleanText(req.body?.focusSummary, 500) || existing.focusSummary,
+      routingHref: cleanText(req.body?.routingHref, 100) || existing.routingHref,
+      routingLabel: cleanText(req.body?.routingLabel, 80) || existing.routingLabel,
+      accentHex: cleanText(req.body?.accentHex, 20) || existing.accentHex,
+    };
+    db.administrators[idx] = updated;
+    writeDatabase(db);
+    res.json({ administrator: updated });
+  });
+
+  app.delete('/api/admin/administrators/:id', requireAdmin, (req, res) => {
+    const db = readDatabase();
+    const before = db.administrators.length;
+    db.administrators = db.administrators.filter((a) => a.id !== req.params.id);
+    if (db.administrators.length === before) {
+      res.status(404).json({ error: 'Administrator entry not found.' });
+      return;
+    }
+    writeDatabase(db);
+    res.json({ deleted: true });
+  });
+
   // Admin: Add / Remove Partner Children's Home
   app.post('/api/admin/childrens-homes', requireAdmin, (req, res) => {
     const name = cleanText(req.body?.name, 160);
@@ -1010,11 +1145,24 @@ async function startServer() {
       return;
     }
     const db = readDatabase();
+    const countyInfo = findKenyaCounty(countyRegion);
     const home: ChildrensHome = {
       id: generateId('ch'),
       name,
+      institutionType:
+        req.body?.institutionType === 'School for Differently Abled'
+          ? 'School for Differently Abled'
+          : 'Children’s Home',
+      regionGroup: cleanText(req.body?.regionGroup, 60) || countyInfo.region,
+      specialization: cleanText(req.body?.specialization, 140) || undefined,
       countyRegion,
       townArea: townArea || countyRegion,
+      physicalAddress:
+        cleanText(req.body?.physicalAddress, 220) || `${townArea || countyRegion}, ${countyInfo.physicalAddress}`,
+      contactPhone: cleanText(req.body?.contactPhone, 60) || countyInfo.facilityPhone,
+      contactEmail: cleanText(req.body?.contactEmail, 140) || countyInfo.facilityEmail,
+      websiteUrl: cleanText(req.body?.websiteUrl, 250) || countyInfo.websiteUrl,
+      visitingHours: cleanText(req.body?.visitingHours, 120) || 'Mon – Sat · 09:00 – 16:00',
       childrenAgeRange: cleanText(req.body?.childrenAgeRange, 80) || 'Ages 4 – 17',
       currentNeeds: String(req.body?.currentNeeds || 'School Supplies, Groceries')
         .split(',')
@@ -1050,6 +1198,7 @@ async function startServer() {
       return;
     }
     const db = readDatabase();
+    const countyInfo = findKenyaCounty(countyRegion);
     const facility: RehabFacility = {
       id: generateId('reh'),
       name,
@@ -1057,8 +1206,14 @@ async function startServer() {
       careFormat: (cleanText(req.body?.careFormat, 80) as RehabFacility['careFormat']) || 'Residential & Outpatient',
       countyRegion,
       townArea: townArea || countyRegion,
-      lat: Number.isFinite(Number(req.body?.lat)) ? Number(req.body.lat) : -1.2921,
-      lng: Number.isFinite(Number(req.body?.lng)) ? Number(req.body.lng) : 36.8219,
+      physicalAddress:
+        cleanText(req.body?.physicalAddress, 220) || `${townArea || countyRegion}, ${countyInfo.physicalAddress}`,
+      contactPhone: cleanText(req.body?.contactPhone, 60) || countyInfo.facilityPhone,
+      contactEmail: cleanText(req.body?.contactEmail, 140) || countyInfo.facilityEmail,
+      websiteUrl: cleanText(req.body?.websiteUrl, 250) || countyInfo.websiteUrl,
+      visitingHours: cleanText(req.body?.visitingHours, 120) || 'Mon – Sat · 08:30 – 17:00',
+      lat: Number.isFinite(Number(req.body?.lat)) ? Number(req.body.lat) : countyInfo.lat,
+      lng: Number.isFinite(Number(req.body?.lng)) ? Number(req.body.lng) : countyInfo.lng,
       acceptsCommunityReferrals: true,
       summary,
       imageUrl: '/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg',
@@ -1138,7 +1293,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`HIS AND HERS server running on http://0.0.0.0:${PORT}`);
+    console.log(`His & Hers Circle of Hope server running on http://0.0.0.0:${PORT}`);
   });
 }
 

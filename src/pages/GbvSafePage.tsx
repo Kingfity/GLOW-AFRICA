@@ -125,7 +125,7 @@ export function GbvSafePage() {
               className="text-left inline-flex items-center gap-2 font-serif text-lg sm:text-xl font-semibold text-[#1D4E46]"
             >
               <Coffee className="w-5 h-5 text-[#256358]" aria-hidden="true" />
-              <span>HIS AND HERS · Family Wellness &amp; Quiet Corner</span>
+              <span>His &amp; Hers Circle of Hope · Quiet Wellness Corner</span>
             </button>
             <span className="hidden md:inline-block text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded bg-[#EDF6F3] text-[#256358]">
               Private Memory Mode

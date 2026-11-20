@@ -217,8 +217,8 @@ export function PrayerRequestForm() {
             className="w-4 h-4 mt-0.5 accent-[#3B155F] rounded cursor-pointer"
           />
           <label htmlFor="prayer-consent" className="text-xs sm:text-sm text-[#3E3349] leading-relaxed cursor-pointer">
-            I consent to HIS AND HERS’s pastoral and care team receiving this request privately in
-            accordance with our{' '}
+            I consent to His &amp; Hers Circle of Hope’s pastoral and care team receiving this
+            request privately in accordance with our{' '}
             <AppLink href="/privacy" className="underline text-[#3B155F] font-medium">
               Privacy Policy
             </AppLink>

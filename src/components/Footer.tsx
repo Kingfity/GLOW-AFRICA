@@ -15,7 +15,7 @@ export function Footer() {
           <p className="font-serif italic text-2xl sm:text-3xl leading-snug text-[#FAF7F2]">
             “
             {settings?.closingStatement ||
-              'At HIS AND HERS, we are a care family home where every child is seen, every burden is shared, and families find clear pathways to healing.'}
+              'At His & Hers Circle of Hope, whether you come because you could use a hand or because you have one to offer, karibu sana—there is room for you in our circle.'}
             ”
           </p>
         </div>
@@ -27,29 +27,42 @@ export function Footer() {
               <BrandMark light />
               <span className="flex flex-col leading-none">
                 <span className="font-serif text-xl font-semibold tracking-tight">
-                  {settings?.organisationName || 'HIS AND HERS'}
+                  {settings?.organisationName || 'His & Hers Circle of Hope'}
                 </span>
                 <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#E5CA7B]">
-                  Care Family Home · Est. 2025 · 47 Counties
+                  Ruiru, Kiambu · Est. 2025 · 47 Counties
                 </span>
               </span>
             </AppLink>
             <p className="text-sm leading-relaxed text-[#FAF7F2]/80 max-w-sm">
-              A care family community reaching all 47 counties—connecting individuals, parents,
-              corporates, and partner organisations to children’s homes, recovery care, ASD family
-              resources, open accountability, and safe refuge.
+              Founded in 2025 in Ruiru, Kiambu County—connecting neighbours, elders, children’s
+              homes, special needs kids &amp; mothers, trauma &amp; mental health circles,
+              rehabilitation, and safe refuge across all 47 Kenyan counties.
             </p>
           </div>
 
           {/* Care Family Pathways */}
           <div className="lg:col-span-3 space-y-3">
             <h2 className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              Care Family Pathways
+              Circle of Hope Pathways
             </h2>
             <ul className="space-y-2.5 text-sm text-[#FAF7F2]/85">
               <li>
                 <AppLink href="/home-visits" className="hover:text-[#F3A683] transition-colors">
-                  Children’s Homes &amp; Corporate Visits
+                  Children’s Homes &amp; Special Schools
+                </AppLink>
+              </li>
+              <li>
+                <AppLink
+                  href="/special-needs-families"
+                  className="hover:text-[#F3A683] transition-colors"
+                >
+                  Special Needs Kids &amp; Families
+                </AppLink>
+              </li>
+              <li>
+                <AppLink href="/mental-health" className="hover:text-[#F3A683] transition-colors">
+                  Mental Health, Trauma &amp; Stress
                 </AppLink>
               </li>
               <li>
@@ -60,11 +73,6 @@ export function Footer() {
               <li>
                 <AppLink href="/rehabilitation" className="hover:text-[#F3A683] transition-colors">
                   Rehabilitation Centres Across 47 Counties
-                </AppLink>
-              </li>
-              <li>
-                <AppLink href="/asd-support" className="hover:text-[#F3A683] transition-colors">
-                  ASD Parents &amp; Kids Support
                 </AppLink>
               </li>
               <li>
@@ -86,7 +94,7 @@ export function Footer() {
               Connect With Us
             </h2>
             <ul className="space-y-2.5 text-sm text-[#FAF7F2]/85">
-              <li>{settings?.primaryLocationLabel || 'HIS AND HERS Care Family Hub'}</li>
+              <li>{settings?.primaryLocationLabel || 'His & Hers Circle of Hope · Ruiru, Kiambu'}</li>
               <li>
                 <a
                   href={`mailto:${settings?.contactEmail || 'care@hisandhers.org'}`}
@@ -105,7 +113,7 @@ export function Footer() {
               </li>
               <li>
                 <AppLink href="/events" className="hover:text-[#E5CA7B] transition-colors">
-                  Nov 28 Feast &amp; Community Events
+                  Christmas of Hope &amp; Nov 28 Feast
                 </AppLink>
               </li>
               <li>
@@ -133,8 +141,13 @@ export function Footer() {
                 </AppLink>
               </li>
               <li>
+                <AppLink href="/leadership" className="hover:text-[#E5CA7B] transition-colors">
+                  Administrators &amp; Help Desk
+                </AppLink>
+              </li>
+              <li>
                 <AppLink href="/about" className="hover:text-[#E5CA7B] transition-colors">
-                  About Us
+                  Our Ruiru Origin Story
                 </AppLink>
               </li>
               <li>
@@ -211,7 +224,7 @@ export function Footer() {
         {/* Legal & Credit Row */}
         <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#FAF7F2]/65">
           <p className="tabular-nums">
-            © {year} {settings?.organisationName || 'HIS AND HERS'}. All rights reserved.
+            © {year} {settings?.organisationName || 'His & Hers Circle of Hope'}. All rights reserved.
           </p>
           <p>Digital platform developed by Aurel Tech Ventures.</p>
         </div>

@@ -44,7 +44,7 @@ export function PrayerWorshipPage() {
               Prayer &amp; Worship
             </p>
               <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
-                The Spiritual Heart of HIS AND HERS
+                The Spiritual Heart of His &amp; Hers Circle of Hope
               </h1>
               <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
                 “
@@ -56,8 +56,8 @@ export function PrayerWorshipPage() {
             <div className="lg:col-span-5">
               <div className="aspect-[16/10] rounded-lg overflow-hidden border border-white/15">
                 <SafeImage
-                  src="/src/assets/images/doc_worship_gathering_1794832340911.jpg"
-                  alt="Sunlit stone and timber sanctuary filled with prayer and joyful singing at golden hour"
+                  src="/src/assets/images/ruiru_fellowship_courtyard_1795102206499.jpg"
+                  alt="East African community neighbours gathered calmly outdoors beneath acacia trees for prayer and evening conversation over warm tea"
                   className="w-full h-full object-cover"
                 />
               </div>

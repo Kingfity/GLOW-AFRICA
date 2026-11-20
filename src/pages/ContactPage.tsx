@@ -56,7 +56,7 @@ export function ContactPage() {
         return;
       }
       setConfirmation(
-        result.message || 'Thank you for reaching out to HIS AND HERS. We will respond soon.'
+        result.message || 'Thank you for reaching out to His & Hers Circle of Hope. We will respond soon.'
       );
       setFullName('');
       setEmail('');
@@ -83,7 +83,7 @@ export function ContactPage() {
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
               Whether you are seeking care, organizing a corporate or group visit to a children’s
-              home, or exploring community partnership with HIS AND HERS, reach out through any of
+              home, or exploring community partnership with His &amp; Hers Circle of Hope, reach out through any of
               the channels below.
             </p>
           </div>

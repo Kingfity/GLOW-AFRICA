@@ -125,8 +125,8 @@ export function CounsellingPage() {
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
               Emotional exhaustion, grief, anxiety, and quiet trauma do not have to be carried in
-              silence. At HIS AND HERS, our counsellors and trained care companions hold a safe,
-              stigma-free space where you can speak honestly and receive steady guidance.
+              silence. At His &amp; Hers Circle of Hope, our counsellors and trained care companions
+              hold a safe, stigma-free space where you can speak honestly and receive steady guidance.
             </p>
             <div className="flex flex-wrap gap-3.5 pt-1">
               <a
@@ -192,7 +192,7 @@ export function CounsellingPage() {
                 </h3>
                 <p className="text-sm text-[#3E3349] mt-1 leading-relaxed">
                   Nothing shared here is ever posted publicly. Requests are accessed only by
-                  authorised HIS AND HERS care and counselling coordinators.
+                  authorised His &amp; Hers Circle of Hope care and counselling coordinators.
                 </p>
               </div>
               <div>
@@ -449,8 +449,8 @@ export function CounsellingPage() {
                       htmlFor="cnsl-consent"
                       className="text-xs sm:text-sm text-[#3E3349] leading-relaxed cursor-pointer"
                     >
-                      I consent to HIS AND HERS’s confidential counselling and care team reviewing
-                      this message under our{' '}
+                      I consent to His &amp; Hers Circle of Hope’s confidential counselling and care team
+                      reviewing this message under our{' '}
                       <AppLink href="/privacy" className="underline text-[#3B155F] font-medium">
                         Privacy &amp; Safeguarding Policy
                       </AppLink>

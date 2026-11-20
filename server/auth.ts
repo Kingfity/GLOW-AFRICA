@@ -19,7 +19,7 @@ export function getAdminCredentials(): { email: string; password: string; name: 
       .trim()
       .toLowerCase(),
     password: process.env.ADMIN_PASSWORD || process.env.GLOW_ADMIN_PASSWORD || 'HisAndHersAdmin!2026',
-    name: 'HIS AND HERS Stewardship Admin',
+    name: 'His & Hers Circle of Hope Stewardship Admin',
     role: 'admin',
   };
 }

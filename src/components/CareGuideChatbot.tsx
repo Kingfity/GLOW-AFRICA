@@ -24,9 +24,10 @@ interface ChatMessage {
 type ChatMode = 'guide' | 'crisis';
 
 const STARTER_PROMPTS = [
+  'Single mother or parent caring for a child with special needs',
+  'Looking for mental health, trauma & stress healing support',
   'Our company wants to visit a children’s home in Nairobi',
   'Help me find a rehabilitation centre near Kiambu',
-  'Tips to help my autistic 6-year-old calm down',
   'I feel overwhelmed and want to talk to a counsellor',
   'Someone needs urgent shelter away from abuse',
 ];
@@ -56,7 +57,7 @@ export function CareGuideChatbot() {
     {
       id: 'welcome',
       role: 'assistant',
-      text: 'Welcome to the HIS AND HERS Care Family Guide. Tell me briefly what you or your loved one need today—whether booking a children’s home CSR visit, finding nearby rehabilitation, ASD family support, counselling, or urgent safe refuge.',
+      text: 'Welcome to the His & Hers Circle of Hope Care Guide. Tell me briefly what you or your loved one need today—whether special needs family & mother support, mental health & trauma care, children’s home CSR visits, rehabilitation referrals, counselling, or urgent safe refuge.',
       suggestedLinks: [
         {
           label: 'Visit Children’s Homes',
@@ -213,7 +214,7 @@ export function CareGuideChatbot() {
         </button>
       ) : (
         <section
-          aria-label="HIS AND HERS Care Guide & Crisis Text Chat"
+          aria-label="His & Hers Circle of Hope Care Guide & Crisis Text Chat"
           className="w-[calc(100vw-2rem)] sm:w-[410px] max-h-[84vh] bg-white border border-[#3B155F]/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
         >
           {/* Chat Header */}
@@ -361,11 +362,12 @@ export function CareGuideChatbot() {
                 <p>{errorMsg}</p>
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {[
+                    { label: 'Special Needs Families', href: '/special-needs-families' },
+                    { label: 'Mental Health & Trauma', href: '/mental-health' },
                     { label: 'Children’s Homes', href: '/home-visits' },
                     { label: 'Rehab Near Me', href: '/rehabilitation' },
-                    { label: 'ASD Support', href: '/asd-support' },
                     { label: 'Counselling', href: '/counselling' },
-                    { label: 'Find My Home', href: '/find-my-home' },
+                    { label: 'Admins & Help', href: '/leadership' },
                   ].map((item) => (
                     <button
                       key={item.href}
@@ -405,7 +407,7 @@ export function CareGuideChatbot() {
             className="p-3 bg-white border-t border-[#3B155F]/12 flex items-center gap-2"
           >
             <label htmlFor="care-guide-chat-input" className="sr-only">
-              Type privately to HIS AND HERS Care Guide or Crisis Text Chat
+              Type privately to His &amp; Hers Circle of Hope Care Guide or Crisis Text Chat
             </label>
             <input
               id="care-guide-chat-input"
@@ -415,7 +417,7 @@ export function CareGuideChatbot() {
               placeholder={
                 mode === 'crisis'
                   ? 'Type discreetly what help you need right now...'
-                  : 'Ask about homes, rehab, ASD tips, counselling...'
+                  : 'Ask about special needs care, trauma, homes, rehab...'
               }
               maxLength={600}
               className="flex-1 px-3.5 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-lg"

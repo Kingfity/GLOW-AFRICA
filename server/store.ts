@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import type {
+  AdministratorDeskProfile,
   Announcement,
   AsdGuideTip,
   AsdSupportRequest,
@@ -20,9 +21,11 @@ import type {
   RehabReferralRequest,
   SafeHomeRequest,
   SiteSettings,
+  SpecialNeedsFamilyRequest,
   VillageContributionItem,
   VolunteerEnquiry,
 } from '../src/shared/types.ts';
+import { findKenyaCounty } from '../src/utils/kenyaCounties.ts';
 import { normalizeEventCategory } from '../src/utils/validation.ts';
 
 export interface AppDatabase {
@@ -34,6 +37,7 @@ export interface AppDatabase {
   rehabFacilities: RehabFacility[];
   asdGuides: AsdGuideTip[];
   villageContributions: VillageContributionItem[];
+  administrators: AdministratorDeskProfile[];
   prayerRequests: PrayerRequest[];
   counsellingRequests: CounsellingRequest[];
   safeHomeRequests: SafeHomeRequest[];
@@ -41,6 +45,7 @@ export interface AppDatabase {
   partnerOrganizations: PartnerOrganization[];
   rehabReferrals: RehabReferralRequest[];
   asdSupportRequests: AsdSupportRequest[];
+  specialNeedsRequests: SpecialNeedsFamilyRequest[];
   volunteerEnquiries: VolunteerEnquiry[];
   contactMessages: ContactMessage[];
   eventRegistrations: EventRegistration[];
@@ -54,31 +59,31 @@ function createSeedDatabase(): AppDatabase {
   const now = new Date().toISOString();
   return {
     settings: {
-      organisationName: 'HIS AND HERS',
-      tagline: 'Care Family Home. Touching Lives. Connecting Families to What They Need.',
-      heroHeadline: 'A Care Family Home That Connects Everyone to Hope.',
+      organisationName: 'His & Hers Circle of Hope',
+      tagline: 'Rooted in Ruiru Since 2025 · Neighbours Walking Together in Practical Care & Hope.',
+      heroHeadline: 'A Community Circle Where Every Neighbour Is Seen and Held.',
       heroSubheadline:
-        'HIS AND HERS is a vibrant community-based organization rooted in prayer, mental wellbeing, safe refuge, children’s home partnerships, rehabilitation support, and autism family care—uniting individuals, families, and organisations to touch lives together.',
-      welcomeHeadline: 'Where Individuals, Families & Partner Organisations Build Stronger Homes',
+        'Started in Ruiru, Kiambu County in 2025, His & Hers Circle of Hope is a Christian community-based organisation bringing neighbours, families, elders living alone, mental health and trauma care, rehabilitation pathways, and partner children’s homes together long after any single outreach day ends.',
+      welcomeHeadline: 'Where Neighbours, Families & Partner Homes Carry One Another Through',
       welcomeBody:
-        'Like a true care family home, HIS AND HERS connects people directly to what they need: corporate and group visits to verified children’s homes, mental health counselling to lighten heavy burdens, nearby rehabilitation centres for families in recovery, safe refuge from abuse, and practical ASD guidance for parents and kids.',
+        'In Ruiru, an elder may quietly wonder what to cook for supper while a neighbour a few doors away has spare unga to share. We started His & Hers Circle of Hope so those neighbours meet—connecting households to mental health and trauma support, rehabilitation recovery partners, discreet safe refuge, children’s homes, and ongoing elder fellowship.',
       prayerInvitation:
-        'Whatever season your family or heart is walking through, you do not have to navigate it alone. We are here to listen, connect you to real care, and stand beside you.',
+        'Whether you come because you could use a hand or because you have one to offer, karibu sana. There is room for you in our circle.',
       closingStatement:
-        'At HIS AND HERS, we are a care family home where every child is seen, every burden is shared, and families find clear pathways to healing.',
-      primaryLocationLabel: 'HIS AND HERS Care Family Hub · Nairobi',
-      primaryAddress: 'Karen & Lang’ata Care Coordination Hub (Directions Shared Upon Booking)',
-      gatheringScheduleSummary: 'Children’s Home Visits · Mental Health Circles · ASD Parent Care · Safe Refuge',
+        'At His & Hers Circle of Hope, no older neighbour sits forgotten, no parent carrying heavy needs is left unheard, and every table leaves room for kindness.',
+      primaryLocationLabel: 'His & Hers Circle of Hope · Ruiru & Nairobi',
+      primaryAddress: 'Ruiru Wards, Kiambu County & Nairobi Outreach Corridor (Est. 2025)',
+      gatheringScheduleSummary: 'Elder Fellowship · Mental Health & Trauma · Children’s Homes · Safe Refuge',
       contactEmail: 'care@hisandhers.org',
       contactPhone: '+254 700 000 000',
       whatsappNumber: '254700000000',
       emergencyHotlineNote:
-        'If you or a child is in immediate physical danger, please call your local police or national emergency hotline immediately before submitting an online request.',
+        'If you or a child is in immediate physical danger, please call 999 / 112, 1195 (GBV), or 116 (Childline) immediately before submitting an online request.',
       instagramUrl: 'https://instagram.com/hisandherscommunity',
       facebookUrl: 'https://facebook.com/hisandherscommunity',
       youtubeUrl: 'https://youtube.com/@hisandherscommunity',
       approvedGivingNote:
-        'Stewardship, children’s home sponsorships, and rehabilitation aid are coordinated strictly through verified HIS AND HERS channels confirmed directly by our leadership team.',
+        'Stewardship, elder relief blankets, Ruiru Boys student provisions, and children’s home partnerships are coordinated strictly through verified His & Hers Circle of Hope channels.',
       updatedAt: now,
     },
     announcements: [
@@ -416,17 +421,17 @@ function createSeedDatabase(): AppDatabase {
         name: 'Jacaranda Special School',
         institutionType: 'School for Differently Abled',
         regionGroup: 'Nairobi',
-        specialization: 'Autism (ASD), Down Syndrome & Intellectual Learning',
+        specialization: 'Inclusive Developmental Learning & Communication Support',
         countyRegion: 'Nairobi',
         townArea: 'Kilimani / Kileleshwa',
         childrenAgeRange: 'Ages 4 – 19 (Day & Boarding)',
-        currentNeeds: ['Sensory Play Stations', 'Visual Communication Cards', 'Occupational Therapy Mats'],
+        currentNeeds: ['Tactile Learning Stations', 'Visual Communication Cards', 'Occupational Therapy Mats'],
         acceptsCorporateTeams: true,
         acceptsIndividualGroups: true,
         description:
-          'Leading public special education school equipping autistic learners and students with Down syndrome or developmental delays for joyful independence.',
-        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
-        imageAlt: 'Parent and autistic child arranging wooden sensory blocks and picture schedules',
+          'Leading public special education school equipping learners with developmental differences, Down syndrome, or communication support needs for joyful independence.',
+        imageUrl: '/src/assets/images/special_needs_mother_care_1795102206738.jpg',
+        imageAlt: 'Kenyan mother sitting warmly beside her young child with wooden therapy chair and tactile blocks',
       },
       {
         id: 'sch-2',
@@ -459,8 +464,8 @@ function createSeedDatabase(): AppDatabase {
         acceptsIndividualGroups: true,
         description:
           'Premier Kenyan primary and secondary campus combining academics, physiotherapy, orthopedic care, and vocational confidence for physically differently abled learners.',
-        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
-        imageAlt: 'Volunteers collaborating warmly with students at a campus courtyard',
+        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
+        imageAlt: 'Parent and child smiling together alongside a volunteer in a warm courtyard',
       },
       {
         id: 'sch-4',
@@ -544,8 +549,8 @@ function createSeedDatabase(): AppDatabase {
         acceptsIndividualGroups: true,
         description:
           'Coastal centre of excellence welcoming learners with hearing, visual, physical, and developmental differences under dedicated specialist care.',
-        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
-        imageAlt: 'Caregiver and child smiling while engaging with tactile wooden blocks',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Caregiver and children learning together in a welcoming sunlit courtyard',
       },
       {
         id: 'sch-9',
@@ -629,8 +634,8 @@ function createSeedDatabase(): AppDatabase {
         acceptsIndividualGroups: true,
         description:
           'Nyanza residential school supporting physically differently abled children alongside inclusive cerebral palsy therapy and recreation.',
-        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
-        imageAlt: 'Caregiver and child playing with tactile learning toys',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Caregivers and students engaged with inclusive learning materials',
       },
       {
         id: 'sch-14',
@@ -649,6 +654,50 @@ function createSeedDatabase(): AppDatabase {
         imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
         imageAlt: 'Mentors and students collaborating at study tables',
       },
+      {
+        id: 'sch-15',
+        name: 'Kabarnet School for the Deaf & Blind',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Rift Valley',
+        specialization: 'Hearing & Visual Impairment Inclusive Boarding',
+        countyRegion: 'Baringo',
+        townArea: 'Kabarnet',
+        physicalAddress: 'Hospital Hill Road, Kabarnet Town, Baringo County',
+        contactPhone: '+254 53 221 116',
+        contactEmail: 'baringocare@hisandhers.org',
+        websiteUrl: 'https://baringo.go.ke',
+        visitingHours: 'Mon – Sat · 09:00 – 16:00 (Prior Safeguard Clearance)',
+        childrenAgeRange: 'Primary & Junior Secondary',
+        currentNeeds: ['Braille Slates', 'Solar Lanterns', 'Warm Blankets'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Regional inclusive residential school equipping hearing- and visually-impaired learners across Baringo, Elgeyo-Marakwet, and Samburu.',
+        imageUrl: '/src/assets/images/impact_education_youth_1794821888567.jpg',
+        imageAlt: 'Mentors and students collaborating warmly around study tables',
+      },
+      {
+        id: 'sch-16',
+        name: 'Rev. Muhoro Secondary School for the Deaf',
+        institutionType: 'School for Differently Abled',
+        regionGroup: 'Central',
+        specialization: 'Deaf Secondary & Technical Trades',
+        countyRegion: 'Nyeri',
+        townArea: 'Mukurweini / Nyeri',
+        physicalAddress: 'Mukurweini–Nyeri Corridor, Nyeri County',
+        contactPhone: '+254 61 203 2116',
+        contactEmail: 'nyericare@hisandhers.org',
+        websiteUrl: 'https://nyeri.go.ke',
+        visitingHours: 'Mon – Sat · 09:00 – 16:00',
+        childrenAgeRange: 'Secondary Youth',
+        currentNeeds: ['Workshop Toolkits', 'Sign-Language Science Posters', 'Winter Sweaters'],
+        acceptsCorporateTeams: true,
+        acceptsIndividualGroups: true,
+        description:
+          'Leading national secondary campus in Central Kenya empowering deaf students through academics and vocational leadership.',
+        imageUrl: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
+        imageAlt: 'Learners and volunteers collaborating in a courtyard',
+      },
     ],
     rehabFacilities: [
       {
@@ -658,6 +707,11 @@ function createSeedDatabase(): AppDatabase {
         careFormat: 'Residential & Outpatient',
         countyRegion: 'Nairobi',
         townArea: 'Karen / Ngong Road',
+        physicalAddress: 'Karen Hardy Road off Ngong Road, Nairobi',
+        contactPhone: '+254 20 272 6300',
+        contactEmail: 'nairobicare@hisandhers.org',
+        websiteUrl: 'https://www.nacada.go.ke',
+        visitingHours: 'Mon – Sun · 08:30 – 17:30',
         lat: -1.3192,
         lng: 36.7073,
         acceptsCommunityReferrals: true,
@@ -672,7 +726,12 @@ function createSeedDatabase(): AppDatabase {
         focusType: 'Youth & Adolescent Restoration',
         careFormat: 'Outpatient Counselling',
         countyRegion: 'Kiambu',
-        townArea: 'Kikuyu / Limuru',
+        townArea: 'Ruiru / Kikuyu Corridor',
+        physicalAddress: 'Ruiru Eastern Bypass & Kikuyu Road Corridor, Kiambu County',
+        contactPhone: '+254 700 000 000',
+        contactEmail: 'care@hisandhers.org',
+        websiteUrl: 'https://kiambu.go.ke',
+        visitingHours: 'Mon – Sat · 08:30 – 17:00',
         lat: -1.2465,
         lng: 36.6634,
         acceptsCommunityReferrals: true,
@@ -687,7 +746,12 @@ function createSeedDatabase(): AppDatabase {
         focusType: 'Trauma & Crisis Rehabilitation',
         careFormat: 'Residential & Outpatient',
         countyRegion: 'Nakuru',
-        townArea: 'Nakuru Town',
+        townArea: 'Milimani / Nakuru',
+        physicalAddress: 'Milimani Road, Near Nakuru Level 5 PGH Precinct, Nakuru',
+        contactPhone: '+254 51 221 5516',
+        contactEmail: 'nakurucare@hisandhers.org',
+        websiteUrl: 'https://nakuru.go.ke',
+        visitingHours: 'Mon – Sat · 09:00 – 17:00',
         lat: -0.3031,
         lng: 36.08,
         acceptsCommunityReferrals: true,
@@ -703,6 +767,11 @@ function createSeedDatabase(): AppDatabase {
         careFormat: 'Outpatient Counselling',
         countyRegion: 'Kisumu',
         townArea: 'Milimani / Kisumu',
+        physicalAddress: 'Milimani Avenue & JOOTRH Kakamega Road Wing, Kisumu',
+        contactPhone: '+254 57 202 3116',
+        contactEmail: 'kisumucare@hisandhers.org',
+        websiteUrl: 'https://kisumu.go.ke',
+        visitingHours: 'Mon – Sat · 08:30 – 18:00',
         lat: -0.0917,
         lng: 34.768,
         acceptsCommunityReferrals: true,
@@ -718,6 +787,11 @@ function createSeedDatabase(): AppDatabase {
         careFormat: 'Detox & Medical Recovery',
         countyRegion: 'Mombasa',
         townArea: 'Nyali / Mombasa',
+        physicalAddress: 'Links Road, Nyali & Coast General Referral Wing, Mombasa',
+        contactPhone: '+254 41 231 4201',
+        contactEmail: 'coastcare@hisandhers.org',
+        websiteUrl: 'https://www.mombasa.go.ke',
+        visitingHours: '24/7 Stabilization Intake · Daily Family Hours',
         lat: -4.0435,
         lng: 39.6682,
         acceptsCommunityReferrals: true,
@@ -726,58 +800,138 @@ function createSeedDatabase(): AppDatabase {
         imageUrl: '/src/assets/images/counselling_safe_space_1794823558841.jpg',
         imageAlt: 'Bright indoor therapy room welcoming families seeking recovery care',
       },
+      {
+        id: 'reh-6',
+        name: 'Eldoret MTRH & North Rift Restoration Wing',
+        focusType: 'Substance & Addiction Recovery',
+        careFormat: 'Detox & Medical Recovery',
+        countyRegion: 'Uasin Gishu',
+        townArea: 'Eldoret',
+        physicalAddress: 'Nandi Road, Moi Teaching & Referral Precinct, Eldoret',
+        contactPhone: '+254 53 203 3471',
+        contactEmail: 'eldoretcare@hisandhers.org',
+        websiteUrl: 'https://www.mtrh.go.ke',
+        visitingHours: 'Mon – Sun · 08:00 – 17:00',
+        lat: 0.5143,
+        lng: 35.2698,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Medical detox, psychiatric accompaniment, and family restoration bridging Uasin Gishu, Nandi, Trans-Nzoia, and Turkana.',
+        imageUrl: '/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg',
+        imageAlt: 'Calm sunlit courtyard at Eldoret community recovery partner',
+      },
+      {
+        id: 'reh-7',
+        name: 'Nyeri Highland Peace & Recovery Centre',
+        focusType: 'Family & Holistic Care',
+        careFormat: 'Residential & Outpatient',
+        countyRegion: 'Nyeri',
+        townArea: 'Nyeri Town',
+        physicalAddress: 'Kenyatta Road, Near Nyeri County Referral Hospital, Nyeri',
+        contactPhone: '+254 61 203 2116',
+        contactEmail: 'nyericare@hisandhers.org',
+        websiteUrl: 'https://nyeri.go.ke',
+        visitingHours: 'Mon – Sat · 09:00 – 17:00',
+        lat: -0.4201,
+        lng: 36.9476,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Calm Mt. Kenya residential and outpatient alcohol & stress recovery centre guiding families across Nyeri, Kirinyaga, and Laikipia.',
+        imageUrl: '/src/assets/images/counselling_safe_space_1794823558841.jpg',
+        imageAlt: 'Quiet wood-lined counselling lounge welcoming highland families',
+      },
+      {
+        id: 'reh-8',
+        name: 'Meru & Eastern Family Renewal Clinic',
+        focusType: 'Youth & Adolescent Restoration',
+        careFormat: 'Outpatient Counselling',
+        countyRegion: 'Meru',
+        townArea: 'Meru Town',
+        physicalAddress: 'Makutano–Nkubu Road, Meru County Referral Wing, Meru',
+        contactPhone: '+254 64 313 2116',
+        contactEmail: 'merucare@hisandhers.org',
+        websiteUrl: 'https://www.nacada.go.ke',
+        visitingHours: 'Mon – Fri · 08:30 – 17:00',
+        lat: 0.0463,
+        lng: 37.6559,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Outpatient counselling, peer sobriety mentorship, and parent guidance serving Meru, Tharaka-Nithi, Embu, and Isiolo.',
+        imageUrl: '/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg',
+        imageAlt: 'Garden courtyard supporting Eastern Kenya recovery visits',
+      },
+      {
+        id: 'reh-9',
+        name: 'Kakamega Western Sobriety & Counselling Bridge',
+        focusType: 'Family & Holistic Care',
+        careFormat: 'Outpatient Counselling',
+        countyRegion: 'Kakamega',
+        townArea: 'Kakamega Town',
+        physicalAddress: 'Kisumu–Kakamega Road, Opposite Kakamega PGH, Kakamega',
+        contactPhone: '+254 56 203 0116',
+        contactEmail: 'kakamegacare@hisandhers.org',
+        websiteUrl: 'https://kakamega.go.ke',
+        visitingHours: 'Mon – Sat · 09:00 – 16:30',
+        lat: 0.2827,
+        lng: 34.7519,
+        acceptsCommunityReferrals: true,
+        summary:
+          'Community peer circles, pastoral family counselling, and detox referrals serving Kakamega, Bungoma, Vihiga, and Busia.',
+        imageUrl: '/src/assets/images/safe_home_refuge_1794823558780.jpg',
+        imageAlt: 'Warm sunlit meeting lounge for Western Kenya recovery families',
+      },
     ],
     asdGuides: [
       {
-        id: 'asd-1',
-        pillar: 'Sensory-Friendly Home',
-        title: 'Creating a Calm Sensory Corner at Home',
-        audienceTag: 'Parents & Kids · Easy Daily Setup',
+        id: 'mh-1',
+        pillar: 'Nervous System & Trauma',
+        title: 'Grounding the Body When Old Trauma Feels Present',
+        audienceTag: 'Adults & Survivors · Body-First Calm',
         summary:
-          'Autistic children often experience lights, loud echoes, and clutter more intensely. A predictable low-stimulation corner helps their nervous system reset gently.',
+          'Unresolved shock and long-term stress live in the body’s alarm system—causing tight chests, jumpiness, or sudden numbness long after a crisis ends.',
         practicalSteps: [
-          'Choose a quiet corner with soft natural light or warm lamp lighting instead of harsh overhead bulbs.',
-          'Keep a familiar basket of comforting textures (weighted blanket, soft cushion, fidget toy, or noise-cancelling ear defenders).',
-          'Never use the calm corner as punishment—introduce it when your child is happy so it feels like a safe harbour.',
+          'Press both feet flat against the floor and notice the solid weight of the chair supporting your back.',
+          'Slowly look around the room and name three everyday objects aloud to signal to your brain that today is safe.',
+          'Place one warm hand over your breastbone or arm and lengthen your exhale twice as long as your inhale.',
         ],
       },
       {
-        id: 'asd-2',
-        pillar: 'Calm Overwhelm & Meltdowns',
-        title: 'Understanding Meltdowns vs. Tantrums With Love',
-        audienceTag: 'Parents & Caregivers · Crisis Moments',
+        id: 'mh-2',
+        pillar: 'Stress, Panic & Sleep',
+        title: 'Interrupting Evening Overwhelm & Spiralling Thoughts',
+        audienceTag: 'Youth & Working Adults · Rest Reset',
         summary:
-          'A meltdown is sensory or emotional overload—not bad behaviour. Lowering demands and staying calm helps your child feel safe faster.',
+          'Constant worry over bills, work, or unsafe nights keeps cortisol elevated until sleep refuses to come. Gentle evening boundaries help the mind lay down its load.',
         practicalSteps: [
-          'Speak softly using short, calm sentences (or pause talking altogether while ensuring physical safety).',
-          'Reduce triggers right away: dim bright lights, turn off loud TVs, and give breathing space without lecturing.',
-          'Wait until after your child is fully settled to reconnect with water, a hug (if welcomed), or a gentle visual check-in.',
+          'Write tomorrow’s three non-negotiable concerns onto paper 45 minutes before bed so you do not rehearse them in the dark.',
+          'Rinse wrists with cool water or sip warm herbal tea away from breaking-news feeds and tense group chats.',
+          'Repeat the slow 4-4-6 cadence for five rounds while dropping your shoulders down from your ears.',
         ],
       },
       {
-        id: 'asd-3',
-        pillar: 'Visual Routines & Speech',
-        title: 'Using Picture Schedules & Gentle Transitions',
-        audienceTag: 'Daily Living · Communication',
+        id: 'mh-3',
+        pillar: 'Caregiver & Silent Burdens',
+        title: 'Sitting Beside Carers Before Burnout Takes Over',
+        audienceTag: 'Parents, Guardians & Elders · Steady Care',
         summary:
-          'Knowing what happens next reduces anxiety. Simple visual cards and 5-minute countdown warnings make mornings, meals, and bedtime smoother.',
+          'Mothers, fathers, grandparents, and relatives caring for chronically ill elders or children with high needs rarely get asked: “And how are you doing?”',
         practicalSteps: [
-          'Place 4–5 simple picture or drawn cards in order for key routines (Wake Up → Brush Teeth → Breakfast → School).',
-          'Give clear countdown warnings before stopping play (“5 more minutes with blocks, then bath time”).',
-          'Celebrate all communication—speech, pointing, picture exchange, gestures, or typing are all valid voices.',
+          'Name your exhaustion without guilt—caring faithfully does not mean pretending you have endless energy.',
+          'Ask one trusted neighbour or ward prayer partner to hold a 30-minute practical errand or meal drop once a week.',
+          'Connect with our Mental Health & Trauma desk or Home Visits circle for an unhurried listening cup of tea.',
         ],
       },
       {
-        id: 'asd-4',
-        pillar: 'Siblings, School & Faith',
-        title: 'Helping Siblings, Relatives & Communities Understand',
-        audienceTag: 'Family & Community Inclusion',
+        id: 'mh-4',
+        pillar: 'Grief, Faith & Belonging',
+        title: 'Walking Slowly Through Grief, Betrayal & Honest Prayer',
+        audienceTag: 'Community Circles · Ruiru & Kenya',
         summary:
-          'Extended family and community spaces thrive when people learn patience, clear sensory kindness, and joy in every child’s unique strengths.',
+          'Faith never demands fake smiles when your heart is breaking. Across our circle, grief is met with patience, shared tears, practical soup or unga, and quiet presence.',
         practicalSteps: [
-          'Explain autism to siblings simply: “Their brain notices sounds and feelings extra strongly, so quiet kindness helps them shine.”',
-          'Share a short one-page “How I Like to Be Greeted” note with teachers, Sunday caregivers, and relatives.',
-          'Build around your child’s special interests (trains, music, drawing, patterns)—they are wonderful bridges to joy and learning.',
+          'Give yourself permission to step away from loud advice that minimizes real heartbreak or loss.',
+          'Stay anchored to one honest weekly rhythm—a shared meal, a ward prayer walk, or a confidential call.',
+          'Reach out to our Helpline or Administrators & Help Desk so someone walks beside you past outreach day.',
         ],
       },
     ],
@@ -792,7 +946,7 @@ function createSeedDatabase(): AppDatabase {
         summary:
           'Corporate volunteers and community friends partnered together to spend a joyful day reading, playing, and equipping a partner children’s home.',
         whatWasDone:
-          'HIS AND HERS coordinated a vetted corporate CSR team and local storytellers to bring reading books, school packs, fresh produce, and unhurried mentorship games to a partner children’s home.',
+          'His & Hers Circle of Hope coordinated a vetted corporate CSR team and local storytellers to bring reading books, school packs, fresh produce, and unhurried mentorship games to a partner children’s home.',
         whyItMattered:
           'Children thrive on genuine presence and long-term care, not drop-off charity. Structured visits ensure safeguarding, warmth, and real friendship.',
         whoItServed:
@@ -812,15 +966,15 @@ function createSeedDatabase(): AppDatabase {
         title: 'Youth Encouragement & Mental Wellbeing Circles',
         category: 'Community Engagement',
         dateLabel: 'March 2025',
-        locationLabel: 'Community Learning Hall',
+        locationLabel: 'Ruiru & Community Learning Hall',
         summary:
           'Intergenerational mentorship and listening tables creating safe spaces for young people to speak openly, receive guidance, and lighten emotional burdens.',
         whatWasDone:
           'We hosted welcoming afternoon sessions pairing trained community mentors, counsellors, and educators with youth for open dialogue and emotional wellbeing conversations.',
         whyItMattered:
-          'Many young people carry quiet pressures around mental health, family stress, and belonging. Having trusted adults who listen breaks isolation.',
+          'Many young people carry quiet pressures around trauma, family stress, and belonging. Having trusted adults who listen breaks isolation.',
         whoItServed:
-          'Teenagers, students, and young adults from across diverse neighbourhoods.',
+          'Teenagers, students, and young adults from across Ruiru and neighbouring counties.',
         whatGlowHopedToAchieve:
           'To cultivate a supportive environment where young people feel heard, safe, and connected to caring mentors and counsellors.',
         documentedStory:
@@ -832,39 +986,39 @@ function createSeedDatabase(): AppDatabase {
       },
       {
         id: 'imp-3',
-        slug: 'asd-parent-and-family-compassion-workshop',
-        title: 'ASD Parents & Caregivers Support Gathering',
+        slug: 'ruiru-four-ward-walk-and-student-care',
+        title: 'Ruiru Four-Ward Walk, Elder Blankets & Ruiru Boys Student Parcels',
         category: 'Acts of Compassion',
-        dateLabel: 'August 2025',
-        locationLabel: 'HIS AND HERS Care Family Hub',
+        dateLabel: 'Ongoing · 2026',
+        locationLabel: 'Four Wards Across Ruiru, Kiambu County',
         summary:
-          'A sensory-friendly afternoon empowering parents of autistic children with visual routine tools, calm regulation tips, and peer solidarity.',
+          'Convened by Nancy Kariuki and the GLOW Prayer Movement alongside well-wishers—walking four Ruiru wards in prayer while gathering blankets for elders and maize flour, rice, and sugar for student homes at Ruiru Boys.',
         whatWasDone:
-          'Occupational therapists, parents, and community volunteers co-hosted an interactive sensory toolkit workshop while caring warmly for children in a calm adjoining playroom.',
+          'Neighbours walked and prayed together across four Ruiru wards, delivering thick warm blankets directly to older residents living alone and sharing bags of maize flour, rice, sugar, lunch, and encouragement at Ruiru Boys student homes.',
         whyItMattered:
-          'Raising a neurodivergent child can feel isolating without practical community understanding. Sharing real tools restores confidence and joy.',
+          'Compassion stays alive when outreach becomes steady relationship—ensuring elders know whom to call on cold nights and students hear sincere encouragement over a shared meal.',
         whoItServed:
-          'Parents, guardians, siblings, and children on the autism spectrum.',
+          'Older neighbours across four Ruiru wards and boarding student households at Ruiru Boys.',
         whatGlowHopedToAchieve:
-          'To build a warm, stigma-free community where ASD families feel celebrated and supported.',
+          'To weave prayer and practical neighbourliness into an ongoing circle leading straight into Christmas of Hope.',
         documentedStory:
-          'Parents crafted custom picture schedules over tea while children explored wooden sensory puzzles in a gentle daylight room.',
-        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
-        imageAlt: 'Parent and young autistic child playing calmly with colorful wooden blocks and picture cards',
+          'After walking and praying along dusty morning roads, conveners and friends shared an unhurried meal at Ruiru Boys, exchanging heartfelt words of encouragement.',
+        imageUrl: '/src/assets/images/ruiru_elder_outreach_1795094869017.jpg',
+        imageAlt: 'Warm blankets, maize flour, and sugar carried thoughtfully to a smiling elder neighbour on a stone veranda in Ruiru',
         featured: true,
-        createdAt: '2025-08-22T10:00:00.000Z',
+        createdAt: '2026-04-12T10:00:00.000Z',
       },
       {
         id: 'imp-4',
         slug: 'sanctuary-doors-open-night-of-refuge',
-        title: 'Safe Refuge & Rehabilitation Pathways Evening',
+        title: 'Safe Refuge & Trauma Recovery Pathways Evening',
         category: 'Support for Vulnerable Communities',
         dateLabel: 'February 2026',
-        locationLabel: 'HIS AND HERS Care Family Sanctuary',
+        locationLabel: 'His & Hers Circle of Hope Sanctuary',
         summary:
-          'An open-door evening combining gentle worship, confidential counselling, rehabilitation referrals, and safe-refuge guidance.',
+          'An open-door evening combining gentle worship, trauma-informed counselling, rehabilitation referrals, and discreet safe-refuge guidance.',
         whatWasDone:
-          'We opened our gathering space for a calm evening featuring acoustic reflection, one-on-one counselling check-ins, and guided referrals to partner rehab and shelter facilities.',
+          'We opened our gathering space for a calm evening featuring acoustic reflection, one-on-one trauma and stress listening check-ins, and guided referrals to partner rehab and shelter facilities.',
         whyItMattered:
           'Families battling trauma, addiction, or domestic danger need trustworthy bridges to nearby care facilities without shame.',
         whoItServed:
@@ -883,20 +1037,20 @@ function createSeedDatabase(): AppDatabase {
       {
         id: 'evt-nov28',
         slug: 'november-28-thanksgiving-feast-and-early-christmas-relief',
-        title: 'November 28 Thanksgiving Feast & Early Christmas Relief Initiative',
+        title: 'Nov 28 Thanksgiving & Christmas of Hope Elder Feast',
         category: 'Community Outreach',
         dateISO: '2026-11-28',
         timeLabel: '10:00 – 16:00',
-        venue: '47-County Community Tables & Karen Hub Courtyard',
+        venue: 'Ruiru Community Tables & 47-County Care Corridors',
         summary:
-          'A joyful Thanksgiving Feast and Early Christmas outreach feeding families across communities and gifting small bundles of relief tokens to cushion hard economic times.',
+          'Sharing a unhurried Christmas of Hope meal with our elders, listening to their stories, feeding families, and packing take-home unga, rice, sugar, and relief token bundles.',
         description:
-          'On 28 November, HIS AND HERS hosts warm outdoor thanksgiving tables stocked with freshly prepared community meals alongside practical relief token bundles (essential grain staples, soap, school notebooks, and direct family vouchers) designed with dignity to cushion households heading into the festive season.',
+          'Preparing for Christmas of Hope on 28 November, His & Hers Circle of Hope invites neighbours, conveners, and well-wishers to sit beside our elders for a warm feast, hear their stories with unhurried respect, and pack nutritious take-home food and relief token bundles to cushion households through hard times.',
         registrationOpen: true,
         registrationNote:
-          'Everyone is welcome to dine, volunteer, or sponsor relief token bundles for families across all 47 counties.',
+          'Karibu sana: join to share a table, listen to elders’ stories, volunteer, or sponsor take-home food bundles.',
         imageUrl: '/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg',
-        imageAlt: 'Families and children seated joyfully at a sunlit community Thanksgiving feast beside neatly tied relief bundles',
+        imageAlt: 'Families and elders seated joyfully at a sunlit community Thanksgiving feast beside neatly tied relief bundles',
         featured: true,
         createdAt: now,
       },
@@ -922,20 +1076,20 @@ function createSeedDatabase(): AppDatabase {
       },
       {
         id: 'evt-2',
-        slug: 'asd-parents-and-kids-sensory-play-morning',
-        title: 'ASD Parents Coffee & Sensory-Friendly Kids Morning',
-        category: 'ASD Family Gatherings',
+        slug: 'trauma-and-stress-listening-and-grounding-evening',
+        title: 'Calm After the Storm: Trauma & Stress Listening Evening',
+        category: 'Trauma & Stress Circles',
         dateISO: '2026-12-05',
         timeLabel: '10:00 – 12:30',
-        venue: 'HIS AND HERS Care Family Hub (Quiet Garden Room)',
+        venue: 'His & Hers Circle of Hope (Ruiru & Karen Quiet Listening Rooms)',
         summary:
-          'A calm, welcoming morning for parents raising children on the autism spectrum—featuring visual routine swaps, practical home tips, and gentle sensory play.',
+          'A calm, confidential morning for neighbours carrying chronic stress, anxiety, caregiver exhaustion, or trauma memories—with nervous-system grounding tools and warm listening.',
         description:
-          'No shushing, no judgement. Parents connect over tea with occupational therapy mentors and fellow caregivers while children enjoy soft lighting, wooden sensory stations, and quiet corner activities.',
+          'No shushing, no clinical coldness. Visitors sip warm tea beside peer companions and trauma-informed listeners, practice calm breathing anchors, and leave with practical weekly care connections.',
         registrationOpen: true,
-        registrationNote: 'Free community entry; let us know your child’s sensory preferences when registering.',
-        imageUrl: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
-        imageAlt: 'Parent and young child exploring sensory blocks and routine cards',
+        registrationNote: 'Free community entry; feel free to come quietly or simply sit and listen.',
+        imageUrl: '/src/assets/images/trauma_calm_listening_1795094868840.jpg',
+        imageAlt: 'Two adults seated peacefully with warm tea in a quiet, sunlit listening room',
         featured: true,
         createdAt: now,
       },
@@ -946,7 +1100,7 @@ function createSeedDatabase(): AppDatabase {
         category: 'Mental Health & Recovery',
         dateISO: '2026-12-10',
         timeLabel: '18:00 – 19:30',
-        venue: 'HIS AND HERS Care & Listening Space',
+        venue: 'His & Hers Circle of Hope Listening Space',
         summary:
           'A stigma-free community evening offering mental wellbeing encouragement, counsellor Q&A, nearby rehabilitation centre guidance, and confidential listening.',
         description:
@@ -961,19 +1115,19 @@ function createSeedDatabase(): AppDatabase {
       {
         id: 'evt-4',
         slug: 'neighbour-to-neighbour-helping-hand-and-pantry-day',
-        title: 'Neighbour-to-Neighbour Helping Hand & Fresh Pantry Drive',
+        title: 'Ruiru Neighbour-to-Neighbour Unpack & Elder Blanket Drive',
         category: 'Community Outreach',
         dateISO: '2026-12-14',
         timeLabel: '09:00 – 13:30',
-        venue: 'Karen & Lang’ata Community Courtyard',
+        venue: 'Ruiru Four-Ward Hubs & Partner Community Courtyards',
         summary:
-          'Hands-on community action assembling fresh produce baskets, hygiene kits, and warmth packages for vulnerable households and elder neighbours.',
+          'Hands-on neighbour action packing maize flour, rice, sugar, and warm blankets for elders living alone and families weathering lean weeks.',
         description:
-          'Volunteers of all ages pack nutritious food hampers, sort warm clothing, and accompany community elders and single-parent families with dignity and warm fellowship.',
+          'Volunteers of all ages assemble household unga and dry staple packs, sort warm woollen blankets, and walk side by side to visit older neighbours and high-need parents with lingering friendship.',
         registrationOpen: true,
         registrationNote: 'Bring comfortable walking shoes; pantry donations and sorting hands are both welcome.',
-        imageUrl: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
-        imageAlt: 'Community volunteers sharing fresh produce hampers outdoors with neighbours',
+        imageUrl: '/src/assets/images/ruiru_elder_outreach_1795094869017.jpg',
+        imageAlt: 'Warm blankets, maize flour, and sugar being handed gently to an elder on a sunlit veranda',
         featured: true,
         createdAt: now,
       },
@@ -984,15 +1138,15 @@ function createSeedDatabase(): AppDatabase {
         category: 'Safe Refuge & Fellowship',
         dateISO: '2026-12-19',
         timeLabel: '16:30 – 19:00',
-        venue: 'HIS AND HERS Care Family Sanctuary',
+        venue: 'His & Hers Circle of Hope Sanctuary',
         summary:
-          'An open, compassionate evening uniting safeguarding advocates, interdenominational prayer, and practical help for families building safe homes free from abuse.',
+          'An open, compassionate evening uniting safeguarding advocates, GLOW Prayer Movement intercession, and practical help for families building safe homes free from abuse.',
         description:
           'Join neighbours, safeguarding volunteers, and faith companions for gentle worship, community safeguarding awareness, and private one-on-one support stations.',
         registrationOpen: true,
         registrationNote: 'Open to individuals, families, and community partner teams.',
-        imageUrl: '/src/assets/images/doc_worship_gathering_1794832340911.jpg',
-        imageAlt: 'Community gathered together in warmth, hope, and fellowship',
+        imageUrl: '/src/assets/images/ruiru_fellowship_courtyard_1795102206499.jpg',
+        imageAlt: 'Community neighbours gathered outdoors beneath acacia trees for prayer and evening reflection',
         featured: false,
         createdAt: now,
       },
@@ -1014,10 +1168,10 @@ function createSeedDatabase(): AppDatabase {
         contributorName: 'Mwangaza Wellness Group',
         region: 'Kiambu',
         tierId: 'sensory',
-        tierLabel: 'ASD Sensory Calm Kit',
+        tierLabel: 'Trauma & Stress Healing Kit',
         units: 3,
         amountKes: 10500,
-        encouragementNote: 'Standing beside autistic children and their dedicated parents.',
+        encouragementNote: 'Standing beside neighbours carrying chronic stress, trauma, and silent burdens.',
         createdAt: '2026-01-19T14:20:00.000Z',
       },
       {
@@ -1054,6 +1208,141 @@ function createSeedDatabase(): AppDatabase {
         createdAt: '2026-08-21T08:10:00.000Z',
       },
     ],
+    administrators: [
+      {
+        id: 'adm-nancy',
+        deskCode: 'Convener 01',
+        fullName: 'Nancy Kariuki',
+        roleTitle: 'Lead Convener & Founding Steward',
+        department: 'Ruiru Four-Ward & Circle Stewardship',
+        status: 'Active',
+        wardLocation: 'Ruiru Founding Hub, Kiambu County',
+        officeHours: 'Mon – Sat · 09:00 – 17:00',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Guiding His & Hers Circle of Hope since its 2025 founding in Ruiru—walking alongside elders living alone, Ruiru Boys student homes, and families in quiet need.',
+        routingHref: '/about',
+        routingLabel: 'Read Our Origin Story',
+        accentHex: '#7A5A10',
+      },
+      {
+        id: 'adm-glow',
+        deskCode: 'Partner Desk',
+        fullName: 'GLOW Prayer Movement & Well-Wishers',
+        roleTitle: 'Intercessory & Ward Mobilisation Lead',
+        department: 'Prayer Walks & Blanket / Staples Drives',
+        status: 'Active',
+        wardLocation: 'Four Wards Across Ruiru & Kiambu',
+        officeHours: 'Wed & Sat Circles + Open Line',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Convening prayer walks across Ruiru wards, mobilising warm blankets for elders and staples for Ruiru Boys, and hosting Christmas of Hope tables.',
+        routingHref: '/prayer-worship',
+        routingLabel: 'Visit Prayer & Worship',
+        accentHex: '#3B155F',
+      },
+      {
+        id: 'adm-desk-1',
+        deskCode: 'Desk 01',
+        fullName: 'Administrator Particulars Updating',
+        roleTitle: 'Programmes & Children’s Homes Coordinator',
+        department: 'Homes, Inclusive Schools & Ward Outreach',
+        status: 'Awaiting Staff Particulars',
+        wardLocation: 'Ruiru & 47-County Partner Desk',
+        officeHours: 'Mon – Fri · 08:30 – 16:30',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Coordinating Children’s Home & Inclusive School visits across all 47 counties, CSR team briefings, elders home checks, and maize flour drives.',
+        routingHref: '/home-visits',
+        routingLabel: 'Children’s Homes & Schools',
+        accentHex: '#C2593F',
+      },
+      {
+        id: 'adm-desk-2',
+        deskCode: 'Desk 02',
+        fullName: 'Coordinator Particulars Updating',
+        roleTitle: 'Mental Health, Trauma & Stress Healing Desk',
+        department: 'Nervous System Care, Stress & Trauma Support',
+        status: 'Awaiting Staff Particulars',
+        wardLocation: 'Ruiru & Karen Trauma-Informed Listening Rooms',
+        officeHours: 'Tue – Sat · 09:00 – 18:00',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Providing trauma-informed listening, chronic stress and panic grounding tools, caregiver burnout recovery, and confidential counselling callbacks.',
+        routingHref: '/mental-health',
+        routingLabel: 'Open Mental Health & Trauma Desk',
+        accentHex: '#256358',
+      },
+      {
+        id: 'adm-desk-3',
+        deskCode: 'Desk 03',
+        fullName: 'Coordinator Particulars Updating',
+        roleTitle: 'Christmas of Hope & Elders Logistics Desk',
+        department: 'Nov 28 Feast & Take-Home Food Parcels',
+        status: 'Awaiting Staff Particulars',
+        wardLocation: 'Ruiru Community Tables & Nairobi Corridor',
+        officeHours: 'Mon – Sat · 09:00 – 17:00',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Organising shared elder tables, Ruiru Boys student hospitality, and take-home unga, rice, sugar, and relief token bundles.',
+        routingHref: '/events',
+        routingLabel: 'View Upcoming Gatherings',
+        accentHex: '#7A5A10',
+      },
+      {
+        id: 'adm-desk-4',
+        deskCode: 'Desk 04',
+        fullName: 'Steward Particulars Updating',
+        roleTitle: 'Safeguarding & Open Books Stewardship Lead',
+        department: 'Find My Home Refuge & 82/12/6 Accountability',
+        status: 'Awaiting Staff Particulars',
+        wardLocation: 'Confidential Safeguarding Desk',
+        officeHours: '24/7 Urgent Safety Escalation',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Managing Find My Home refuge confidentiality, 47-county protection relay, 82/12/6 open-books audits, and partner home safeguarding.',
+        routingHref: '/accountability',
+        routingLabel: 'Open Books & Accountability',
+        accentHex: '#3B155F',
+      },
+      {
+        id: 'adm-desk-5',
+        deskCode: 'Desk 05',
+        fullName: 'Mothers & Guardians Lead Updating',
+        roleTitle: 'Special Needs Kids & Mothers Care Lead',
+        department: 'Single Mothers, Sole Guardians & Two-Parent Family Care',
+        status: 'Awaiting Staff Particulars',
+        wardLocation: 'Ruiru & 47-County Disability Family Network',
+        officeHours: 'Mon – Sat · 08:30 – 18:00',
+        phone: '+254 700 000 000',
+        whatsapp: '254700000000',
+        email: 'care@hisandhers.org',
+        photoUrl: '',
+        focusSummary:
+          'Listening directly to mothers and guardians raising differently abled children—coordinating respite hours, care kits, inclusive schools, and family circles.',
+        routingHref: '/special-needs-families',
+        routingLabel: 'Special Needs Families Hub',
+        accentHex: '#C2593F',
+      },
+    ],
     prayerRequests: [],
     counsellingRequests: [],
     safeHomeRequests: [],
@@ -1061,6 +1350,7 @@ function createSeedDatabase(): AppDatabase {
     partnerOrganizations: [],
     rehabReferrals: [],
     asdSupportRequests: [],
+    specialNeedsRequests: [],
     volunteerEnquiries: [],
     contactMessages: [],
     eventRegistrations: [],
@@ -1072,11 +1362,17 @@ const LEGACY_IMAGE_UPGRADES: Record<string, string> = {
   '/src/assets/images/children_home_visit_joy_1794828208960.jpg':
     '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
   '/src/assets/images/asd_parent_child_care_1794828209127.jpg':
-    '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
+    '/src/assets/images/special_needs_mother_care_1795102206738.jpg',
+  '/src/assets/images/lifelike_care_family_art_1794832340734.jpg':
+    '/src/assets/images/ruiru_elder_outreach_1795094869017.jpg',
   '/src/assets/images/rehab_recovery_garden_1794828209576.jpg':
     '/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg',
   '/src/assets/images/worship_gathering_sanctuary_1794821887938.jpg':
-    '/src/assets/images/doc_worship_gathering_1794832340911.jpg',
+    '/src/assets/images/ruiru_fellowship_courtyard_1795102206499.jpg',
+  '/src/assets/images/doc_worship_gathering_1794832340911.jpg':
+    '/src/assets/images/ruiru_fellowship_courtyard_1795102206499.jpg',
+  '/src/assets/images/hero_worship_community_1794821886213.jpg':
+    '/src/assets/images/community_circle_hero_1795102206455.jpg',
 };
 
 function upgradeImageUrl(url: string): { nextUrl: string; changed: boolean } {
@@ -1114,8 +1410,25 @@ function ensureDatabaseExists(): AppDatabase {
       const seedMatch = seedEventsById.get(evt.id);
       if (
         seedMatch &&
+        evt.id === 'evt-2' &&
+        (evt.slug === 'asd-parents-and-kids-sensory-play-morning' ||
+          evt.category === ('ASD Family Gatherings' as string) ||
+          evt.title.includes('ASD'))
+      ) {
+        migrated = true;
+        return { ...seedMatch, createdAt: evt.createdAt || seedMatch.createdAt };
+      }
+      if (
+        seedMatch &&
+        evt.id === 'evt-nov28' &&
+        !evt.title.includes('Christmas of Hope')
+      ) {
+        migrated = true;
+        return { ...seedMatch, createdAt: evt.createdAt || seedMatch.createdAt };
+      }
+      if (
+        seedMatch &&
         (evt.slug === 'corporate-and-community-childrens-home-visit-day' ||
-          evt.slug === 'asd-parents-and-kids-sensory-play-morning' ||
           evt.slug === 'mental-health-listening-and-burden-sharing-circle' ||
           evt.slug === 'interdenominational-evening-of-worship-and-intercession')
       ) {
@@ -1139,7 +1452,7 @@ function ensureDatabaseExists(): AppDatabase {
     });
 
     if (!migratedEvents.some((e) => e.id === 'evt-5') && !migratedEvents.some((e) => e.category === 'Safe Refuge & Fellowship')) {
-      migratedEvents = [...migratedEvents, seed.events[4]];
+      migratedEvents = [...migratedEvents, seed.events[5]];
       migrated = true;
     }
 
@@ -1147,10 +1460,15 @@ function ensureDatabaseExists(): AppDatabase {
       parsed.childrensHomes?.length ? parsed.childrensHomes : seed.childrensHomes
     ).map((h) => {
       const seedMatch = seed.childrensHomes.find((s) => s.id === h.id);
+      const countyInfo = findKenyaCounty(h.countyRegion);
       let next = h;
       if (next.name.includes('(Partner Slot)')) {
         migrated = true;
         next = { ...next, name: next.name.replace(' (Partner Slot)', '').trim() };
+      }
+      if (seedMatch && next.id === 'sch-1' && next.specialization?.includes('Autism (ASD)')) {
+        migrated = true;
+        next = seedMatch;
       }
       if (seedMatch && (!next.institutionType || !next.regionGroup || !next.specialization)) {
         migrated = true;
@@ -1159,6 +1477,19 @@ function ensureDatabaseExists(): AppDatabase {
           institutionType: seedMatch.institutionType,
           regionGroup: seedMatch.regionGroup,
           specialization: seedMatch.specialization,
+        };
+      }
+      if (!next.physicalAddress || !next.contactPhone || !next.websiteUrl) {
+        migrated = true;
+        next = {
+          ...next,
+          physicalAddress:
+            seedMatch?.physicalAddress || `${next.townArea}, ${countyInfo.physicalAddress}`,
+          contactPhone: seedMatch?.contactPhone || countyInfo.facilityPhone,
+          contactEmail: seedMatch?.contactEmail || countyInfo.facilityEmail,
+          websiteUrl: seedMatch?.websiteUrl || countyInfo.websiteUrl,
+          visitingHours:
+            seedMatch?.visitingHours || 'Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)',
         };
       }
       return next;
@@ -1172,29 +1503,61 @@ function ensureDatabaseExists(): AppDatabase {
     }
     const migratedHomes = [...existingHomes, ...missingSeededHomes];
 
-    const migratedRehab = migrateList(
+    const existingRehab = migrateList(
       parsed.rehabFacilities?.length ? parsed.rehabFacilities : seed.rehabFacilities
     ).map((f) => {
-      if (f.name.includes('(Partner Facility)')) {
+      const seedMatch = seed.rehabFacilities.find((s) => s.id === f.id);
+      const countyInfo = findKenyaCounty(f.countyRegion);
+      let next = f;
+      if (next.name.includes('(Partner Facility)')) {
         migrated = true;
-        return { ...f, name: f.name.replace(' (Partner Facility)', '').trim() };
+        next = { ...next, name: next.name.replace(' (Partner Facility)', '').trim() };
       }
-      return f;
+      if (!next.physicalAddress || !next.contactPhone || !next.websiteUrl) {
+        migrated = true;
+        next = {
+          ...next,
+          physicalAddress:
+            seedMatch?.physicalAddress || `${next.townArea}, ${countyInfo.physicalAddress}`,
+          contactPhone: seedMatch?.contactPhone || countyInfo.facilityPhone,
+          contactEmail: seedMatch?.contactEmail || countyInfo.facilityEmail,
+          websiteUrl: seedMatch?.websiteUrl || countyInfo.websiteUrl,
+          visitingHours: seedMatch?.visitingHours || 'Mon – Sat · 08:30 – 17:00',
+        };
+      }
+      return next;
     });
-
-    let migratedSettings = { ...seed.settings, ...(parsed.settings || {}) };
-    if (migratedSettings.primaryLocationLabel?.includes('(Editable in Admin CMS)')) {
-      migratedSettings.primaryLocationLabel = seed.settings.primaryLocationLabel;
+    const missingSeededRehab = seed.rehabFacilities.filter(
+      (s) => !existingRehab.some((existing) => existing.id === s.id)
+    );
+    if (missingSeededRehab.length > 0) {
       migrated = true;
     }
-    if (migratedSettings.primaryAddress?.includes('Update exact street address in Admin CMS')) {
-      migratedSettings.primaryAddress = seed.settings.primaryAddress;
+    const migratedRehab = [...existingRehab, ...missingSeededRehab];
+
+    let migratedSettings = { ...seed.settings, ...(parsed.settings || {}) };
+    if (
+      migratedSettings.organisationName === 'HIS AND HERS' ||
+      migratedSettings.heroSubheadline?.includes('autism family care') ||
+      migratedSettings.primaryLocationLabel?.includes('(Editable in Admin CMS)')
+    ) {
+      migratedSettings = {
+        ...seed.settings,
+        contactEmail: migratedSettings.contactEmail || seed.settings.contactEmail,
+        contactPhone: migratedSettings.contactPhone || seed.settings.contactPhone,
+        whatsappNumber: migratedSettings.whatsappNumber || seed.settings.whatsappNumber,
+        updatedAt: new Date().toISOString(),
+      };
       migrated = true;
     }
 
     const migratedImpact = migrateList(
       parsed.impactProjects?.length ? parsed.impactProjects : seed.impactProjects
     ).map((proj) => {
+      if (proj.id === 'imp-3' && proj.slug === 'asd-parent-and-family-compassion-workshop') {
+        migrated = true;
+        return seed.impactProjects[2];
+      }
       if (proj.id === 'imp-1' && (proj.dateLabel.includes('2024') || proj.createdAt.startsWith('2024'))) {
         migrated = true;
         return {
@@ -1205,6 +1568,12 @@ function ensureDatabaseExists(): AppDatabase {
       }
       return proj;
     });
+
+    const hasLegacyAsdGuides = !parsed.asdGuides?.length || parsed.asdGuides.some((g) => g.id?.startsWith('asd-'));
+    const migratedAsdGuides = hasLegacyAsdGuides ? seed.asdGuides : parsed.asdGuides!;
+    if (hasLegacyAsdGuides) {
+      migrated = true;
+    }
 
     if (!migratedEvents.some((e) => e.id === 'evt-nov28' || e.slug === 'november-28-thanksgiving-feast-and-early-christmas-relief')) {
       migratedEvents = [seed.events[0], ...migratedEvents];
@@ -1223,13 +1592,44 @@ function ensureDatabaseExists(): AppDatabase {
       migrated = true;
     }
 
-    const migratedContributions =
+    let migratedContributions =
       Array.isArray(parsed.villageContributions) && parsed.villageContributions.length > 0
-        ? parsed.villageContributions
+        ? parsed.villageContributions.map((c) => {
+            if (c.tierLabel === 'ASD Sensory Calm Kit') {
+              migrated = true;
+              return {
+                ...c,
+                tierLabel: 'Trauma & Stress Healing Kit',
+                encouragementNote:
+                  c.encouragementNote === 'Standing beside autistic children and their dedicated parents.'
+                    ? 'Standing beside neighbours carrying chronic stress, trauma, and silent burdens.'
+                    : c.encouragementNote,
+              };
+            }
+            return c;
+          })
         : seed.villageContributions;
     if (!parsed.villageContributions || parsed.villageContributions.length === 0) {
       migrated = true;
     }
+
+    const existingAdmins =
+      Array.isArray(parsed.administrators) && parsed.administrators.length > 0
+        ? parsed.administrators.map((a) => {
+            if (a.id === 'adm-desk-2' && !a.roleTitle.includes('Trauma')) {
+              migrated = true;
+              return seed.administrators.find((s) => s.id === 'adm-desk-2') || a;
+            }
+            return a;
+          })
+        : seed.administrators;
+    const missingSeedAdmins = seed.administrators.filter(
+      (s) => !existingAdmins.some((existing) => existing.id === s.id)
+    );
+    if (!parsed.administrators || parsed.administrators.length === 0 || missingSeedAdmins.length > 0) {
+      migrated = true;
+    }
+    const migratedAdmins = [...existingAdmins, ...missingSeedAdmins];
 
     const db: AppDatabase = {
       ...seed,
@@ -1240,14 +1640,16 @@ function ensureDatabaseExists(): AppDatabase {
       events: migratedEvents,
       childrensHomes: migratedHomes,
       rehabFacilities: migratedRehab,
-      asdGuides: parsed.asdGuides?.length ? parsed.asdGuides : seed.asdGuides,
+      asdGuides: migratedAsdGuides,
       villageContributions: migratedContributions,
+      administrators: migratedAdmins,
       counsellingRequests: parsed.counsellingRequests || [],
       safeHomeRequests: parsed.safeHomeRequests || [],
       homeVisitBookings: parsed.homeVisitBookings || [],
       partnerOrganizations: parsed.partnerOrganizations || [],
       rehabReferrals: parsed.rehabReferrals || [],
       asdSupportRequests: parsed.asdSupportRequests || [],
+      specialNeedsRequests: parsed.specialNeedsRequests || [],
       emergencyAlerts: parsed.emergencyAlerts || [],
     };
 
@@ -1289,6 +1691,7 @@ export function getPublicSiteData(): PublicSiteData {
     rehabFacilities: db.rehabFacilities,
     asdGuides: db.asdGuides,
     villageContributions: db.villageContributions,
+    administrators: db.administrators,
   };
 }
 

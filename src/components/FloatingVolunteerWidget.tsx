@@ -6,11 +6,10 @@ import { ALL_47_COUNTY_NAMES } from '../utils/kenyaCounties';
 type VolunteerKind = 'individual' | 'team' | 'institution';
 
 const HELP_AREAS = [
-  'Nov 28 Thanksgiving Feast & Relief Token Bundles',
+  'Nov 28 Feast & Christmas of Hope Elder Parcels',
   'Visiting Partner Children’s Homes',
-  'Packing Pantry & School Kits',
-  'ASD Parents & Kids Support Mornings',
-  'Listening Circles & Community Care',
+  'Ruiru Elder Blankets & Staple Packs (Unga / Rice)',
+  'Mental Health, Trauma & Listening Circles',
   '47-County Outreach Logistics',
 ];
 
@@ -25,7 +24,7 @@ export function FloatingVolunteerWidget() {
   const [volunteerKind, setVolunteerKind] = useState<VolunteerKind>('individual');
   // Step 2
   const [selectedAreas, setSelectedAreas] = useState<string[]>([
-    'Nov 28 Thanksgiving Feast & Relief Token Bundles',
+    'Nov 28 Feast & Christmas of Hope Elder Parcels',
   ]);
   // Step 3
   const [fullName, setFullName] = useState('');
@@ -174,7 +173,7 @@ export function FloatingVolunteerWidget() {
             <div className="px-6 sm:px-8 pt-6 pb-5 bg-gradient-to-r from-[#FDF6EE] via-[#FBF5E6] to-[#EAF6F2] border-b border-[#D4AF37]/25 flex items-start justify-between gap-4">
               <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-wider text-[#7A5A10]">
-                  HIS AND HERS · Community Hands
+                  His &amp; Hers Circle of Hope · Community Hands
                 </p>
                 <h2
                   id="volunteer-modal-heading"

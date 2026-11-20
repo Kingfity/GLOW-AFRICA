@@ -1,11 +1,19 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { ArrowRight, CheckCircle2, LocateFixed, MapPin, ShieldCheck } from 'lucide-react';
-import { CommunityVideoPlayer } from '../components/CommunityVideoPlayer';
+import {
+  ArrowRight,
+  CheckCircle2,
+  ExternalLink,
+  LocateFixed,
+  Mail,
+  MapPin,
+  PhoneCall,
+  ShieldCheck,
+} from 'lucide-react';
 import { SafeImage } from '../components/SafeImage';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import type { RehabFacility, RehabReferralRequest } from '../shared/types';
-import { ALL_47_COUNTY_NAMES, ALL_KENYA_COUNTIES } from '../utils/kenyaCounties';
+import { ALL_47_COUNTY_NAMES, ALL_KENYA_COUNTIES, findKenyaCounty } from '../utils/kenyaCounties';
 import { sortFacilitiesByProximity, validateRehabReferral } from '../utils/validation';
 
 const FOCUS_FILTERS: Array<'All' | RehabFacility['focusType']> = [
@@ -31,7 +39,12 @@ export function RehabilitationPage() {
   const { data } = useSiteData();
   const facilities = data?.rehabFacilities || [];
 
-  const [countyFilter, setCountyFilter] = useState<string>('All');
+  const [countyFilter, setCountyFilter] = useState<string>(() => {
+    if (typeof window === 'undefined') return 'All';
+    const qCounty = new URLSearchParams(window.location.search).get('county');
+    if (qCounty && ALL_47_COUNTY_NAMES.includes(qCounty)) return qCounty;
+    return 'All';
+  });
   const [focusFilter, setFocusFilter] = useState<string>('All');
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLabel, setLocationLabel] = useState<string>('');
@@ -70,6 +83,11 @@ export function RehabilitationPage() {
   const displayedFacilities = useMemo(() => {
     return sortFacilitiesByProximity(facilities, effectiveCoords, countyFilter, focusFilter);
   }, [facilities, effectiveCoords, countyFilter, focusFilter]);
+
+  const selectedCountyDetails = useMemo(
+    () => (countyFilter !== 'All' ? findKenyaCounty(countyFilter) : null),
+    [countyFilter]
+  );
 
   const handleUseMyLocation = () => {
     if (!navigator.geolocation) {
@@ -205,23 +223,17 @@ export function RehabilitationPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="rounded-xl overflow-hidden border border-white/15 bg-[#160822]">
-              <CommunityVideoPlayer
-                videoSrc="/videos/healing_and_recovery_reel.mp4"
-                posterSrc="/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg"
-                ariaLabel="Counselling room and calm rehabilitation garden pathway"
-                soundMoodLabel="Warm Rhodes Sanctuary"
-                chapters={[
-                  { timeSeconds: 0, label: '01 · Garden Talk' },
-                  { timeSeconds: 3.7, label: '02 · Quiet Room' },
-                  { timeSeconds: 7.4, label: '03 · Safe Haven' },
-                ]}
+            <figure className="rounded-xl overflow-hidden border border-white/15 bg-[#160822] shadow-xl">
+              <SafeImage
+                src="/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg"
+                alt="Kenyan counsellor and visitor seated peacefully in wooden veranda chairs beneath bougainvillea over warm tea"
+                className="w-full aspect-[4/3] object-cover"
               />
-              <div className="px-5 py-3 bg-[#160822] flex items-center justify-between text-xs text-[#FAF7F2]/80 border-t border-white/10">
+              <figcaption className="px-5 py-3.5 bg-[#160822] flex items-center justify-between text-xs text-[#FAF7F2]/85 border-t border-white/10">
                 <span>Restoration &amp; Counselling Centres (47 Counties)</span>
-                <span className="text-[#E5CA7B] tabular-nums">0:12 Reel · Warm Rhodes Sound</span>
-              </div>
-            </div>
+                <span className="text-[#E5CA7B]">Quiet Family Intake</span>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
@@ -278,6 +290,61 @@ export function RehabilitationPage() {
             </div>
           </div>
 
+          {selectedCountyDetails && (
+            <div className="bg-white border-2 border-[#D4AF37]/50 rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-sm">
+              <div className="space-y-2 max-w-3xl">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#7A5A10]">
+                  County {selectedCountyDetails.code} · {selectedCountyDetails.name} Referral Desk
+                </p>
+                <h3 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
+                  {selectedCountyDetails.facilityHubName}
+                </h3>
+                <p className="text-sm text-[#3E3349]">
+                  <strong>Physical Address:</strong> {selectedCountyDetails.physicalAddress} ·{' '}
+                  <strong>Local Linkages:</strong> {selectedCountyDetails.partnerProgrammes}
+                </p>
+                <div className="flex flex-wrap gap-4 pt-1 text-xs font-semibold">
+                  <a
+                    href={`tel:${selectedCountyDetails.facilityPhone.replace(/\s+/g, '')}`}
+                    className="inline-flex items-center gap-1 text-[#256358] hover:underline tabular-nums"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" aria-hidden="true" />
+                    {selectedCountyDetails.facilityPhone}
+                  </a>
+                  <a
+                    href={`mailto:${selectedCountyDetails.facilityEmail}`}
+                    className="inline-flex items-center gap-1 text-[#3B155F] hover:underline"
+                  >
+                    <Mail className="w-3.5 h-3.5" aria-hidden="true" />
+                    {selectedCountyDetails.facilityEmail}
+                  </a>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <a
+                  href={selectedCountyDetails.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold border border-[#256358]/30 text-[#256358] hover:bg-[#EDF6F3] rounded-md"
+                >
+                  Open County Webpage
+                  <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreferredCounty(selectedCountyDetails.name);
+                    setChosenFacilityName(selectedCountyDetails.facilityHubName);
+                    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs sm:text-sm font-semibold bg-[#D4AF37] text-[#160822] hover:bg-[#E5CA7B] rounded-md"
+                >
+                  Connect via {selectedCountyDetails.name} Desk
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedFacilities.map((facility) => (
               <article
@@ -314,15 +381,64 @@ export function RehabilitationPage() {
                       {facility.focusType} · {facility.careFormat}
                     </p>
                     <p className="text-sm text-[#3E3349] leading-relaxed">{facility.summary}</p>
+                    {(facility.physicalAddress || facility.contactPhone || facility.visitingHours) && (
+                      <div className="p-3 rounded-lg bg-[#EDF6F3]/75 border border-[#256358]/15 space-y-1 text-xs text-[#3E3349]">
+                        {facility.physicalAddress && (
+                          <p>
+                            <strong className="text-[#1D4E46]">Address:</strong>{' '}
+                            {facility.physicalAddress}
+                          </p>
+                        )}
+                        {facility.visitingHours && (
+                          <p>
+                            <strong className="text-[#1D4E46]">Hours:</strong>{' '}
+                            {facility.visitingHours}
+                          </p>
+                        )}
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-0.5 font-semibold">
+                          {facility.contactPhone && (
+                            <a
+                              href={`tel:${facility.contactPhone.replace(/\s+/g, '')}`}
+                              className="inline-flex items-center gap-1 text-[#256358] hover:underline tabular-nums"
+                            >
+                              <PhoneCall className="w-3 h-3" aria-hidden="true" />
+                              {facility.contactPhone}
+                            </a>
+                          )}
+                          {facility.contactEmail && (
+                            <a
+                              href={`mailto:${facility.contactEmail}`}
+                              className="inline-flex items-center gap-1 text-[#3B155F] hover:underline"
+                            >
+                              <Mail className="w-3 h-3" aria-hidden="true" />
+                              {facility.contactEmail}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => selectFacility(facility)}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold bg-[#256358] text-white hover:bg-[#1C4D44] rounded-md transition-colors"
-                  >
-                    Connect With This Facility
-                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                  </button>
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => selectFacility(facility)}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold bg-[#256358] text-white hover:bg-[#1C4D44] rounded-md transition-colors"
+                    >
+                      Connect With This Facility
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </button>
+                    {facility.websiteUrl && (
+                      <a
+                        href={facility.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#3B155F] hover:underline"
+                      >
+                        Visit Facility Webpage
+                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </article>
             ))}
@@ -570,7 +686,7 @@ export function RehabilitationPage() {
                     htmlFor="rehab-consent"
                     className="text-xs sm:text-sm text-[#3E3349] leading-relaxed cursor-pointer"
                   >
-                    I consent to HIS AND HERS coordinating privately with my selected rehabilitation
+                    I consent to His &amp; Hers Circle of Hope coordinating privately with my selected rehabilitation
                     facility under our{' '}
                     <AppLink href="/privacy" className="underline text-[#3B155F] font-medium">
                       Privacy &amp; Safeguarding Policy

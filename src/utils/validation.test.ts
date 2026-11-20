@@ -11,6 +11,7 @@ import {
   validateVolunteerEnquiry,
   validateContactMessage,
   validateEventRegistration,
+  validateSpecialNeedsSupport,
   calculateDistanceKm,
   sortFacilitiesByProximity,
   filterImpactProjects,
@@ -246,14 +247,74 @@ test('validateAsdSupportRequest enforces parent details and consent', () => {
 
   const ok = validateAsdSupportRequest({
     parentName: 'Miriam K.',
-    childAgeGroup: 'Primary Age (6–11)',
+    childAgeGroup: 'Adults & Working Parents',
     contact: 'miriam@example.org',
-    topicNeeded: 'Calm Overwhelm & Meltdowns',
-    questionOrStory: 'Looking for practical visual routine cards and a local ASD parent circle.',
+    topicNeeded: 'Stress, Panic & Sleep',
+    questionOrStory: 'Looking for practical trauma grounding tools and a local peer listening circle.',
     consentAccepted: true,
   });
   assert.equal(ok.valid, true);
-  assert.equal(ok.data?.childAgeGroup, 'Primary Age (6–11)');
+  assert.equal(ok.data?.childAgeGroup, 'Adults & Working Parents');
+});
+
+test('validateSpecialNeedsSupport supports both single-parent and two-parent families with guardian details', () => {
+  const bad = validateSpecialNeedsSupport({
+    guardianName: 'A',
+    householdStructure: 'Single Mother Household',
+    phoneOrWhatsapp: '12',
+    email: 'not-an-email',
+    preferredContactMethod: 'WhatsApp Chat',
+    county: '',
+    townWard: '',
+    childAgeGroup: 'Early Childhood (Ages 0–5)',
+    disabilityFocus: 'Cerebral Palsy / Physical Mobility',
+    practicalNeeds: [],
+    storyMessage: 'short',
+    consentAccepted: false,
+  });
+  assert.equal(bad.valid, false);
+  assert.ok(bad.errors.guardianName);
+  assert.ok(bad.errors.phoneOrWhatsapp);
+  assert.ok(bad.errors.email);
+  assert.ok(bad.errors.county);
+  assert.ok(bad.errors.storyMessage);
+  assert.ok(bad.errors.consentAccepted);
+
+  const singleMotherOk = validateSpecialNeedsSupport({
+    guardianName: 'Grace Wanjiru',
+    householdStructure: 'Single Mother Household',
+    phoneOrWhatsapp: '+254 712 345 678',
+    email: '',
+    preferredContactMethod: 'Phone Call With Mother/Guardian Lead',
+    county: 'Kiambu',
+    townWard: 'Ruiru',
+    childAgeGroup: 'Primary School (Ages 6–12)',
+    disabilityFocus: 'Neurodevelopmental / Learning Support',
+    practicalNeeds: ['Mother Respite & Rest', 'Inclusive School Placement'],
+    storyMessage: 'Looking for inclusive school guidance in Kiambu and a local mothers circle.',
+    consentAccepted: true,
+  });
+  assert.equal(singleMotherOk.valid, true);
+  assert.equal(singleMotherOk.data?.householdStructure, 'Single Mother Household');
+  assert.equal(singleMotherOk.data?.practicalNeeds.length, 2);
+
+  const twoParentOk = validateSpecialNeedsSupport({
+    guardianName: 'Martha & John Ochieng',
+    householdStructure: 'Two-Parent Family',
+    phoneOrWhatsapp: '+254 722 987 654',
+    email: 'martha@example.org',
+    preferredContactMethod: 'Mothers Support Tea Circle',
+    county: 'Kisumu',
+    townWard: 'Milimani',
+    childAgeGroup: 'Early Childhood (Ages 0–5)',
+    disabilityFocus: 'Visual / Hearing Impairment',
+    practicalNeeds: [],
+    storyMessage: 'We both work shifts and need afternoon companion help plus inclusive early years.',
+    consentAccepted: true,
+  });
+  assert.equal(twoParentOk.valid, true);
+  assert.equal(twoParentOk.data?.householdStructure, 'Two-Parent Family');
+  assert.equal(twoParentOk.data?.practicalNeeds[0], 'Direct Mother / Guardian Listening & Prayer');
 });
 
 test('validateVolunteerEnquiry validates email and area of interest', () => {

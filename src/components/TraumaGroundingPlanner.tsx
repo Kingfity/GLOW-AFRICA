@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { CheckCircle2, Circle, Plus, Printer, RotateCcw, SunMedium } from 'lucide-react';
 import {
-  addCustomRoutineStep,
-  getAsdRoutinePreset,
-  toggleRoutineStep,
-  type AsdRoutineStep,
-  type RoutineMode,
+  addCustomAnchorStep,
+  getTraumaAnchorPreset,
+  toggleAnchorStep,
+  type AnchorMode,
+  type TraumaAnchorStep,
 } from '../utils/careTools';
 
-const MODE_LABELS: Array<{ id: RoutineMode; label: string }> = [
-  { id: 'morning', label: 'Morning Start' },
-  { id: 'after-school', label: 'After School Transition' },
-  { id: 'bedtime', label: 'Bedtime Wind-Down' },
+const MODE_LABELS: Array<{ id: AnchorMode; label: string }> = [
+  { id: 'morning-steady', label: 'Morning Nervous System Steady' },
+  { id: 'panic-reset', label: 'Acute Stress & Panic Reset' },
+  { id: 'evening-unload', label: 'Trauma Memory & Sleep Unload' },
 ];
 
 const CARD_PALETTES = [
@@ -21,24 +21,26 @@ const CARD_PALETTES = [
   { idle: 'bg-[#F4EEFA] border-[#C5B0DF] hover:border-[#3B155F]', accent: 'text-[#3B155F]' },
 ];
 
-export function AsdRoutineBuilder() {
-  const [mode, setMode] = useState<RoutineMode>('morning');
-  const [steps, setSteps] = useState<AsdRoutineStep[]>(() => getAsdRoutinePreset('morning'));
+export function TraumaGroundingPlanner() {
+  const [mode, setMode] = useState<AnchorMode>('morning-steady');
+  const [steps, setSteps] = useState<TraumaAnchorStep[]>(() =>
+    getTraumaAnchorPreset('morning-steady')
+  );
   const [customTitle, setCustomTitle] = useState('');
 
-  const switchMode = (nextMode: RoutineMode) => {
+  const switchMode = (nextMode: AnchorMode) => {
     setMode(nextMode);
-    setSteps(getAsdRoutinePreset(nextMode));
+    setSteps(getTraumaAnchorPreset(nextMode));
   };
 
   const handleToggle = (id: string) => {
-    setSteps((prev) => toggleRoutineStep(prev, id));
+    setSteps((prev) => toggleAnchorStep(prev, id));
   };
 
   const handleAddStep = (e: React.FormEvent) => {
     e.preventDefault();
     if (customTitle.trim().length < 2) return;
-    setSteps((prev) => addCustomRoutineStep(prev, customTitle));
+    setSteps((prev) => addCustomAnchorStep(prev, customTitle));
     setCustomTitle('');
   };
 
@@ -46,7 +48,7 @@ export function AsdRoutineBuilder() {
 
   return (
     <section
-      aria-label="Interactive ASD Visual Routine Builder"
+      aria-label="Trauma, Stress and Emotional Grounding Planner"
       className="py-16 sm:py-20 bg-gradient-to-b from-white via-[#FBFDFC] to-[#F4FAF8] border-b border-[#256358]/15"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-8">
@@ -54,15 +56,15 @@ export function AsdRoutineBuilder() {
           <div className="max-w-2xl space-y-3">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F] inline-flex items-center gap-1.5">
               <SunMedium className="w-3.5 h-3.5" aria-hidden="true" />
-              Interactive Parent &amp; Child Tool
+              Somatic &amp; Trauma-Informed Grounding Plan
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
-              Visual Daily Routine &amp; Calm Card Builder
+              Trauma, Stress &amp; Emotional Grounding Planner
             </h2>
             <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
-              Predictable colour-coded steps lower sensory surprise. Pick a time of day, tap cards
-              together as your child completes them, add your family’s own comfort step, or print a
-              calm wall chart.
+              When trauma flashbacks, panic attacks, caregiver burnout, or sleepless stress overwhelm
+              your nervous system, predictable 4-4-6 grounding steps help steady the body. Pick your
+              moment below or print a copy for home.
             </p>
           </div>
 
@@ -81,16 +83,15 @@ export function AsdRoutineBuilder() {
               className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#256358] hover:bg-[#1C4D44] rounded-md transition-colors whitespace-nowrap"
             >
               <Printer className="w-3.5 h-3.5" aria-hidden="true" />
-              Print Visual Sheet
+              Print Grounding Sheet
             </button>
           </div>
         </div>
 
-        {/* Time-of-day selector + live completion counter */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div
             role="tablist"
-            aria-label="Select routine time of day"
+            aria-label="Select quiet daily rhythm moment"
             className="inline-flex flex-wrap gap-1.5 p-1 bg-[#E7F3EF] border border-[#256358]/20 rounded-lg self-start"
           >
             {MODE_LABELS.map((tab) => (
@@ -112,12 +113,14 @@ export function AsdRoutineBuilder() {
           </div>
 
           <p className="text-xs sm:text-sm font-semibold text-[#256358] tabular-nums">
-            {completedCount} of {steps.length} gentle steps checked off
+            {completedCount} of {steps.length} gentle pauses practised today
           </p>
         </div>
 
-        {/* Colourful visual routine cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          key={mode}
+          className="tab-panel-smooth grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        >
           {steps.map((step, index) => {
             const palette = CARD_PALETTES[index % CARD_PALETTES.length];
             return (
@@ -167,27 +170,26 @@ export function AsdRoutineBuilder() {
                     step.done ? 'text-[#F3D79B]' : palette.accent
                   }`}
                 >
-                  {step.done ? 'Completed calmly' : 'Tap when ready'}
+                  {step.done ? 'Practised calmly' : 'Tap when ready'}
                 </span>
               </button>
             );
           })}
         </div>
 
-        {/* Add custom comfort step */}
         <form
           onSubmit={handleAddStep}
           className="flex flex-col sm:flex-row gap-3 pt-2 max-w-2xl print:hidden"
         >
-          <label htmlFor="asd-custom-step" className="sr-only">
-            Add your child’s comfort or routine step
+          <label htmlFor="mh-custom-anchor" className="sr-only">
+            Add your own quiet pause or tea-time anchor step
           </label>
           <input
-            id="asd-custom-step"
+            id="mh-custom-anchor"
             type="text"
             value={customTitle}
             onChange={(e) => setCustomTitle(e.target.value)}
-            placeholder="Add a custom comforting step (e.g. Hug blue teddy or 5 mins on swing)"
+            placeholder="Add a personal rhythm (e.g. Tea on veranda or 10 mins quiet prayer)"
             maxLength={70}
             className="flex-1 px-4 py-2.5 text-sm bg-white border border-[#256358]/25 rounded-md"
           />
@@ -196,7 +198,7 @@ export function AsdRoutineBuilder() {
             className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm font-semibold text-white bg-[#C2593F] hover:bg-[#A64831] rounded-md transition-colors whitespace-nowrap shrink-0"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
-            Add Family Step
+            Add My Rhythm
           </button>
         </form>
       </div>

@@ -134,7 +134,7 @@ export function FindMyHomePage() {
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
               No woman, man, or child should remain trapped in gender-based violence or child abuse.
-              HIS AND HERS connects survivors and endangered children with confidential shelter
+              His &amp; Hers Circle of Hope connects survivors and endangered children with confidential shelter
               coordination, protective relocation guidance, trauma-informed counselling, and trusted
               community refuge.
             </p>
@@ -450,7 +450,7 @@ export function FindMyHomePage() {
                       htmlFor="safe-consent"
                       className="text-xs sm:text-sm text-[#3E3349] leading-relaxed cursor-pointer"
                     >
-                      I consent to HIS AND HERS’s safeguarding coordinator reviewing this privately
+                      I consent to His &amp; Hers Circle of Hope’s safeguarding coordinator reviewing this privately
                       to help arrange safe refuge under our{' '}
                       <AppLink href="/privacy" className="underline text-[#3B155F] font-medium">
                         Privacy &amp; Safeguarding Policy

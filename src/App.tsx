@@ -9,7 +9,6 @@ import { SiteDataProvider } from './context/SiteDataContext';
 import { AboutPage } from './pages/AboutPage';
 import { AccountabilityPage } from './pages/AccountabilityPage';
 import { AdminPage } from './pages/AdminPage';
-import { AsdSupportPage } from './pages/AsdSupportPage';
 import { ContactPage } from './pages/ContactPage';
 import { CounsellingPage } from './pages/CounsellingPage';
 import { EventDetailPage } from './pages/EventDetailPage';
@@ -21,18 +20,29 @@ import { HomePage } from './pages/HomePage';
 import { HomeVisitsPage } from './pages/HomeVisitsPage';
 import { ImpactDetailPage } from './pages/ImpactDetailPage';
 import { ImpactPage } from './pages/ImpactPage';
+import { LeadershipHelpPage } from './pages/LeadershipHelpPage';
+import { MentalHealthTraumaPage } from './pages/MentalHealthTraumaPage';
 import { PrayerWorshipPage } from './pages/PrayerWorshipPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { RecoverySectionPage } from './pages/RecoverySectionPage';
 import { RehabilitationPage } from './pages/RehabilitationPage';
+import { SpecialNeedsFamiliesPage } from './pages/SpecialNeedsFamiliesPage';
 
 function PageView({ normalized }: { normalized: string }) {
   if (normalized === '/') return <HomePage />;
   if (normalized === '/about') return <AboutPage />;
+  if (normalized === '/leadership' || normalized === '/administrators' || normalized === '/help') {
+    return <LeadershipHelpPage />;
+  }
   if (normalized === '/accountability') return <AccountabilityPage />;
   if (normalized === '/home-visits') return <HomeVisitsPage />;
+  if (normalized === '/special-needs-families' || normalized === '/special-needs') {
+    return <SpecialNeedsFamiliesPage />;
+  }
   if (normalized === '/rehabilitation') return <RehabilitationPage />;
-  if (normalized === '/asd-support') return <AsdSupportPage />;
+  if (normalized === '/mental-health' || normalized === '/asd-support' || normalized === '/quiet-rest') {
+    return <MentalHealthTraumaPage />;
+  }
   if (normalized === '/counselling') return <CounsellingPage />;
   if (normalized === '/find-my-home') return <FindMyHomePage />;
   if (normalized === '/gbv' || normalized.startsWith('/gbv/')) return <GbvSafePage />;
@@ -75,7 +85,9 @@ function AppShell() {
       </a>
       {!isPrivacyIsolated && <Navbar />}
       <main id="main-content" className="flex-1">
-        <PageView normalized={normalized} />
+        <div key={normalized} className="page-transition">
+          <PageView normalized={normalized} />
+        </div>
       </main>
       <Footer />
       <CareGuideChatbot />

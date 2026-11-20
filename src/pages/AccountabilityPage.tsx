@@ -98,18 +98,18 @@ const REPORT_FOLDERS: FolderReport[] = [
     id: 'annual-report',
     tabCode: 'FOLDER 01 · IMPACT',
     title: 'Annual Report',
-    subtitle: 'Community stories, 47-county expansion, Children’s Homes, ASD & Safe Refuge outcomes (Est. 2025).',
+    subtitle: 'Community stories, 47-county expansion, Children’s Homes, Mental Health & Trauma, and Safe Refuge outcomes (Est. 2025).',
     fiscalYear: '2025 – 2026 Edition',
     fileSizeLabel: 'TXT / Printable Ledger · 4.2 KB',
     tabColor: '#D4AF37',
     bodyBg: '#FFFBF0',
     accentBorder: '#C79F27',
-    filename: 'HIS-AND-HERS-Annual-Report-2025-2026.txt',
+    filename: 'Circle-Of-Hope-Annual-Report-2025-2026.txt',
     summaryText: [
-      'HIS AND HERS — COMMUNITY-BASED ORGANIZATION (ESTABLISHED 2025)',
+      'HIS & HERS CIRCLE OF HOPE — COMMUNITY-BASED ORGANIZATION (ESTABLISHED 2025 IN RUIRU)',
       'ANNUAL COMMUNITY IMPACT REPORT (2025 – 2026)',
       '====================================================================',
-      'Mission: A Care Family Home touching lives across all 47 Counties of Kenya.',
+      'Mission: Rooted in Ruiru since 2025 · Neighbours walking together across all 47 Counties of Kenya.',
       '',
       'KEY STEWARDSHIP RATIOS:',
       '  * 82% Direct Community Programmes',
@@ -118,11 +118,11 @@ const REPORT_FOLDERS: FolderReport[] = [
       '',
       'PROGRAMME REACH HIGHLIGHTS:',
       '  1. Children’s Homes & Corporate CSR Visits: Active partner homes hosted reading, mentorship & supply days.',
-      '  2. Mental Health & Burden-Sharing: Confidential counsellor bookings & anonymous listening desk.',
+      '  2. Mental Health, Trauma & Stress Care: Confidential counsellor bookings, trauma grounding & listening circles.',
       '  3. Recovery & Rehabilitation Connections: Proximity matching & family accompaniment across Kenya.',
-      '  4. ASD Parents & Kids Hub: Sensory corners, visual routine cards & parent mentors.',
-      '  5. GBV & Child Protection (/gbv & Find My Home): Privacy-hardened, zero-tracking emergency refuge pathways.',
-      '  6. Nov 28 Thanksgiving Feast & Early Christmas Relief: Hot meals + family relief token bundles.',
+      '  4. Ruiru Elder Blankets & Student Care: Four-ward walks, warm blankets for elders & Ruiru Boys staples.',
+      '  5. Safe Refuge & Child Protection (/gbv & Find My Home): Privacy-hardened, zero-tracking emergency pathways.',
+      '  6. Nov 28 Thanksgiving Feast & Christmas of Hope: Shared meals with elders + take-home food bundles.',
       '',
       'Contact our Stewardship Desk anytime: care@hisandhers.org',
     ].join('\n'),
@@ -137,13 +137,13 @@ const REPORT_FOLDERS: FolderReport[] = [
     tabColor: '#256358',
     bodyBg: '#F4FAF8',
     accentBorder: '#256358',
-    filename: 'HIS-AND-HERS-Audited-Financials-2025.csv',
+    filename: 'Circle-Of-Hope-Audited-Financials-2025.csv',
     summaryText: [
       'Category,SharePercent,VerifiedAllocationDescription,FiscalYear',
-      '"Direct Programmes - Children Homes & Meals (Incl. Nov 28 Feast)",38%,"Verified home supply packs, school uniforms, Nov 28 feast & relief bundles",2025',
+      '"Direct Programmes - Children Homes & Meals (Incl. Christmas of Hope)",38%,"Verified home supply packs, school uniforms, Nov 28 feast & relief bundles",2025',
       '"Direct Programmes - Safe Refuge & Emergency Protection",20%,"Emergency transport, safe shelter placement, 47-county rapid authority coordination",2025',
-      '"Direct Programmes - Rehabilitation & Mental Health Counselling",14%,"Counselling subsidies, family recovery mediation, crisis listening",2025',
-      '"Direct Programmes - ASD Parent & Sensory Family Kits",10%,"Visual routine boards, sensory calm kits, parent workshops",2025',
+      '"Direct Programmes - Rehabilitation & Mental Health Counselling",14%,"Counselling subsidies, family recovery mediation, trauma & crisis listening",2025',
+      '"Direct Programmes - Ruiru Elder Blankets & Trauma Healing Kits",10%,"Elder warmth packs, Ruiru Boys food parcels, caregiver respite care",2025',
       '"Stewardship & Safeguarding Administration",12%,"Vetting visitors, annual independent audit, zero-tracking privacy infrastructure",2025',
       '"Community Outreach & Fundraising",6%,"Open reporting, partner onboarding kits, local community invitations",2025',
     ].join('\n'),
@@ -158,11 +158,11 @@ const REPORT_FOLDERS: FolderReport[] = [
     tabColor: '#C2593F',
     bodyBg: '#FDF6F2',
     accentBorder: '#C2593F',
-    filename: 'HIS-AND-HERS-Governance-Form-990-Summary-2025.txt',
+    filename: 'Circle-Of-Hope-Governance-Form-990-Summary-2025.txt',
     summaryText: [
-      'HIS AND HERS — PUBLIC GOVERNANCE & FORM 990 EQUIVALENT DISCLOSURE (2025)',
+      'HIS & HERS CIRCLE OF HOPE — PUBLIC GOVERNANCE & FORM 990 EQUIVALENT DISCLOSURE (2025)',
       '====================================================================',
-      'Legal Status: Community-Based Organization (CBO) Established 2025',
+      'Legal Status: Community-Based Organization (CBO) Established 2025 · Ruiru, Kiambu County',
       'Coverage Footprint: All 47 Counties of Kenya',
       '',
       'PART I — FUNCTIONAL EXPENSE DECLARATION:',
@@ -246,7 +246,7 @@ export function AccountabilityPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#F3D79B]">
-              HIS AND HERS · Open Kitchen-Table Stewardship (Est. 2025)
+              His &amp; Hers Circle of Hope · Open Kitchen-Table Stewardship (Est. 2025)
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[56px] font-semibold leading-[1.08] text-[#FAF7F2]">
               We keep the books open.

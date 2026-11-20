@@ -33,9 +33,9 @@ export function ImpactPage() {
               Compassion Expressed Through Presence and Open Accountability
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
-              From neighbourhood food sharing and children’s home CSR partnerships to mental health
-              circles and ASD parent workshops, our community work since 2025 is tracked transparently
-              across our regional care hubs.
+              From Ruiru ward walks, elder blankets, and Ruiru Boys solidarity to children’s home
+              CSR partnerships, mental health circles, and trauma recovery care—our community work
+              since 2025 is tracked transparently across our regional care hubs.
             </p>
           </div>
         </div>

@@ -5,11 +5,13 @@ import {
   type EventCategory,
   type EventItem,
   type HomeVisitBooking,
+  type HouseholdStructureType,
   type ImpactProject,
   type PartnerOrganization,
   type RehabFacility,
   type RehabReferralRequest,
   type SafeHomeRequest,
+  type SpecialNeedsFamilyRequest,
 } from '../shared/types';
 
 export interface ValidationResult<T> {
@@ -99,6 +101,22 @@ export interface AsdSupportInput {
   contact: string;
   topicNeeded: string;
   questionOrStory: string;
+  consentAccepted: boolean;
+  website_url?: string;
+}
+
+export interface SpecialNeedsSupportInput {
+  guardianName: string;
+  householdStructure: HouseholdStructureType;
+  phoneOrWhatsapp: string;
+  email?: string;
+  preferredContactMethod: SpecialNeedsFamilyRequest['preferredContactMethod'];
+  county: string;
+  townWard?: string;
+  childAgeGroup: string;
+  disabilityFocus: string;
+  practicalNeeds?: string[];
+  storyMessage: string;
   consentAccepted: boolean;
   website_url?: string;
 }
@@ -502,17 +520,17 @@ export function validateAsdSupportRequest(input: AsdSupportInput): ValidationRes
     errors.parentName = 'Please enter your name or preferred name.';
   }
   if (contact.length < 5) {
-    errors.contact = 'Please provide a phone number, WhatsApp, or email for parent mentoring follow-up.';
+    errors.contact = 'Please provide a phone number, WhatsApp, or email for confidential follow-up.';
   }
   if (contact && contact.includes('@') && !isValidEmail(contact)) {
     errors.contact = 'Please enter a valid email address.';
   }
   if (questionOrStory.length < 10) {
-    errors.questionOrStory = 'Please share a little about your child or question (at least 10 characters).';
+    errors.questionOrStory = 'Please share a little about what you are carrying (at least 10 characters).';
   }
   if (!consentAccepted) {
     errors.consentAccepted =
-      'Please confirm consent so our ASD family support coordinator can respond warmly.';
+      'Please confirm consent so our mental health & trauma support coordinator can respond warmly.';
   }
 
   return {
@@ -522,10 +540,87 @@ export function validateAsdSupportRequest(input: AsdSupportInput): ValidationRes
       Object.keys(errors).length === 0
         ? {
             parentName,
-            childAgeGroup: input.childAgeGroup || 'Primary Age (6–11)',
+            childAgeGroup: input.childAgeGroup || 'Chronic Stress & Burnout',
             contact,
             topicNeeded,
             questionOrStory,
+            consentAccepted,
+          }
+        : undefined,
+  };
+}
+
+export function validateSpecialNeedsSupport(input: SpecialNeedsSupportInput): ValidationResult<{
+  guardianName: string;
+  householdStructure: HouseholdStructureType;
+  phoneOrWhatsapp: string;
+  email: string;
+  preferredContactMethod: SpecialNeedsFamilyRequest['preferredContactMethod'];
+  county: string;
+  townWard: string;
+  childAgeGroup: string;
+  disabilityFocus: string;
+  practicalNeeds: string[];
+  storyMessage: string;
+  consentAccepted: boolean;
+}> {
+  const errors: Record<string, string> = {};
+  const guardianName = cleanText(input.guardianName, 120);
+  const householdStructure: HouseholdStructureType = input.householdStructure || 'Single Mother Household';
+  const phoneOrWhatsapp = cleanText(input.phoneOrWhatsapp, 80);
+  const email = cleanText(input.email, 160);
+  const preferredContactMethod: SpecialNeedsFamilyRequest['preferredContactMethod'] =
+    input.preferredContactMethod || 'Phone Call With Mother/Guardian Lead';
+  const county = cleanText(input.county, 80);
+  const townWard = cleanText(input.townWard, 120) || county;
+  const childAgeGroup = cleanText(input.childAgeGroup, 80) || 'Early Childhood (Ages 0–5)';
+  const disabilityFocus = cleanText(input.disabilityFocus, 140) || 'Developmental / Sensory Support';
+  const storyMessage = cleanText(input.storyMessage, 3200);
+  const consentAccepted = Boolean(input.consentAccepted);
+  const practicalNeeds = Array.isArray(input.practicalNeeds)
+    ? input.practicalNeeds
+        .map((n) => cleanText(n, 100))
+        .filter(Boolean)
+        .slice(0, 8)
+    : [];
+
+  if (guardianName.length < 2) {
+    errors.guardianName = 'Please enter the mother, father, or primary guardian name.';
+  }
+  if (phoneOrWhatsapp.length < 6) {
+    errors.phoneOrWhatsapp = 'Please share a phone or WhatsApp number so our guardian lead can talk with you directly.';
+  }
+  if (email && !isValidEmail(email)) {
+    errors.email = 'Please enter a valid email address or leave email blank.';
+  }
+  if (county.length < 2) {
+    errors.county = 'Please select or enter your county.';
+  }
+  if (storyMessage.length < 10) {
+    errors.storyMessage = 'Please share briefly about your child and how we can stand with you (at least 10 characters).';
+  }
+  if (!consentAccepted) {
+    errors.consentAccepted =
+      'Please confirm consent so our Mother & Guardian Care Lead can reach out confidentially.';
+  }
+
+  return {
+    valid: Object.keys(errors).length === 0,
+    errors,
+    data:
+      Object.keys(errors).length === 0
+        ? {
+            guardianName,
+            householdStructure,
+            phoneOrWhatsapp,
+            email,
+            preferredContactMethod,
+            county,
+            townWard,
+            childAgeGroup,
+            disabilityFocus,
+            practicalNeeds: practicalNeeds.length > 0 ? practicalNeeds : ['Direct Mother / Guardian Listening & Prayer'],
+            storyMessage,
             consentAccepted,
           }
         : undefined,
@@ -727,8 +822,14 @@ export function normalizeEventCategory(raw: string): EventCategory {
   if (lower.includes('child') || lower.includes('home visit')) {
     return 'Children’s Home Visits';
   }
-  if (lower.includes('asd') || lower.includes('autism') || lower.includes('sensory')) {
-    return 'ASD Family Gatherings';
+  if (
+    lower.includes('trauma') ||
+    lower.includes('stress') ||
+    lower.includes('asd') ||
+    lower.includes('autism') ||
+    lower.includes('sensory')
+  ) {
+    return 'Trauma & Stress Circles';
   }
   if (
     lower.includes('mental') ||

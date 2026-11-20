@@ -22,6 +22,7 @@ import { useSiteData } from '../context/SiteDataContext';
 import {
   HELPING_HAND_EVENT_CATEGORIES,
   type AdminDashboardData,
+  type AdministratorDeskProfile,
   type AdminUserSession,
   type Announcement,
   type EventCategory,
@@ -36,7 +37,9 @@ type AdminTab =
   | 'homevisits'
   | 'partners'
   | 'rehab'
+  | 'specialneeds'
   | 'asd'
+  | 'admins'
   | 'counselling'
   | 'safehome'
   | 'prayer'
@@ -106,6 +109,23 @@ export function AdminPage() {
 
   // Settings form state
   const [settingsForm, setSettingsForm] = useState<SiteSettings | null>(null);
+
+  // Administrator & Help Desk profile editor state
+  const [editingAdminId, setEditingAdminId] = useState<string | null>(null);
+  const [admName, setAdmName] = useState('');
+  const [admRoleTitle, setAdmRoleTitle] = useState('');
+  const [admDepartment, setAdmDepartment] = useState('Care Coordination');
+  const [admStatus, setAdmStatus] =
+    useState<AdministratorDeskProfile['status']>('Active');
+  const [admEmail, setAdmEmail] = useState('care@hisandhers.org');
+  const [admPhone, setAdmPhone] = useState('+254 700 000 000');
+  const [admWhatsapp, setAdmWhatsapp] = useState('');
+  const [admWard, setAdmWard] = useState('Ruiru, Kiambu County');
+  const [admHours, setAdmHours] = useState('Mon – Sat · 09:00 – 17:00 EAT');
+  const [admFocus, setAdmFocus] = useState('');
+  const [admRouteHref, setAdmRouteHref] = useState('/leadership');
+  const [admRouteLabel, setAdmRouteLabel] = useState('Contact Circle Desk');
+  const [admPhotoUrl, setAdmPhotoUrl] = useState('');
 
   const loadDashboard = useCallback(async () => {
     const res = await fetch('/api/admin/dashboard');
@@ -416,6 +436,7 @@ export function AdminPage() {
       | 'homevisit'
       | 'partner'
       | 'rehab'
+      | 'specialneeds'
       | 'asd'
       | 'volunteer'
       | 'contact',
@@ -464,6 +485,97 @@ export function AdminPage() {
     }
   };
 
+  const resetAdminProfileForm = () => {
+    setEditingAdminId(null);
+    setAdmName('');
+    setAdmRoleTitle('');
+    setAdmDepartment('Care Coordination');
+    setAdmStatus('Active');
+    setAdmEmail('care@hisandhers.org');
+    setAdmPhone('+254 700 000 000');
+    setAdmWhatsapp('');
+    setAdmWard('Ruiru, Kiambu County');
+    setAdmHours('Mon – Sat · 09:00 – 17:00 EAT');
+    setAdmFocus('');
+    setAdmRouteHref('/leadership');
+    setAdmRouteLabel('Contact Circle Desk');
+    setAdmPhotoUrl('');
+  };
+
+  const startEditAdminProfile = (profile: AdministratorDeskProfile) => {
+    setEditingAdminId(profile.id);
+    setAdmName(profile.fullName);
+    setAdmRoleTitle(profile.roleTitle);
+    setAdmDepartment(profile.department);
+    setAdmStatus(profile.status);
+    setAdmEmail(profile.email);
+    setAdmPhone(profile.phone);
+    setAdmWhatsapp(profile.whatsapp || '');
+    setAdmWard(profile.wardLocation || '');
+    setAdmHours(profile.officeHours || '');
+    setAdmFocus(profile.focusSummary);
+    setAdmRouteHref(profile.routingHref);
+    setAdmRouteLabel(profile.routingLabel);
+    setAdmPhotoUrl(profile.photoUrl || '');
+  };
+
+  const handleSaveAdminProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorNotice(null);
+    const endpoint = editingAdminId
+      ? `/api/admin/administrators/${editingAdminId}`
+      : '/api/admin/administrators';
+    const method = editingAdminId ? 'PUT' : 'POST';
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: admName,
+          roleTitle: admRoleTitle,
+          department: admDepartment,
+          status: admStatus,
+          email: admEmail,
+          phone: admPhone,
+          whatsapp: admWhatsapp,
+          wardLocation: admWard,
+          officeHours: admHours,
+          focusSummary: admFocus,
+          routingHref: admRouteHref,
+          routingLabel: admRouteLabel,
+          photoUrl: admPhotoUrl,
+        }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(payload.error || 'Could not save administrator particulars.');
+        return;
+      }
+      resetAdminProfileForm();
+      await loadDashboard();
+      await refreshPublicSite();
+      notify('Administrator & Help Desk particulars saved.');
+    } catch {
+      showError('Network error saving administrator particulars.');
+    }
+  };
+
+  const handleDeleteAdminProfile = async (id: string) => {
+    setErrorNotice(null);
+    try {
+      const res = await fetch(`/api/admin/administrators/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        showError('Could not remove administrator entry.');
+        return;
+      }
+      await loadDashboard();
+      await refreshPublicSite();
+      notify('Administrator entry removed.');
+    } catch {
+      showError('Network error removing administrator entry.');
+    }
+  };
+
   if (checkingSession) {
     return (
       <div className="max-w-4xl mx-auto px-5 py-24 text-center text-sm text-[#665B73]">
@@ -480,14 +592,14 @@ export function AdminPage() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#7A5A10]">
                 <ShieldCheck className="w-4 h-4" aria-hidden="true" />
-                HIS AND HERS · Stewardship CMS
+                His &amp; Hers Circle of Hope · Stewardship CMS
               </div>
               <h1 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
                 Authorised Care &amp; Admin Sign In
               </h1>
               <p className="text-sm text-[#665B73]">
                 Review counselling requests, Find My Home safeguarding alerts, children’s home visit
-                bookings, partner onboarding, rehab referrals, ASD family desk, and site content.
+                bookings, partner onboarding, rehab referrals, trauma care desk, and site content.
               </p>
             </div>
 
@@ -579,10 +691,22 @@ export function AdminPage() {
       icon: <LocateFixed className="w-4 h-4" aria-hidden="true" />,
     },
     {
+      id: 'specialneeds',
+      label: 'Special Needs Families',
+      count: dashboard?.specialNeedsRequests?.length || 0,
+      icon: <Heart className="w-4 h-4" aria-hidden="true" />,
+    },
+    {
       id: 'asd',
-      label: 'ASD Family',
+      label: 'Mental Health & Trauma',
       count: dashboard?.asdSupportRequests?.length || 0,
       icon: <Sparkles className="w-4 h-4" aria-hidden="true" />,
+    },
+    {
+      id: 'admins',
+      label: 'Admins & Help',
+      count: dashboard?.administrators?.length || 0,
+      icon: <ShieldCheck className="w-4 h-4" aria-hidden="true" />,
     },
     {
       id: 'counselling',
@@ -646,7 +770,7 @@ export function AdminPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#3B155F]/12">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#7A5A10]">
-              HIS AND HERS · Care &amp; Stewardship Console
+              His &amp; Hers Circle of Hope · Care &amp; Stewardship Console
             </p>
             <h1 className="font-serif text-3xl font-semibold text-[#1E0B2B]">
               Community Care, Refuge &amp; Content Administration
@@ -711,6 +835,8 @@ export function AdminPage() {
           })}
         </div>
 
+        {/* Active Tab Workspace */}
+        <div key={activeTab} className="tab-panel-smooth">
         {/* Tab: Counselling & Mental Health Requests */}
         {activeTab === 'counselling' && (
           <section className="bg-white border border-[#3B155F]/12 rounded-lg p-6 sm:p-8 space-y-6">
@@ -1007,20 +1133,92 @@ export function AdminPage() {
           </section>
         )}
 
-        {/* Tab: ASD Parents & Kids Support Requests */}
+        {/* Tab: Special Needs Kids & Families (Mothers & Guardians) */}
+        {activeTab === 'specialneeds' && (
+          <section className="bg-white border border-[#3B155F]/12 rounded-lg p-6 sm:p-8 space-y-6">
+            <div>
+              <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
+                Special Needs Kids &amp; Families — Mothers &amp; Guardians Queue
+              </h2>
+              <p className="text-sm text-[#665B73]">
+                Direct companion intake from single mothers, sole guardians, and two-parent families
+                raising children or dependants with disabilities.
+              </p>
+            </div>
+            {!dashboard?.specialNeedsRequests?.length ? (
+              <p className="text-sm text-[#665B73] py-8 text-center border border-dashed border-[#3B155F]/15 rounded-md">
+                No special needs family conversations logged yet.
+              </p>
+            ) : (
+              <div className="divide-y divide-[#3B155F]/10">
+                {dashboard.specialNeedsRequests.map((item) => (
+                  <div key={item.id} className="py-5 space-y-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#665B73]">
+                      <div>
+                        <strong className="text-[#1E0B2B]">{item.guardianName}</strong>
+                        <span> · {item.householdStructure}</span>
+                        <span> · {item.childAgeGroup}</span>
+                        <span> · Focus: {item.disabilityFocus}</span>
+                        <span> · {item.townWard}, {item.county}</span>
+                      </div>
+                      <span className="font-semibold uppercase text-[#7A5A10]">
+                        Status: {item.status}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#3E3349]">
+                      Channel: {item.preferredContactMethod} · Tel/WhatsApp: {item.phoneOrWhatsapp}
+                      {item.email && ` · ${item.email}`}
+                    </p>
+                    {item.practicalNeeds?.length > 0 && (
+                      <p className="text-xs font-medium text-[#256358]">
+                        Needs: {item.practicalNeeds.join(' · ')}
+                      </p>
+                    )}
+                    <p className="text-sm text-[#1A1224]">{item.storyMessage}</p>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => handleSubmissionStatus('specialneeds', item.id, 'connected')}
+                        className="px-3 py-1.5 text-xs font-medium bg-[#EDF6F3] text-[#256358] rounded"
+                      >
+                        Connect Mother Lead
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSubmissionStatus('specialneeds', item.id, 'supported')}
+                        className="px-3 py-1.5 text-xs font-medium border border-[#256358]/25 text-[#256358] rounded"
+                      >
+                        Mark Supported
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSubmissionStatus('specialneeds', item.id, 'archived')}
+                        className="px-3 py-1.5 text-xs font-medium border border-[#3B155F]/15 text-[#665B73] rounded"
+                      >
+                        Archive
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Tab: Mental Health, Trauma & Stress Healing Requests */}
         {activeTab === 'asd' && (
           <section className="bg-white border border-[#3B155F]/12 rounded-lg p-6 sm:p-8 space-y-6">
             <div>
               <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
-                ASD Parents &amp; Kids Support Queue
+                Mental Health, Trauma &amp; Stress Healing Queue
               </h2>
               <p className="text-sm text-[#665B73]">
-                Questions and parent-mentor connection requests from autism families.
+                Confidential stress, trauma healing, panic, grief, and caregiver exhaustion check-ins.
               </p>
             </div>
             {!dashboard?.asdSupportRequests?.length ? (
               <p className="text-sm text-[#665B73] py-8 text-center border border-dashed border-[#3B155F]/15 rounded-md">
-                No ASD family support inquiries yet.
+                No mental health or trauma healing inquiries yet.
               </p>
             ) : (
               <div className="divide-y divide-[#3B155F]/10">
@@ -1779,6 +1977,254 @@ export function AdminPage() {
             </button>
           </form>
         )}
+
+        {/* Tab: Administrators & Help Desk Particulars */}
+        {activeTab === 'admins' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <form
+              onSubmit={handleSaveAdminProfile}
+              className="lg:col-span-5 bg-white border border-[#3B155F]/12 rounded-lg p-6 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
+                  {editingAdminId ? 'Update Staff / Desk Particulars' : 'Add Administrator or Desk'}
+                </h2>
+                {editingAdminId && (
+                  <button
+                    type="button"
+                    onClick={resetAdminProfileForm}
+                    className="text-xs font-semibold text-[#C2593F] underline"
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="adm-full-name" className="block text-xs font-medium mb-1">
+                    Full Name *
+                  </label>
+                  <input
+                    id="adm-full-name"
+                    required
+                    value={admName}
+                    onChange={(e) => setAdmName(e.target.value)}
+                    placeholder="e.g. Grace Wambui"
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="adm-status" className="block text-xs font-medium mb-1">
+                    Status
+                  </label>
+                  <select
+                    id="adm-status"
+                    value={admStatus}
+                    onChange={(e) =>
+                      setAdmStatus(e.target.value as AdministratorDeskProfile['status'])
+                    }
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Awaiting Staff Particulars">Awaiting Staff Particulars</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="adm-role" className="block text-xs font-medium mb-1">
+                  Role / Desk Title *
+                </label>
+                <input
+                  id="adm-role"
+                  required
+                  value={admRoleTitle}
+                  onChange={(e) => setAdmRoleTitle(e.target.value)}
+                  placeholder="e.g. Programmes & Ruiru Ward Outreach Lead"
+                  className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="adm-dept" className="block text-xs font-medium mb-1">
+                    Department
+                  </label>
+                  <input
+                    id="adm-dept"
+                    value={admDepartment}
+                    onChange={(e) => setAdmDepartment(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="adm-ward" className="block text-xs font-medium mb-1">
+                    Ward / County Coverage
+                  </label>
+                  <input
+                    id="adm-ward"
+                    value={admWard}
+                    onChange={(e) => setAdmWard(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="adm-email" className="block text-xs font-medium mb-1">
+                    Email *
+                  </label>
+                  <input
+                    id="adm-email"
+                    type="email"
+                    required
+                    value={admEmail}
+                    onChange={(e) => setAdmEmail(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="adm-phone" className="block text-xs font-medium mb-1">
+                    Phone *
+                  </label>
+                  <input
+                    id="adm-phone"
+                    required
+                    value={admPhone}
+                    onChange={(e) => setAdmPhone(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="adm-wa" className="block text-xs font-medium mb-1">
+                    WhatsApp (Optional)
+                  </label>
+                  <input
+                    id="adm-wa"
+                    value={admWhatsapp}
+                    onChange={(e) => setAdmWhatsapp(e.target.value)}
+                    placeholder="+254..."
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="adm-hours" className="block text-xs font-medium mb-1">
+                    Office Hours
+                  </label>
+                  <input
+                    id="adm-hours"
+                    value={admHours}
+                    onChange={(e) => setAdmHours(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="adm-focus" className="block text-xs font-medium mb-1">
+                  Desk Focus &amp; Particulars *
+                </label>
+                <textarea
+                  id="adm-focus"
+                  rows={3}
+                  required
+                  value={admFocus}
+                  onChange={(e) => setAdmFocus(e.target.value)}
+                  className="w-full px-3 py-2 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="adm-photo-file" className="block text-xs font-medium mb-1">
+                  Portrait Photo (Upload optional portrait)
+                </label>
+                <input
+                  id="adm-photo-file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => void handlePhotoUpload(e.target.files?.[0], setAdmPhotoUrl)}
+                  className="w-full text-xs text-[#665B73]"
+                />
+                {admPhotoUrl && (
+                  <p className="text-[11px] text-[#256358] mt-1 truncate">
+                    Attached: {admPhotoUrl}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={uploadingPhoto}
+                className="w-full px-4 py-2.5 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] disabled:opacity-60 rounded-md"
+              >
+                {editingAdminId ? 'Save Updated Particulars' : 'Save Administrator / Desk'}
+              </button>
+            </form>
+
+            <div className="lg:col-span-7 bg-white border border-[#3B155F]/12 rounded-lg p-6 space-y-4">
+              <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
+                Live Conveners &amp; Help Desks ({dashboard?.administrators?.length || 0})
+              </h2>
+              <p className="text-xs text-[#665B73]">
+                Select any desk to populate staff names, photos, telephone extensions, and ward hours
+                as particulars are received.
+              </p>
+              <div className="divide-y divide-[#3B155F]/10">
+                {(dashboard?.administrators || []).map((adm) => (
+                  <div
+                    key={adm.id}
+                    className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2 text-xs">
+                        <span className="font-semibold text-[#C2593F]">{adm.department}</span>
+                        <span>·</span>
+                        <span
+                          className={`font-semibold ${
+                            adm.status === 'Active' ? 'text-[#256358]' : 'text-[#7A5A10]'
+                          }`}
+                        >
+                          {adm.status}
+                        </span>
+                      </div>
+                      <h3 className="font-serif text-xl font-semibold text-[#1E0B2B]">
+                        {adm.roleTitle}
+                      </h3>
+                      <p className="text-xs text-[#3E3349]">
+                        <strong>Name:</strong> {adm.fullName} · <strong>Tel:</strong> {adm.phone} ·{' '}
+                        <strong>Email:</strong> {adm.email}
+                      </p>
+                      <p className="text-xs text-[#665B73]">{adm.wardLocation}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => startEditAdminProfile(adm)}
+                        className="px-3 py-1.5 text-xs font-semibold bg-[#F3EEF8] text-[#3B155F] rounded hover:bg-[#E7DFF1]"
+                      >
+                        Edit Particulars
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void handleDeleteAdminProfile(adm.id)}
+                        aria-label={`Remove ${adm.roleTitle}`}
+                        className="p-2 text-red-700 hover:bg-red-50 rounded"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,8 @@
-import { useRef, useState } from 'react';
 import {
   ArrowRight,
   Calendar,
   HeartHandshake,
   MapPin,
-  Pause,
-  Play,
   ShieldAlert,
   Sparkles,
 } from 'lucide-react';
@@ -29,32 +26,42 @@ const CARE_PATHWAYS = [
     borderColor: '#C2593F',
     title: 'Children’s Homes & Schools for Differently Abled',
     description:
-      'Visit children’s homes across Kenya and inclusive schools for blind, deaf, autistic, and physically differently abled learners—plus corporate and NGO onboarding.',
+      'Visit children’s homes across Kenya and inclusive schools for blind, deaf, developmental, and physically differently abled learners—plus corporate and NGO onboarding.',
     linkLabel: 'Explore Homes & Special Schools',
     linkHref: '/home-visits',
   },
   {
     index: '02.',
-    accent: 'text-[#256358]',
-    borderColor: '#256358',
-    title: 'Rehabilitation Centres Near You',
+    accent: 'text-[#7A5A10]',
+    borderColor: '#D4AF37',
+    title: 'Special Needs Kids & Families (Single & Two-Parent)',
     description:
-      'Connect loved ones navigating addiction, trauma, or youth crisis with verified rehabilitation facilities sorted by proximity and chosen care format.',
-    linkLabel: 'Find Nearby Rehabilitation',
-    linkHref: '/rehabilitation',
+      'Speak directly with our Mother & Guardian Care Lead for monthly respite hours, maize flour & hygiene bundles, NCPWD/EARS guidance, and inclusive family circles.',
+    linkLabel: 'Open Special Needs Families Hub',
+    linkHref: '/special-needs-families',
   },
   {
     index: '03.',
     accent: 'text-[#256358]',
-    borderColor: '#D4AF37',
-    title: 'ASD Parents & Kids Care Hub',
+    borderColor: '#256358',
+    title: 'Mental Health, Trauma & Stress Healing',
     description:
-      'Simple, welcoming daily living points, sensory corner setups, visual routine guides, and parent mentors for families raising autistic children.',
-    linkLabel: 'Open ASD Family Tips',
-    linkHref: '/asd-support',
+      'Interactive 4-4-6 nervous-system grounding plans, trauma and caregiver burnout relief, confidential callbacks, and direct Kenyan crisis support.',
+    linkLabel: 'Open Mental Health & Trauma Wing',
+    linkHref: '/mental-health',
   },
   {
     index: '04.',
+    accent: 'text-[#256358]',
+    borderColor: '#1D4E46',
+    title: 'Rehabilitation Centres Near You',
+    description:
+      'Connect loved ones navigating addiction, trauma, or youth crisis with verified rehabilitation facilities across 47 counties sorted by proximity.',
+    linkLabel: 'Find Nearby Rehabilitation',
+    linkHref: '/rehabilitation',
+  },
+  {
+    index: '05.',
     accent: 'text-[#3B155F]',
     borderColor: '#3B155F',
     title: 'Talk to a Counsellor & Lighten Your Burden',
@@ -64,24 +71,34 @@ const CARE_PATHWAYS = [
     linkHref: '/counselling',
   },
   {
-    index: '05.',
+    index: '06.',
     accent: 'text-[#7A5A10]',
     borderColor: '#B85D19',
-    title: 'Find My Home · Calm Refuge',
+    title: 'Find My Home · Safe Refuge',
     description:
       'Discreet, private family-shelter coordination and child safeguarding support whenever home no longer feels safe.',
-    linkLabel: 'Open Calm Refuge',
+    linkLabel: 'Open Safe Refuge',
     linkHref: '/find-my-home',
   },
   {
-    index: '06.',
+    index: '07.',
     accent: 'text-[#3B155F]',
     borderColor: '#59217C',
     title: 'Interdenominational Prayer & Worship',
     description:
-      'Rooted in our prayer movement heritage, we gather across backgrounds to seek God together and uphold one another in confidential prayer.',
+      'Rooted in Nancy Kariuki and the GLOW Prayer Movement heritage, we gather across backgrounds to uphold one another in confidential prayer.',
     linkLabel: 'Visit Prayer & Worship',
     linkHref: '/prayer-worship',
+  },
+  {
+    index: '08.',
+    accent: 'text-[#256358]',
+    borderColor: '#7A5A10',
+    title: 'Accountability & 82/12/6 Open Books',
+    description:
+      'We keep the books open—inspect our 82% programmes / 12% admin / 6% fundraising breakdown, Follow a Dollar journal, and downloadable reports.',
+    linkLabel: 'Inspect Open Books',
+    linkHref: '/accountability',
   },
 ];
 
@@ -92,41 +109,19 @@ export function HomePage() {
   const featuredImpact = (data?.impactProjects || []).slice(0, 3);
   const upcomingEvents = (data?.events || []).slice(0, 3);
 
-  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
-  const [heroMotionPaused, setHeroMotionPaused] = useState(false);
-
-  const toggleHeroMotion = () => {
-    const video = heroVideoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      void video.play().catch(() => {});
-      setHeroMotionPaused(false);
-    } else {
-      video.pause();
-      setHeroMotionPaused(true);
-    }
-  };
-
   return (
     <div>
-      {/* 1. Immersive Video-Background Hero */}
+      {/* 1. Lifelike Documentary Photography Hero */}
       <section className="relative bg-[#160822] text-[#FAF7F2] overflow-hidden">
         <div className="absolute inset-0">
-          <video
-            ref={heroVideoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster="/src/assets/images/hero_worship_community_1794821886213.jpg"
+          <SafeImage
+            src="/src/assets/images/community_circle_hero_1795102206455.jpg"
+            alt="Kenyan community neighbours packing kikapu baskets of fresh sukuma wiki and maize flour together on a warm sunny veranda"
             className="w-full h-full object-cover object-center"
-            aria-hidden="true"
-          >
-            <source src="/videos/childrens_home_visits_reel.mp4" type="video/mp4" />
-          </video>
+          />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[#160822]/80 sm:bg-transparent sm:bg-gradient-to-r sm:from-[#160822]/94 sm:via-[#3B155F]/80 sm:to-[#C2593F]/45"
+            className="absolute inset-0 bg-[#160822]/80 sm:bg-transparent sm:bg-gradient-to-r sm:from-[#160822]/94 sm:via-[#3B155F]/82 sm:to-[#C2593F]/45"
           />
         </div>
 
@@ -135,15 +130,15 @@ export function HomePage() {
             <div className="flex flex-wrap items-center gap-3">
               <BrandMark light size="md" />
               <p className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-[#F3D79B]">
-                HIS AND HERS · Kenya Care Family Hub · Expanding East &amp; Central Africa · Est. 2025
+                His &amp; Hers Circle of Hope · Ruiru, Kiambu County · Est. 2025
               </p>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[58px] font-semibold leading-[1.08] tracking-tight text-[#FAF7F2]">
-              {settings?.heroHeadline || 'A Care Family Home That Connects Everyone to Hope.'}
+              {settings?.heroHeadline || 'Bringing Neighbours Together Long After an Outreach Day Ends.'}
             </h1>
             <p className="text-base sm:text-lg leading-relaxed text-[#FAF7F2]/90 max-w-xl">
               {settings?.heroSubheadline ||
-                'HIS AND HERS is a vibrant community-based organization rooted in prayer, mental wellbeing, safe refuge, children’s home partnerships, rehabilitation support, and autism family care—uniting individuals, families, and organisations to touch lives together.'}
+                'Born in 2025 in Ruiru out of Christian faith and neighbourly compassion—so an elder living alone knows whom to call, parents of children with special needs walk alongside sisters who listen, trauma and stress are met with warmth, and no household carries hardship unseen.'}
             </p>
             <div className="pt-2 flex flex-wrap items-center gap-3.5">
               <AppLink
@@ -154,10 +149,10 @@ export function HomePage() {
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </AppLink>
               <AppLink
-                href="/counselling"
+                href="/special-needs-families"
                 className="inline-flex items-center justify-center px-5 py-3.5 text-sm font-semibold text-[#FAF7F2] bg-[#256358] hover:bg-[#1D4E46] rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
               >
-                Talk to a Counsellor
+                Special Needs Families
               </AppLink>
               <button
                 type="button"
@@ -169,26 +164,6 @@ export function HomePage() {
               </button>
             </div>
           </div>
-
-          {/* Ambient Video Motion Accessibility Toggle */}
-          <button
-            type="button"
-            onClick={toggleHeroMotion}
-            aria-pressed={heroMotionPaused}
-            className="mt-8 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-black/35 hover:bg-black/55 border border-white/20 text-[11px] font-medium text-[#FAF7F2]/90 transition-colors"
-          >
-            {heroMotionPaused ? (
-              <>
-                <Play className="w-3 h-3 text-[#E5CA7B]" aria-hidden="true" />
-                Play Background Motion
-              </>
-            ) : (
-              <>
-                <Pause className="w-3 h-3 text-[#E5CA7B]" aria-hidden="true" />
-                Pause Background Motion
-              </>
-            )}
-          </button>
         </div>
       </section>
 
@@ -225,29 +200,29 @@ export function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
-                Connected Care · Children’s Homes, Families &amp; Partners
+                Ruiru Origin Story (2025 – Present) · Connected Care
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-semibold leading-tight text-[#1E0B2B]">
                 {settings?.welcomeHeadline ||
-                  'Where Individuals, Families & Partner Organisations Build Stronger Homes'}
+                  'When One Door Has Spare Unga and Next Door Wonders What to Cook'}
               </h2>
               <p className="text-base leading-relaxed text-[#3E3349]">
                 {settings?.welcomeBody ||
-                  'Like a true care family home, HIS AND HERS connects people directly to what they need: corporate and group visits to verified children’s homes, mental health counselling to lighten heavy burdens, nearby rehabilitation centres for families in recovery, safe refuge from abuse, and practical ASD guidance for parents and kids.'}
+                  'In 2025 in Ruiru, Kiambu County, Christian faith moved us to build a steady circle people could rely on long after an outreach day ended—walking four Ruiru wards with conveners Nancy Kariuki and the GLOW Prayer Movement to share elder blankets, staples at Ruiru Boys, quiet listening tea tables, safe refuge, and Christmas of Hope.'}
               </p>
               <div className="pt-2 flex flex-wrap gap-6">
                 <AppLink
-                  href="/home-visits"
+                  href="/about"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-[#3B155F] hover:text-[#C2593F] border-b border-[#C2593F] pb-1 transition-colors"
                 >
-                  Partner or Visit a Children’s Home
+                  Read Our Ruiru Origin Story
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </AppLink>
                 <AppLink
-                  href="/rehabilitation"
+                  href="/leadership"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-[#256358] hover:text-[#1E0B2B] border-b border-[#256358] pb-1 transition-colors"
                 >
-                  Find Rehabilitation Near You
+                  Administrators &amp; Help Desk
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </AppLink>
               </div>
@@ -256,8 +231,8 @@ export function HomePage() {
             <div className="lg:col-span-6">
               <div className="h-full min-h-[320px] rounded-xl overflow-hidden border border-[#C2593F]/25 shadow-sm">
                 <SafeImage
-                  src="/src/assets/images/doc_childrens_home_csr_1794832339445.jpg"
-                  alt="Volunteers and children sharing books and fresh mango beneath sunlit acacia trees"
+                  src="/src/assets/images/ruiru_elder_outreach_1795094869017.jpg"
+                  alt="Kenyan community neighbour handing warm woollen blankets and bags of maize flour and sugar to a smiling elder in Ruiru"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -281,7 +256,7 @@ export function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
             {CARE_PATHWAYS.map((item) => (
               <div
                 key={item.index}
@@ -319,44 +294,44 @@ export function HomePage() {
       {/* 4c. Gamified Care Family Village Scene Builder + Real-Time Supporter Stream */}
       <CareVillageBuilder compact />
 
-      {/* 5. ASD Family Care & Rehabilitation Spotlight */}
+      {/* 5. Mental Health, Trauma & Nearby Rehabilitation Spotlight */}
       <section className="py-16 sm:py-24 bg-[#256358] text-[#FAF7F2]">
         <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
             <div className="lg:col-span-6 order-2 lg:order-1">
               <div className="h-full min-h-[300px] rounded-xl overflow-hidden border border-white/20">
                 <SafeImage
-                  src="/src/assets/images/doc_asd_family_moment_1794832339166.jpg"
-                  alt="Smiling mother and autistic son gently arranging wooden sensory blocks on a woven mat"
+                  src="/src/assets/images/trauma_calm_listening_1795094868840.jpg"
+                  alt="Calm sunlit listening room with two Kenyan neighbours sitting quietly over tea"
                   className="w-full h-full object-cover"
                 />
               </div>
             </div>
             <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col justify-center space-y-6">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#F3D79B]">
-                ASD Parents &amp; Nearby Rehabilitation Care
+                Trauma Healing, Mental Health &amp; Rehabilitation Bridges
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-semibold leading-tight text-[#FAF7F2]">
-                Practical Tips for ASD Families &amp; Rehabilitation Closer to Home
+                Mental Health, Trauma &amp; Stress Support Alongside Rehabilitation Closer to Home
               </h2>
               <p className="text-base leading-relaxed text-[#FAF7F2]/90">
-                Explore friendly visual routine tips, sensory-calm corner ideas, and meltdown
-                support written for parents and kids on the autism spectrum—or search nearby
-                rehabilitation facilities sorted by distance to support family restoration.
+                Explore nervous-system 4-4-6 grounding tools, trauma and caregiver burnout recovery,
+                and warm listening rooms where someone genuinely asks, “And how are you doing?”—or
+                locate nearby rehabilitation facilities across Kenya’s 47 counties.
               </p>
               <blockquote className="py-4 border-y border-white/15 font-serif italic text-xl text-[#F3D79B]">
                 “
                 {settings?.prayerInvitation ||
-                  'Whatever season your family or heart is walking through, you do not have to navigate it alone.'}
+                  'Whether you come because you could use a hand or because you have one to offer, karibu sana. There is room for you in our circle.'}
                 ”
               </blockquote>
               <div className="flex flex-wrap gap-4 pt-1">
                 <AppLink
-                  href="/asd-support"
+                  href="/mental-health"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-[#160822] bg-[#D4AF37] hover:bg-[#E5CA7B] rounded-md transition-colors whitespace-nowrap"
                 >
                   <Sparkles className="w-4 h-4" aria-hidden="true" />
-                  ASD Parents &amp; Kids Hub
+                  Mental Health &amp; Trauma Wing
                 </AppLink>
                 <AppLink
                   href="/rehabilitation"
@@ -385,8 +360,8 @@ export function HomePage() {
                 Touching Lives Across Homes &amp; Neighbourhoods
               </h2>
               <p className="text-base text-[#3E3349] leading-relaxed">
-                Explore documented initiatives across children’s home visits, ASD parent mornings,
-                and community healing circles.
+                Explore documented initiatives across Ruiru ward walks, elder blankets, Ruiru Boys
+                solidarity, children’s home visits, and quiet tea listening circles.
               </p>
             </div>
             <AppLink
@@ -458,16 +433,16 @@ export function HomePage() {
               Thanksgiving Feast &amp; Early Christmas Relief Bundles (Nov 28)
             </h2>
             <p className="text-base text-[#3E3349] leading-relaxed">
-              On November 28, HIS AND HERS hosts warm community tables to feed families together and
-              distribute small bundles of practical relief tokens—helping households cushion hard
-              economic times with food staples, children’s essentials, and early Christmas warmth.
+              On November 28 and into our Christmas of Hope elders celebration, His &amp; Hers
+              Circle of Hope hosts warm community tables to share meals, hear elders’ stories, and
+              pack take-home food staples and blankets to cushion hard times.
             </p>
             <div className="flex flex-wrap gap-3 pt-1">
               <AppLink
                 href="/events/november-28-thanksgiving-feast-and-early-christmas-relief"
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-[#C2593F] text-white hover:bg-[#A64831] rounded-md transition-colors"
               >
-                RSVP or Sponsor Nov 28 Bundles
+                RSVP or Sponsor Nov 28 &amp; Christmas of Hope
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </AppLink>
               <AppLink
@@ -483,7 +458,7 @@ export function HomePage() {
             <div className="aspect-[16/10] rounded-2xl overflow-hidden border-2 border-[#D4AF37]/50 shadow-md">
               <SafeImage
                 src="/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg"
-                alt="Kenyan neighbours gathering outdoors for the November 28 Thanksgiving Feast with shared meals and neatly wrapped relief bundles"
+                alt="Kenyan neighbours gathering outdoors for the November 28 Thanksgiving Feast and Christmas of Hope with shared meals and neatly wrapped relief bundles"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -497,7 +472,7 @@ export function HomePage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div className="max-w-2xl space-y-3">
               <p className="text-xs font-semibold tracking-wider uppercase text-[#7A5A10]">
-                Children’s Home Visits, ASD Mornings &amp; Helping Hand Days
+                Children’s Home Visits, Quiet Tea Circles &amp; Elder Tables
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
                 Upcoming Community Events &amp; Action Days

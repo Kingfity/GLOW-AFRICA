@@ -129,15 +129,15 @@ export function GetInvolvedPage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="max-w-3xl space-y-5">
             <p className="text-xs font-semibold tracking-wider uppercase text-[#E5CA7B]">
-              Get Involved · HIS AND HERS
+              Get Involved · His &amp; Hers Circle of Hope
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl font-semibold leading-tight">
               From Visitor to Companion in Community Care
             </h1>
             <p className="text-base sm:text-lg text-[#FAF7F2]/85 leading-relaxed">
               Whether you want to bring your corporate team or group to a children’s home, onboard
-              your organisation as a partner, offer counselling hours, or walk beside ASD families,
-              your presence helps touch lives meaningfully.
+              your organisation as a partner, offer counselling hours, or walk beside neighbours
+              facing trauma, stress, or old-age isolation, karibu sana.
             </p>
           </div>
         </div>
@@ -212,7 +212,7 @@ export function GetInvolvedPage() {
               </h3>
               <p className="text-sm text-[#3E3349] leading-relaxed">
                 {settings?.approvedGivingNote ||
-                  'Stewardship and charitable contributions are coordinated strictly through verified HIS AND HERS channels confirmed directly by our leadership team.'}
+                  'Stewardship, elder blankets, Ruiru Boys student provisions, and children’s home partnerships are coordinated strictly through verified His & Hers Circle of Hope channels confirmed directly by our leadership team.'}
               </p>
               <AppLink
                 href="/contact"

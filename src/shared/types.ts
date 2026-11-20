@@ -7,7 +7,7 @@ export type ImpactCategory =
 export const HELPING_HAND_EVENT_CATEGORIES = [
   'Children’s Home Visits',
   'Mental Health & Recovery',
-  'ASD Family Gatherings',
+  'Trauma & Stress Circles',
   'Community Outreach',
   'Safe Refuge & Fellowship',
 ] as const;
@@ -94,6 +94,11 @@ export interface ChildrensHome {
   specialization?: string;
   countyRegion: string;
   townArea: string;
+  physicalAddress?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  websiteUrl?: string;
+  visitingHours?: string;
   childrenAgeRange: string;
   currentNeeds: string[];
   acceptsCorporateTeams: boolean;
@@ -114,6 +119,11 @@ export interface RehabFacility {
   careFormat: 'Residential & Outpatient' | 'Outpatient Counselling' | 'Detox & Medical Recovery';
   countyRegion: string;
   townArea: string;
+  physicalAddress?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  websiteUrl?: string;
+  visitingHours?: string;
   lat: number;
   lng: number;
   acceptsCommunityReferrals: boolean;
@@ -122,18 +132,39 @@ export interface RehabFacility {
   imageAlt: string;
 }
 
+export interface AdministratorDeskProfile {
+  id: string;
+  deskCode: string;
+  fullName: string;
+  roleTitle: string;
+  department: string;
+  status: 'Active' | 'Awaiting Staff Particulars';
+  wardLocation: string;
+  officeHours: string;
+  phone: string;
+  whatsapp?: string;
+  email: string;
+  photoUrl?: string;
+  focusSummary: string;
+  routingHref: string;
+  routingLabel: string;
+  accentHex: string;
+}
+
 export interface AsdGuideTip {
   id: string;
   pillar:
-    | 'Sensory-Friendly Home'
-    | 'Calm Overwhelm & Meltdowns'
-    | 'Visual Routines & Speech'
-    | 'Siblings, School & Faith';
+    | 'Nervous System & Trauma'
+    | 'Stress, Panic & Sleep'
+    | 'Caregiver & Silent Burdens'
+    | 'Grief, Faith & Belonging';
   title: string;
   audienceTag: string;
   summary: string;
   practicalSteps: string[];
 }
+
+export type MentalHealthGuideTip = AsdGuideTip;
 
 export interface PrayerRequest {
   id: string;
@@ -245,12 +276,44 @@ export interface RehabReferralRequest {
 export interface AsdSupportRequest {
   id: string;
   parentName: string;
-  childAgeGroup: 'Early Years (2–5)' | 'Primary Age (6–11)' | 'Teen & Adolescent (12–17)' | 'Young Adult / Caregiver';
+  childAgeGroup: string;
   contact: string;
   topicNeeded: string;
   questionOrStory: string;
   consentAccepted: boolean;
   status: 'new' | 'answered' | 'connected' | 'archived';
+  createdAt: string;
+}
+
+export type MentalHealthSupportRequest = AsdSupportRequest;
+
+export type HouseholdStructureType =
+  | 'Single Mother Household'
+  | 'Single Father / Sole Guardian'
+  | 'Two-Parent Family'
+  | 'Grandparent / Kinship Guardian'
+  | 'Foster / Community Caregiver';
+
+export interface SpecialNeedsFamilyRequest {
+  id: string;
+  guardianName: string;
+  householdStructure: HouseholdStructureType;
+  phoneOrWhatsapp: string;
+  email: string;
+  preferredContactMethod:
+    | 'Phone Call With Mother/Guardian Lead'
+    | 'WhatsApp Chat'
+    | 'Home Visit in Ward'
+    | 'Mothers Support Tea Circle'
+    | 'Email';
+  county: string;
+  townWard: string;
+  childAgeGroup: string;
+  disabilityFocus: string;
+  practicalNeeds: string[];
+  storyMessage: string;
+  consentAccepted: boolean;
+  status: 'new' | 'connected' | 'supported' | 'archived';
   createdAt: string;
 }
 
@@ -335,6 +398,7 @@ export interface PublicSiteData {
   rehabFacilities: RehabFacility[];
   asdGuides: AsdGuideTip[];
   villageContributions: VillageContributionItem[];
+  administrators: AdministratorDeskProfile[];
 }
 
 export interface AdminUserSession {
@@ -351,7 +415,9 @@ export interface AdminDashboardData {
   partnerOrganizations: PartnerOrganization[];
   rehabReferrals: RehabReferralRequest[];
   asdSupportRequests: AsdSupportRequest[];
+  specialNeedsRequests?: SpecialNeedsFamilyRequest[];
   volunteerEnquiries: VolunteerEnquiry[];
   contactMessages: ContactMessage[];
   eventRegistrations: EventRegistration[];
+  administrators?: AdministratorDeskProfile[];
 }

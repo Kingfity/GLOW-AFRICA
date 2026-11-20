@@ -20,9 +20,9 @@ export function PrivacyPage() {
             </h2>
             <p>
               Counselling requests, mental health disclosures, and prayer submissions shared through
-              HIS AND HERS are handled with strict confidentiality. They are never published or
-              displayed publicly. Visitors may choose anonymous submission when lightening their
-              burdens.
+              His &amp; Hers Circle of Hope are handled with strict confidentiality. They are never
+              published or displayed publicly. Visitors may choose anonymous submission when
+              lightening their burdens.
             </p>
           </section>
 
@@ -40,13 +40,13 @@ export function PrivacyPage() {
 
           <section className="space-y-2">
             <h2 className="font-serif text-2xl font-semibold text-[#1E0B2B]">
-              3. Children’s Home Visits, Rehab Referrals, ASD Family Desk &amp; Partners
+              3. Children’s Home Visits, Rehab Referrals, Trauma Care Desk &amp; Partners
             </h2>
             <p>
               Information provided for children’s home visit coordination, corporate or NGO
-              onboarding, rehabilitation facility referrals, ASD parent support, or volunteer
-              applications is used solely to coordinate care safely and responsibly. We never sell
-              or share personal information with third-party marketers.
+              onboarding, rehabilitation facility referrals, mental health &amp; trauma support, or
+              volunteer applications is used solely to coordinate care safely and responsibly. We
+              never sell or share personal information with third-party marketers.
             </p>
           </section>
 

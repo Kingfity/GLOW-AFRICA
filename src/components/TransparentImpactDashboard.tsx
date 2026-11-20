@@ -3,8 +3,11 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
+  ExternalLink,
   HeartPulse,
+  Mail,
   MapPin,
+  PhoneCall,
   ShieldAlert,
   ShieldCheck,
 } from 'lucide-react';
@@ -49,21 +52,24 @@ export function TransparentImpactDashboard({ compact = false }: { compact?: bool
 
   const activeCounty = useMemo(() => findKenyaCounty(selectedCounty), [selectedCounty]);
 
-  const countyHomesCount = useMemo(
+  const matchingHomes = useMemo(
     () =>
       homes.filter(
         (h) => h.countyRegion.toLowerCase() === activeCounty.name.toLowerCase()
-      ).length,
+      ),
     [homes, activeCounty.name]
   );
 
-  const countyRehabCount = useMemo(
+  const matchingFacilities = useMemo(
     () =>
       facilities.filter(
         (f) => f.countyRegion.toLowerCase() === activeCounty.name.toLowerCase()
-      ).length,
+      ),
     [facilities, activeCounty.name]
   );
+
+  const countyHomesCount = matchingHomes.length;
+  const countyRehabCount = matchingFacilities.length;
 
   const countyPledgesKes = useMemo(
     () =>
@@ -226,7 +232,7 @@ export function TransparentImpactDashboard({ compact = false }: { compact?: bool
                 <svg
                   viewBox="0 0 420 360"
                   role="img"
-                  aria-label="Interactive 47 Counties Map of HIS AND HERS Care Network in Kenya"
+                  aria-label="Interactive 47 Counties Map of His & Hers Circle of Hope Network in Kenya"
                   className="w-full h-auto"
                 >
                   <path
@@ -354,6 +360,87 @@ export function TransparentImpactDashboard({ compact = false }: { compact?: bool
                     </div>
                   </div>
 
+                  <div className="p-3.5 rounded-lg bg-[#1C0A2E] border border-[#D4AF37]/30 text-xs space-y-2 text-[#FAF7F2]/90">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[#E5CA7B]">
+                          County Facility &amp; Guardian Desk
+                        </p>
+                        <p className="font-semibold text-[#FAF7F2] text-sm mt-0.5">
+                          {activeCounty.facilityHubName}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-[#FAF7F2]/80 leading-relaxed">
+                      <strong>Address:</strong> {activeCounty.physicalAddress}
+                    </p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] pt-0.5">
+                      <a
+                        href={`tel:${activeCounty.facilityPhone.replace(/\s+/g, '')}`}
+                        className="inline-flex items-center gap-1 font-semibold text-[#84B5A9] hover:text-[#FAF7F2] tabular-nums"
+                      >
+                        <PhoneCall className="w-3 h-3" aria-hidden="true" />
+                        {activeCounty.facilityPhone}
+                      </a>
+                      <a
+                        href={`mailto:${activeCounty.facilityEmail}`}
+                        className="inline-flex items-center gap-1 font-semibold text-[#F3D79B] hover:text-[#FAF7F2]"
+                      >
+                        <Mail className="w-3 h-3" aria-hidden="true" />
+                        {activeCounty.facilityEmail}
+                      </a>
+                    </div>
+                    <div className="pt-1">
+                      <a
+                        href={activeCounty.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#D4AF37] text-[#160822] hover:bg-[#E5CA7B] font-semibold text-[11px] transition-colors"
+                      >
+                        Open Facility / County Webpage
+                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {(matchingHomes.length > 0 || matchingFacilities.length > 0) && (
+                    <div className="p-3 rounded-lg bg-[#140620]/80 border border-white/10 text-[11px] space-y-1.5 text-[#FAF7F2]/85">
+                      <p className="font-semibold text-[#84B5A9] uppercase tracking-wider">
+                        Verified Partner Facilities in {activeCounty.name}
+                      </p>
+                      {[...matchingHomes.slice(0, 2), ...matchingFacilities.slice(0, 2)].map(
+                        (item) => (
+                          <div
+                            key={item.id}
+                            className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-white/8 first:border-t-0 first:pt-0"
+                          >
+                            <span className="font-medium text-[#FAF7F2]">{item.name}</span>
+                            <div className="flex items-center gap-2">
+                              {item.contactPhone && (
+                                <a
+                                  href={`tel:${item.contactPhone.replace(/\s+/g, '')}`}
+                                  className="text-[#84B5A9] hover:underline tabular-nums"
+                                >
+                                  {item.contactPhone}
+                                </a>
+                              )}
+                              {item.websiteUrl && (
+                                <a
+                                  href={item.websiteUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#E5CA7B] hover:underline inline-flex items-center gap-0.5"
+                                >
+                                  Site <ExternalLink className="w-2.5 h-2.5" aria-hidden="true" />
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
+
                   <div className="p-3 rounded-lg bg-[#140620] border border-white/10 text-[11px] space-y-1 text-[#FAF7F2]/85">
                     <p>
                       <strong className="text-[#F3D79B]">Police OCS:</strong>{' '}
@@ -377,12 +464,20 @@ export function TransparentImpactDashboard({ compact = false }: { compact?: bool
                       <ShieldAlert className="w-3.5 h-3.5" aria-hidden="true" />
                       Alert {activeCounty.name} Authorities
                     </button>
-                    <AppLink
-                      href="/rehabilitation"
-                      className="font-semibold text-[#84B5A9] hover:underline underline-offset-4"
-                    >
-                      Find Rehab →
-                    </AppLink>
+                    <div className="flex items-center gap-3">
+                      <AppLink
+                        href={`/home-visits?county=${encodeURIComponent(activeCounty.name)}`}
+                        className="font-semibold text-[#F3D79B] hover:underline underline-offset-4"
+                      >
+                        Homes →
+                      </AppLink>
+                      <AppLink
+                        href={`/rehabilitation?county=${encodeURIComponent(activeCounty.name)}`}
+                        className="font-semibold text-[#84B5A9] hover:underline underline-offset-4"
+                      >
+                        Find Rehab →
+                      </AppLink>
+                    </div>
                   </div>
                 </div>
               </div>

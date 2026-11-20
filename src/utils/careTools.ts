@@ -41,9 +41,9 @@ export function calculateVisitKitPlan(visitorCountRaw: number, childrenCountRaw:
   };
 }
 
-export type RoutineMode = 'morning' | 'after-school' | 'bedtime';
+export type AnchorMode = 'morning-steady' | 'panic-reset' | 'evening-unload';
 
-export interface AsdRoutineStep {
+export interface TraumaAnchorStep {
   id: string;
   timeHint: string;
   title: string;
@@ -51,99 +51,99 @@ export interface AsdRoutineStep {
   done: boolean;
 }
 
-const ROUTINE_PRESETS: Record<RoutineMode, Omit<AsdRoutineStep, 'done'>[]> = {
-  morning: [
+const TRAUMA_ANCHOR_PRESETS: Record<AnchorMode, Omit<TraumaAnchorStep, 'done'>[]> = {
+  'morning-steady': [
     {
       id: 'm1',
       timeHint: 'Step 1',
-      title: 'Soft Wake-Up & Warm Hello',
-      gentleCue: 'Open curtains slowly—no sudden loud voices.',
+      title: 'Two Feet on the Floor & Slow Morning Exhale',
+      gentleCue: 'Before checking bad news or messages, feel both feet grounded and exhale slowly.',
     },
     {
       id: 'm2',
       timeHint: 'Step 2',
-      title: 'Wash Face & Brush Teeth',
-      gentleCue: 'Offer choice: warm cloth or cool water, favourite cup.',
+      title: 'Warm Tea, Water & One Nourishing Bite',
+      gentleCue: 'Heavy weeks drain energy early—nourish your body gently before tackling tasks.',
     },
     {
       id: 'm3',
       timeHint: 'Step 3',
-      title: 'Calm Breakfast Plate',
-      gentleCue: 'Keep familiar safe foods separate on the plate.',
+      title: 'Choose Only Today’s Essential Step',
+      gentleCue: 'Write down one small reachable priority for today rather than carrying all of next month.',
     },
     {
       id: 'm4',
       timeHint: 'Step 4',
-      title: '2-Minute Sensory Pocket Reset',
-      gentleCue: 'Pack fidget, ear defenders, and give a 5-minute shoe countdown.',
+      title: 'Quiet Prayer or One Trusted Check-In Text',
+      gentleCue: 'Remind yourself you do not have to walk through Ruiru, Nairobi, or today alone.',
     },
   ],
-  'after-school': [
+  'panic-reset': [
     {
-      id: 'a1',
+      id: 'p1',
       timeHint: 'Step 1',
-      title: '15 Minutes Quiet Unwind First',
-      gentleCue: 'Hold off on homework questions right at the door.',
+      title: '5-4-3-2-1 Present-Room Reality Anchor',
+      gentleCue: 'Name 5 things you see, 4 textures you touch, and 3 natural sounds around you right now.',
     },
     {
-      id: 'a2',
+      id: 'p2',
       timeHint: 'Step 2',
-      title: 'Crunchy Snack & Water Break',
-      gentleCue: 'Offer familiar snack and drink in their favourite cup.',
+      title: 'Drop Your Shoulders & Unclench Your Jaw',
+      gentleCue: 'Place one warm hand on your chest or forearm so your nervous system registers safety.',
     },
     {
-      id: 'a3',
+      id: 'p3',
       timeHint: 'Step 3',
-      title: 'One-Step Play or Visual Timer Task',
-      gentleCue: 'Use a visual sand timer or 10-minute gentle warning.',
+      title: 'Cool Water on Wrists or Step Into Daylight',
+      gentleCue: 'Cool water and fresh air gently settle a racing pulse within 90 seconds.',
     },
     {
-      id: 'a4',
+      id: 'p4',
       timeHint: 'Step 4',
-      title: 'Check Feelings Card Together',
-      gentleCue: 'Point to Calm, Tired, Loud, or Hug Needed without pressure.',
+      title: 'Reach Out to a Counsellor or Friend',
+      gentleCue: 'Speak openly: “My chest feels heavy right now—can you stay on the line for five minutes?”',
     },
   ],
-  bedtime: [
+  'evening-unload': [
     {
-      id: 'b1',
+      id: 'e1',
       timeHint: 'Step 1',
-      title: 'Screens Off & Warm Lamp On',
-      gentleCue: 'Switch bright overhead lights off 30 minutes before sleep.',
+      title: 'Set Down Unfinished Worries on Paper',
+      gentleCue: 'Write the three heaviest thoughts onto a notepad so your mind stops rehearsing them at 2 AM.',
     },
     {
-      id: 'b2',
+      id: 'e2',
       timeHint: 'Step 2',
-      title: 'Warm Bath or Gentle Wipe-Down',
-      gentleCue: 'Soft towel wrap and slow drying pace.',
+      title: 'Soften Lighting & Step Back From Distress News',
+      gentleCue: 'Protect the last 40 minutes before bed from painful feeds and urgent demands.',
     },
     {
-      id: 'b3',
+      id: 'e3',
       timeHint: 'Step 3',
-      title: 'Predictable Story or Soft Prayer',
-      gentleCue: 'Same calm song or blessing sentence every evening.',
+      title: 'Gentle Neck Stretch & Slow 4-4-6 Breathing',
+      gentleCue: 'Lengthen your exhale to signal your vagus nerve that tonight is safe for rest.',
     },
     {
-      id: 'b4',
+      id: 'e4',
       timeHint: 'Step 4',
-      title: 'Weighted Blanket & Safe Sleep Cue',
-      gentleCue: 'Keep comfort plush or pillow within easy reach.',
+      title: 'Spoken Release of Peace & Gratitude',
+      gentleCue: 'Leave tomorrow’s provision in God’s hands and rest honestly.',
     },
   ],
 };
 
-export function getAsdRoutinePreset(mode: RoutineMode): AsdRoutineStep[] {
-  return ROUTINE_PRESETS[mode].map((item) => ({ ...item, done: false }));
+export function getTraumaAnchorPreset(mode: AnchorMode): TraumaAnchorStep[] {
+  return TRAUMA_ANCHOR_PRESETS[mode].map((item) => ({ ...item, done: false }));
 }
 
-export function toggleRoutineStep(steps: AsdRoutineStep[], id: string): AsdRoutineStep[] {
+export function toggleAnchorStep(steps: TraumaAnchorStep[], id: string): TraumaAnchorStep[] {
   return steps.map((step) => (step.id === id ? { ...step, done: !step.done } : step));
 }
 
-export function addCustomRoutineStep(
-  steps: AsdRoutineStep[],
+export function addCustomAnchorStep(
+  steps: TraumaAnchorStep[],
   rawTitle: string
-): AsdRoutineStep[] {
+): TraumaAnchorStep[] {
   const cleanTitle = rawTitle.trim().slice(0, 70);
   if (cleanTitle.length < 2) return steps;
   return [
@@ -152,7 +152,7 @@ export function addCustomRoutineStep(
       id: `custom-${steps.length + 1}-${cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8)}`,
       timeHint: `Step ${steps.length + 1}`,
       title: cleanTitle,
-      gentleCue: 'Added by your family at home—go at a gentle pace.',
+      gentleCue: 'Added by you—move slowly and treat yourself with patience.',
       done: false,
     },
   ];
@@ -190,20 +190,82 @@ export function getBreathPhaseAtSecond(elapsedSeconds: number): BreathCycleState
 
 export const ALLOWED_ASSISTANT_ROUTES = new Set([
   '/home-visits',
+  '/special-needs-families',
+  '/special-needs',
   '/rehabilitation',
   '/recovery',
-  '/asd-support',
+  '/mental-health',
   '/counselling',
   '/find-my-home',
   '/gbv',
   '/prayer-worship',
   '/events',
   '/accountability',
+  '/leadership',
   '/get-involved',
   '/contact',
   '/impact',
   '/about',
 ]);
+
+export interface SpecialNeedsSupportPlan {
+  householdLabel: string;
+  isSoleGuardian: boolean;
+  monthlyRespiteHours: number;
+  pantryAndCareBundles: number;
+  estimatedMonthlySupportKes: number;
+  suggestedNeeds: string[];
+  guidanceNote: string;
+}
+
+export function calculateSpecialNeedsSupportPlan(
+  householdStructure: string,
+  disabilityFocus: string,
+  dependantsCountRaw: number
+): SpecialNeedsSupportPlan {
+  const dependants = Math.max(1, Math.min(8, Math.round(dependantsCountRaw || 1)));
+  const isSoleGuardian =
+    householdStructure === 'Single Mother Household' ||
+    householdStructure === 'Single Father / Sole Guardian' ||
+    householdStructure === 'Grandparent / Kinship Guardian';
+
+  const monthlyRespiteHours = isSoleGuardian ? 12 + (dependants - 1) * 4 : 6 + (dependants - 1) * 3;
+  const pantryAndCareBundles = isSoleGuardian ? 2 + (dependants > 2 ? 1 : 0) : 1 + (dependants > 2 ? 1 : 0);
+  const baseCareKes = isSoleGuardian ? 6500 : 4500;
+  const estimatedMonthlySupportKes = baseCareKes + (dependants - 1) * 2000;
+
+  const focusLower = (disabilityFocus || '').toLowerCase();
+  const focusSpecificNeed = focusLower.includes('mobility') || focusLower.includes('cerebral')
+    ? 'Physiotherapy & Mobility Aid Co-Pay'
+    : focusLower.includes('deaf') || focusLower.includes('hearing')
+      ? 'Kenyan Sign Language & Hearing Assessment Aid'
+      : focusLower.includes('blind') || focusLower.includes('visual')
+        ? 'Braille & Low-Vision Learning Materials'
+        : focusLower.includes('autism') || focusLower.includes('developmental') || focusLower.includes('speech')
+          ? 'Sensory Calm & Speech Therapy Support'
+          : 'Occupational & Daily Living Care Supplies';
+
+  const suggestedNeeds = [
+    focusSpecificNeed,
+    isSoleGuardian ? 'Respite Caregiver Hours & Emergency Backup' : 'Co-Parent & Sibling Encouragement Circle',
+    'Maize Flour, Hygiene & Diaper Cushion Pack',
+    'NCPWD Disability Card & SHA/EARS Assessment Guide',
+  ];
+
+  const guidanceNote = isSoleGuardian
+    ? `When one mother or guardian carries every clinic trip, feeding, and sleepless night alone, we prioritise regular respite hours, unga and hygiene relief packs, and a direct sister-to-sister check-in lead for ${disabilityFocus}.`
+    : `For two-parent and extended households, we walk beside both caregivers and siblings—preventing silent exhaustion, coordinating therapy referrals, and connecting you with vetted inclusive schools for ${disabilityFocus}.`;
+
+  return {
+    householdLabel: householdStructure,
+    isSoleGuardian,
+    monthlyRespiteHours,
+    pantryAndCareBundles,
+    estimatedMonthlySupportKes,
+    suggestedNeeds,
+    guidanceNote,
+  };
+}
 
 export interface AssistantSuggestedLink {
   label: string;
@@ -237,7 +299,7 @@ export function sanitizeAssistantResult(raw: unknown): AssistantResponsePayload 
   const reply =
     typeof obj.reply === 'string' && obj.reply.trim()
       ? obj.reply.trim()
-      : 'Thank you for reaching out to HIS AND HERS. Please select one of the guided pathways below so our care family can help you right away.';
+      : 'Thank you for reaching out to His & Hers Circle of Hope. Please select one of the guided pathways below so our care circle can help you right away.';
   const rawLinks = Array.isArray(obj.suggestedLinks) ? obj.suggestedLinks : [];
   const suggestedLinks: AssistantSuggestedLink[] = rawLinks
     .map((item) => {
@@ -293,7 +355,7 @@ export const COLOUR_GRADE_PRESETS: ColourGradePreset[] = [
     label: 'Calm Sage Sanctuary',
     emotionLabel: 'Peace, Sensory Ease & Healing',
     meaning:
-      'Softened eucalyptus midtones and gentle contrast ease visual overwhelm for autistic children, parents, and counselling rest.',
+      'Softened eucalyptus midtones and gentle contrast bring calm to weary guests, parents, and quiet listening rooms.',
     swatchHex: '#256358',
     secondaryHex: '#84B5A9',
     cssFilter: 'contrast(0.98) saturate(0.95) hue-rotate(-5deg) brightness(1.03)',
@@ -346,34 +408,54 @@ export interface PortfolioVisualItem {
 
 export const PORTFOLIO_SHOWCASE_ITEMS: PortfolioVisualItem[] = [
   {
+    id: 'port-ruiru-elders',
+    title: 'Ruiru Elder Blanket & Maize Flour Sharing',
+    kind: 'Documentary Photo',
+    src: '/src/assets/images/ruiru_elder_outreach_1795094869017.jpg',
+    alt: 'Community neighbour gently handing folded warm blankets, maize flour, and sugar to a smiling elder on a stone veranda in Ruiru, Kiambu County',
+    location: 'Ruiru Wards, Kiambu County',
+    recommendedGrade: 'golden-hope',
+    caption: 'Where our story began: neighbours noticing each other across four Ruiru wards with blankets, unga, rice, sugar, and time.',
+  },
+  {
+    id: 'port-special-mother',
+    title: 'Special Needs Child & Mother Courtyard Care',
+    kind: 'Documentary Photo',
+    src: '/src/assets/images/special_needs_mother_care_1795102206738.jpg',
+    alt: 'Kenyan mother sitting warmly on a grass mat beside her smiling young child in wooden therapy seating with sensory blocks',
+    location: 'Kiambu & 47-County Family Desk',
+    recommendedGrade: 'golden-hope',
+    caption: 'Walking side-by-side with single mothers, fathers, and two-parent families raising differently abled children with dignity and respite.',
+  },
+  {
+    id: 'port-mothers-circle',
+    title: 'Mothers & Guardians Care Circle',
+    kind: 'Documentary Photo',
+    src: '/src/assets/images/mothers_support_circle_1795102208113.jpg',
+    alt: 'Three Kenyan mothers and guardians speaking warmly around an outdoor garden table over tea',
+    location: 'Caregiver & Single-Mothers Tea Table',
+    recommendedGrade: 'sage-calm',
+    caption: 'Listening directly to mothers and guardians caring for children with disabilities so nobody carries the weight unseen.',
+  },
+  {
+    id: 'port-trauma-listening',
+    title: 'Trauma, Stress & Quiet Listening Over Spiced Tea',
+    kind: 'Documentary Photo',
+    src: '/src/assets/images/trauma_calm_listening_1795094868840.jpg',
+    alt: 'Two Kenyan adults seated calmly across a wooden table with warm tea mugs in a sunlit linen-curtained room',
+    location: 'Mental Health & Trauma Desk',
+    recommendedGrade: 'sage-calm',
+    caption: 'Unhurried, trauma-informed listening rooms where chronic stress, grief, and anxiety are met safely without stigma.',
+  },
+  {
     id: 'port-homes',
     title: 'Storytime & Fresh Fruit at Partner Children’s Home',
     kind: 'Documentary Photo',
     src: '/src/assets/images/doc_childrens_home_csr_1794832339445.jpg',
     alt: 'Kenyan volunteers and smiling children reading picture books on woven mats under acacia trees',
-    location: 'Nairobi Partner Courtyard',
+    location: 'Partner Children’s Courtyard',
     recommendedGrade: 'golden-hope',
     caption: 'Warm afternoon light reflects shared friendship during corporate CSR & community reading visits.',
-  },
-  {
-    id: 'port-art',
-    title: 'Care Family Home Courtyard at Golden Dusk',
-    kind: 'Lifelike Illustration',
-    src: '/src/assets/images/lifelike_care_family_art_1794832340734.jpg',
-    alt: 'Lifelike painterly illustration of a warm Kenyan Care Family Home courtyard with elders, parents, and children walking beneath acacia and jacaranda trees',
-    location: 'Care Family Editorial Artwork',
-    recommendedGrade: 'golden-hope',
-    caption: 'Lifelike painterly artwork illustrating our vision—every generation welcomed at the glowing doorway.',
-  },
-  {
-    id: 'port-asd',
-    title: 'Calm Sensory Blocks & Mother-Son Rhythm',
-    kind: 'Documentary Photo',
-    src: '/src/assets/images/doc_asd_family_moment_1794832339166.jpg',
-    alt: 'Smiling Kenyan mother sitting beside her young autistic son gently sorting wooden sensory blocks in soft window daylight',
-    location: 'ASD Family Care Home Space',
-    recommendedGrade: 'sage-calm',
-    caption: 'Gentle natural daylight and soft neutral tones support sensory peace and unhurried focus.',
   },
   {
     id: 'port-rehab',
@@ -387,23 +469,23 @@ export const PORTFOLIO_SHOWCASE_ITEMS: PortfolioVisualItem[] = [
   },
   {
     id: 'port-worship',
-    title: 'Golden Hour Prayer & Fellowship Gathering',
+    title: 'GLOW Prayer Movement & Ruiru Courtyard Fellowship',
     kind: 'Documentary Photo',
-    src: '/src/assets/images/doc_worship_gathering_1794832340911.jpg',
-    alt: 'East African congregation standing together in sunlit stone and timber sanctuary in prayer and song',
-    location: 'Interdenominational Sanctuary',
+    src: '/src/assets/images/ruiru_fellowship_courtyard_1795102206499.jpg',
+    alt: 'East African neighbours gathered in a warm outdoor courtyard circle under acacia trees for prayer and conversation over tea',
+    location: 'Ruiru Founding Courtyard',
     recommendedGrade: 'royal-heritage',
-    caption: 'Sunbeams through arched windows express warmth, reverence, and unity across backgrounds.',
+    caption: 'Open-air fellowship, interdenominational prayer, and neighbour care rooted in Ruiru since 2025.',
   },
   {
-    id: 'port-outreach',
-    title: 'Neighbour-to-Neighbour Fresh Harvest Sharing',
+    id: 'port-courtyard-circle',
+    title: 'Neighbour-to-Neighbour Veranda Pantry & Hope',
     kind: 'Documentary Photo',
-    src: '/src/assets/images/impact_community_outreach_1794821887071.jpg',
-    alt: 'Community volunteers and elder neighbours sharing woven baskets of fresh produce joyfully outdoors',
-    location: 'Neighbourhood Food Outreach',
+    src: '/src/assets/images/community_circle_hero_1795102206455.jpg',
+    alt: 'Kenyan community members packing kikapu baskets with maize flour and fresh sukuma wiki on a sunny courtyard veranda',
+    location: 'Ruiru Shared Pantry Hub',
     recommendedGrade: 'true-daylight',
-    caption: 'Crisp documentary tones honour genuine smiles and everyday dignity while awaiting upcoming uploads.',
+    caption: 'Real Kenyan families and neighbours sorting fresh greens and dry staples together after morning outreach.',
   },
 ];
 
@@ -494,11 +576,11 @@ export const VILLAGE_SCENE_TIERS: VillageSceneTier[] = [
   },
   {
     id: 'sensory',
-    label: 'ASD Sensory Calm Kit',
-    sceneElementName: 'Quiet Eucalyptus Pavilion',
-    missionFocus: 'ASD Parents & Kids',
+    label: 'Trauma & Stress Healing Kit',
+    sceneElementName: 'Quiet Eucalyptus Listening Room',
+    missionFocus: 'Mental Health & Trauma',
     unitAmountKes: 3500,
-    beneficiaryImpact: 'Supplies visual routine cards, weighted wrap & ear defenders.',
+    beneficiaryImpact: 'Supports trauma-informed listening hours, grounding guides & caregiver rest circles.',
     accentHex: '#256358',
   },
   {
@@ -645,10 +727,10 @@ export const TRANSPARENT_STEWARDSHIP_ALLOCATIONS: TransparentStewardshipItem[] =
   },
   {
     id: 'mental-rehab',
-    label: 'Mental Health & Rehab Access',
+    label: 'Mental Health, Trauma & Rehab Access',
     percent: 26,
     colorHex: '#256358',
-    detail: 'Licensed counsellor sessions, listening circles, and proximity rehabilitation referrals.',
+    detail: 'Trauma-informed counsellor conversations, nervous-system care, and proximity rehabilitation referrals.',
   },
   {
     id: 'refuge',
@@ -659,10 +741,10 @@ export const TRANSPARENT_STEWARDSHIP_ALLOCATIONS: TransparentStewardshipItem[] =
   },
   {
     id: 'asd',
-    label: 'ASD Family Toolkits & Workshops',
+    label: 'Special Needs Families & Elder Care Packs',
     percent: 12,
     colorHex: '#D4AF37',
-    detail: 'Sensory calm boxes, printed visual schedules, and monthly ASD parent coffee mornings.',
+    detail: 'Single-mother & family respite kits, elder blankets, and Ruiru maize flour, rice & sugar bundles.',
   },
   {
     id: 'ops',
@@ -689,7 +771,7 @@ export const KENYA_CARE_REGIONS: CareRegionNode[] = [
     mapX: 98,
     mapY: 162,
     safeRefugeActive: true,
-    highlightNote: 'Lakeside Wholeness outpatient rehab circles & ASD parent outreach.',
+    highlightNote: 'Lakeside Wholeness outpatient rehab circles & mental health listening outreach.',
   },
   {
     county: 'Nakuru',
@@ -701,19 +783,19 @@ export const KENYA_CARE_REGIONS: CareRegionNode[] = [
   },
   {
     county: 'Kiambu',
-    hubSubtitle: 'Highland Youth & Bridge Haven',
+    hubSubtitle: 'Ruiru Founding Circle & Highland Care (Est. 2025)',
     mapX: 215,
     mapY: 178,
     safeRefugeActive: true,
-    highlightNote: 'Tumaini Bridge Haven school kits & Maji Mazuri Youth Recovery Hub.',
+    highlightNote: 'Four-ward Ruiru elder blankets, Ruiru Boys food parcels & Christmas of Hope meals.',
   },
   {
     county: 'Nairobi',
-    hubSubtitle: 'Karen & Lang’ata Founding Sanctuary (Est. 2025)',
+    hubSubtitle: 'Nairobi Care Corridor & Hub Liaison',
     mapX: 222,
     mapY: 204,
     safeRefugeActive: true,
-    highlightNote: 'Primary Counselling Hub, Amani Gardens CSR visits & 24/7 Find My Home desk.',
+    highlightNote: 'Counselling & trauma desk, Amani Gardens CSR visits & 24/7 Find My Home desk.',
   },
   {
     county: 'Mombasa',

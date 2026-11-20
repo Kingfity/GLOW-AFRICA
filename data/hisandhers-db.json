@@ -1,25 +1,25 @@
 {
   "settings": {
-    "organisationName": "HIS AND HERS",
-    "tagline": "Care Family Home. Touching Lives. Connecting Families to What They Need.",
-    "heroHeadline": "A Care Family Home That Connects Everyone to Hope.",
-    "heroSubheadline": "HIS AND HERS is a vibrant community-based organization rooted in prayer, mental wellbeing, safe refuge, children’s home partnerships, rehabilitation support, and autism family care—uniting individuals, families, and organisations to touch lives together.",
-    "welcomeHeadline": "Where Individuals, Families & Partner Organisations Build Stronger Homes",
-    "welcomeBody": "Like a true care family home, HIS AND HERS connects people directly to what they need: corporate and group visits to verified children’s homes, mental health counselling to lighten heavy burdens, nearby rehabilitation centres for families in recovery, safe refuge from abuse, and practical ASD guidance for parents and kids.",
-    "prayerInvitation": "Whatever season your family or heart is walking through, you do not have to navigate it alone. We are here to listen, connect you to real care, and stand beside you.",
-    "closingStatement": "At HIS AND HERS, we are a care family home where every child is seen, every burden is shared, and families find clear pathways to healing.",
-    "primaryLocationLabel": "HIS AND HERS Care Family Hub · Nairobi",
-    "primaryAddress": "Karen & Lang’ata Care Coordination Hub (Directions Shared Upon Booking)",
-    "gatheringScheduleSummary": "Children’s Home Visits · Mental Health Circles · ASD Parent Care · Prayer",
+    "organisationName": "His & Hers Circle of Hope",
+    "tagline": "Rooted in Ruiru Since 2025 · Neighbours Walking Together in Practical Care & Hope.",
+    "heroHeadline": "A Community Circle Where Every Neighbour Is Seen and Held.",
+    "heroSubheadline": "Started in Ruiru, Kiambu County in 2025, His & Hers Circle of Hope is a Christian community-based organisation bringing neighbours, families, elders living alone, mental health and trauma care, rehabilitation pathways, and partner children’s homes together long after any single outreach day ends.",
+    "welcomeHeadline": "Where Neighbours, Families & Partner Homes Carry One Another Through",
+    "welcomeBody": "In Ruiru, an elder may quietly wonder what to cook for supper while a neighbour a few doors away has spare unga to share. We started His & Hers Circle of Hope so those neighbours meet—connecting households to mental health and trauma support, rehabilitation recovery partners, discreet safe refuge, children’s homes, and ongoing elder fellowship.",
+    "prayerInvitation": "Whether you come because you could use a hand or because you have one to offer, karibu sana. There is room for you in our circle.",
+    "closingStatement": "At His & Hers Circle of Hope, no older neighbour sits forgotten, no parent carrying heavy needs is left unheard, and every table leaves room for kindness.",
+    "primaryLocationLabel": "His & Hers Circle of Hope · Ruiru & Nairobi",
+    "primaryAddress": "Ruiru Wards, Kiambu County & Nairobi Outreach Corridor (Est. 2025)",
+    "gatheringScheduleSummary": "Elder Fellowship · Mental Health & Trauma · Children’s Homes · Safe Refuge",
     "contactEmail": "care@hisandhers.org",
     "contactPhone": "+254 700 000 000",
     "whatsappNumber": "254700000000",
-    "emergencyHotlineNote": "If you or a child is in immediate physical danger, please call your local police or national emergency hotline immediately before submitting an online request.",
+    "emergencyHotlineNote": "If you or a child is in immediate physical danger, please call 999 / 112, 1195 (GBV), or 116 (Childline) immediately before submitting an online request.",
     "instagramUrl": "https://instagram.com/hisandherscommunity",
     "facebookUrl": "https://facebook.com/hisandherscommunity",
     "youtubeUrl": "https://youtube.com/@hisandherscommunity",
-    "approvedGivingNote": "Stewardship, children’s home sponsorships, and rehabilitation aid are coordinated strictly through verified HIS AND HERS channels confirmed directly by our leadership team.",
-    "updatedAt": "2026-11-16T11:34:31.481Z"
+    "approvedGivingNote": "Stewardship, elder relief blankets, Ruiru Boys student provisions, and children’s home partnerships are coordinated strictly through verified His & Hers Circle of Hope channels.",
+    "updatedAt": "2026-11-19T13:36:33.762Z"
   },
   "announcements": [
     {
@@ -60,7 +60,12 @@
       "imageAlt": "Volunteers and children laughing and reading storybooks together in a sunlit children home courtyard",
       "institutionType": "Children’s Home",
       "regionGroup": "Nairobi",
-      "specialization": "Family-Style Residential Care & Reading"
+      "specialization": "Family-Style Residential Care & Reading",
+      "physicalAddress": "Karen / Lang’ata, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-2",
@@ -80,7 +85,12 @@
       "imageAlt": "Mentors and students seated around wooden tables with books in a warm classroom",
       "institutionType": "Children’s Home",
       "regionGroup": "Central",
-      "specialization": "Primary & Secondary Education Support"
+      "specialization": "Primary & Secondary Education Support",
+      "physicalAddress": "Thika / Ruiru, Ruiru Eastern Bypass & Thika Joytown / Kambui Corridor, Kiambu County",
+      "contactPhone": "+254 700 000 000",
+      "contactEmail": "care@hisandhers.org",
+      "websiteUrl": "https://kiambu.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-3",
@@ -100,7 +110,12 @@
       "imageAlt": "Care volunteers organizing fresh produce and care hampers in a sunny courtyard",
       "institutionType": "Children’s Home",
       "regionGroup": "Rift Valley",
-      "specialization": "Infant & Early Childhood Sanctuary"
+      "specialization": "Infant & Early Childhood Sanctuary",
+      "physicalAddress": "Milimani / Nakuru, Milimani Road, Near Nakuru Level 5 PGH Complex, Nakuru City",
+      "contactPhone": "+254 51 221 5516",
+      "contactEmail": "nakurucare@hisandhers.org",
+      "websiteUrl": "https://nakuru.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-4",
@@ -120,7 +135,12 @@
       "imageAlt": "Caregivers and visitors seated warmly in fellowship conversation",
       "institutionType": "Children’s Home",
       "regionGroup": "Coast",
-      "specialization": "Youth Life Skills & Coastal Care"
+      "specialization": "Youth Life Skills & Coastal Care",
+      "physicalAddress": "Nyali / Bamburi, Links Road, Nyali / Coast General Referral Wing, Mombasa",
+      "contactPhone": "+254 41 231 4201",
+      "contactEmail": "coastcare@hisandhers.org",
+      "websiteUrl": "https://www.mombasa.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-5",
@@ -140,7 +160,12 @@
       "acceptsIndividualGroups": true,
       "description": "One of Kenya’s historic child welfare homes running rescue care, community schooling, and dignified family reintegration programs.",
       "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
-      "imageAlt": "Children and community mentors reading under courtyard shade"
+      "imageAlt": "Children and community mentors reading under courtyard shade",
+      "physicalAddress": "Lang’ata Road, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-6",
@@ -160,7 +185,12 @@
       "acceptsIndividualGroups": true,
       "description": "Long-standing Nairobi residential care sanctuary sheltering abandoned and orphaned children in a warm family setting.",
       "imageUrl": "/src/assets/images/impact_community_outreach_1794821887071.jpg",
-      "imageAlt": "Community pantry baskets and learning kits sorted warmly"
+      "imageAlt": "Community pantry baskets and learning kits sorted warmly",
+      "physicalAddress": "South C / Muhoho Avenue, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-7",
@@ -180,7 +210,12 @@
       "acceptsIndividualGroups": true,
       "description": "Renowned care sanctuary combining loving home cottages, pediatric wellness, and academic support for vulnerable children.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Youth and mentors gathered around wooden learning tables"
+      "imageAlt": "Youth and mentors gathered around wooden learning tables",
+      "physicalAddress": "Dagoretti Road / Karen, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-8",
@@ -200,7 +235,12 @@
       "acceptsIndividualGroups": true,
       "description": "Multi-county sanctuary network offering emergency medical care and tender nursery care for rescued newborn babies across Kenya.",
       "imageUrl": "/src/assets/images/safe_home_refuge_1794823558780.jpg",
-      "imageAlt": "Quiet warm nursery and living room welcoming infants"
+      "imageAlt": "Quiet warm nursery and living room welcoming infants",
+      "physicalAddress": "Kilimani & Regional Hubs, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-9",
@@ -220,7 +260,12 @@
       "acceptsIndividualGroups": true,
       "description": "Established family-based cottage villages nurturing orphaned and vulnerable children across Nairobi, Mombasa, Eldoret, Kisumu, and Meru.",
       "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
-      "imageAlt": "Mentors and children sharing outdoor learning activities"
+      "imageAlt": "Mentors and children sharing outdoor learning activities",
+      "physicalAddress": "Eldoret & Nairobi Cottages, Nandi Road / Pioneer Estate & MTRH Precinct, Eldoret Town",
+      "contactPhone": "+254 53 203 3471",
+      "contactEmail": "eldoretcare@hisandhers.org",
+      "websiteUrl": "https://www.mtrh.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-10",
@@ -240,7 +285,12 @@
       "acceptsIndividualGroups": true,
       "description": "Supporting coastal children through mother-led family cottages, neighborhood strengthening, and youth career mentorship.",
       "imageUrl": "/src/assets/images/prayer_fellowship_circle_1794821886765.jpg",
-      "imageAlt": "Community group seated warmly during mentorship dialogue"
+      "imageAlt": "Community group seated warmly during mentorship dialogue",
+      "physicalAddress": "Mombasa North, Links Road, Nyali / Coast General Referral Wing, Mombasa",
+      "contactPhone": "+254 41 231 4201",
+      "contactEmail": "coastcare@hisandhers.org",
+      "websiteUrl": "https://www.mombasa.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-11",
@@ -260,7 +310,12 @@
       "acceptsIndividualGroups": true,
       "description": "Welcoming corporate teams, church circles, and student volunteers to support long-term child care and youth education around Lake Victoria.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Students and mentors working together at wooden desks"
+      "imageAlt": "Students and mentors working together at wooden desks",
+      "physicalAddress": "Milimani / Kisumu, Milimani & JOOTRH Kakamega Road Corridor, Kisumu City",
+      "contactPhone": "+254 57 202 3116",
+      "contactEmail": "kisumucare@hisandhers.org",
+      "websiteUrl": "https://kisumu.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-12",
@@ -280,7 +335,12 @@
       "acceptsIndividualGroups": true,
       "description": "Self-sustaining Eastern Kenya community village pairing orphaned children with caring grandparents, vocational farming, and green energy.",
       "imageUrl": "/src/assets/images/impact_community_outreach_1794821887071.jpg",
-      "imageAlt": "Fresh harvest baskets prepared by volunteers for community families"
+      "imageAlt": "Fresh harvest baskets prepared by volunteers for community families",
+      "physicalAddress": "Kwa Vonza / Kitui, Kwa Vonza Eco-Village & Kitui Referral Hospital Road, Kitui",
+      "contactPhone": "+254 44 442 2116",
+      "contactEmail": "kituicare@hisandhers.org",
+      "websiteUrl": "https://www.nyumbani.org",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-13",
@@ -300,7 +360,12 @@
       "acceptsIndividualGroups": true,
       "description": "Serving children across Nyeri, Kirinyaga, Murang’a, and Laikipia with warm residential care and structured weekend mentorship.",
       "imageUrl": "/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg",
-      "imageAlt": "Children seated together enjoying warm community meals outdoors"
+      "imageAlt": "Children seated together enjoying warm community meals outdoors",
+      "physicalAddress": "Nyeri Town, Kenyatta Road, Near Nyeri County Referral Hospital, Nyeri Town",
+      "contactPhone": "+254 61 203 2116",
+      "contactEmail": "nyericare@hisandhers.org",
+      "websiteUrl": "https://nyeri.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-14",
@@ -320,7 +385,12 @@
       "acceptsIndividualGroups": true,
       "description": "Partner children’s haven serving Kakamega, Vihiga, Bungoma, and Busia families with safe boarding, tutoring, and family reunification.",
       "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
-      "imageAlt": "Community helpers reading storybooks with young children"
+      "imageAlt": "Community helpers reading storybooks with young children",
+      "physicalAddress": "Kakamega / Bukura, Kakamega–Mumias Road, Bukura & County Referral Precinct, Kakamega",
+      "contactPhone": "+254 56 203 0116",
+      "contactEmail": "kakamegacare@hisandhers.org",
+      "websiteUrl": "https://kakamega.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-15",
@@ -340,7 +410,12 @@
       "acceptsIndividualGroups": true,
       "description": "Working alongside County Children’s Officers across Machakos, Makueni, and Kajiado to shelter and educate vulnerable children.",
       "imageUrl": "/src/assets/images/impact_community_outreach_1794821887071.jpg",
-      "imageAlt": "Fresh provisions and hampers sorted by community volunteers"
+      "imageAlt": "Fresh provisions and hampers sorted by community volunteers",
+      "physicalAddress": "Machakos / Athi River, Mwatu wa Ngoma Road, Near Machakos Level 5 Hospital, Machakos",
+      "contactPhone": "+254 44 202 1116",
+      "contactEmail": "machakoscare@hisandhers.org",
+      "websiteUrl": "https://machakos.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-16",
@@ -360,7 +435,12 @@
       "acceptsIndividualGroups": true,
       "description": "Community sanctuary supporting orphaned and pastoralist children across Garissa, Wajir, and Mandera with safe shelter and schooling.",
       "imageUrl": "/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg",
-      "imageAlt": "Community members sharing food hampers under acacia trees"
+      "imageAlt": "Community members sharing food hampers under acacia trees",
+      "physicalAddress": "Garissa Town, Kismayu Road, Near Garissa County Referral Hospital, Garissa Town",
+      "contactPhone": "+254 46 210 2116",
+      "contactEmail": "garissacare@hisandhers.org",
+      "websiteUrl": "https://garissa.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-17",
@@ -380,7 +460,12 @@
       "acceptsIndividualGroups": true,
       "description": "Northern Rift Valley haven providing safe boarding, nutritious meals, and secondary school pathways for girls and vulnerable youth.",
       "imageUrl": "/src/assets/images/prayer_fellowship_circle_1794821886765.jpg",
-      "imageAlt": "Caregivers and community visitors conversing warmly"
+      "imageAlt": "Caregivers and community visitors conversing warmly",
+      "physicalAddress": "Lodwar, Kitale–Lodwar Highway, Kanamkemer / Lodwar Town, Turkana County",
+      "contactPhone": "+254 54 210 116",
+      "contactEmail": "turkanacare@hisandhers.org",
+      "websiteUrl": "https://turkana.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "ch-18",
@@ -400,27 +485,37 @@
       "acceptsIndividualGroups": true,
       "description": "Family-centered cottages serving Meru, Tharaka-Nithi, and Embu communities with educational backing and youth transitions.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Students reading alongside volunteer mentors"
+      "imageAlt": "Students reading alongside volunteer mentors",
+      "physicalAddress": "Meru Town, Makutano–Nkubu Road, Meru Town & Igoji Mission Precinct, Meru",
+      "contactPhone": "+254 64 313 2116",
+      "contactEmail": "merucare@hisandhers.org",
+      "websiteUrl": "https://www.soskenya.org",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-1",
       "name": "Jacaranda Special School",
       "institutionType": "School for Differently Abled",
       "regionGroup": "Nairobi",
-      "specialization": "Autism (ASD), Down Syndrome & Intellectual Learning",
+      "specialization": "Inclusive Developmental Learning & Communication Support",
       "countyRegion": "Nairobi",
       "townArea": "Kilimani / Kileleshwa",
       "childrenAgeRange": "Ages 4 – 19 (Day & Boarding)",
       "currentNeeds": [
-        "Sensory Play Stations",
+        "Tactile Learning Stations",
         "Visual Communication Cards",
         "Occupational Therapy Mats"
       ],
       "acceptsCorporateTeams": true,
       "acceptsIndividualGroups": true,
-      "description": "Leading public special education school equipping autistic learners and students with Down syndrome or developmental delays for joyful independence.",
-      "imageUrl": "/src/assets/images/doc_asd_family_moment_1794832339166.jpg",
-      "imageAlt": "Parent and autistic child arranging wooden sensory blocks and picture schedules"
+      "description": "Leading public special education school equipping learners with developmental differences, Down syndrome, or communication support needs for joyful independence.",
+      "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
+      "imageAlt": "Mentors and students seated around wooden tables with learning kits in sunlit classrooms",
+      "physicalAddress": "Kilimani / Kileleshwa, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-2",
@@ -440,7 +535,12 @@
       "acceptsIndividualGroups": true,
       "description": "Historic Nairobi public school empowering deaf and hard-of-hearing learners through Kenyan Sign Language literacy, creative arts, and life skills.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Students learning actively with teachers around wooden tables"
+      "imageAlt": "Students learning actively with teachers around wooden tables",
+      "physicalAddress": "Bahati / Nairobi, Lang’ata / Ngong Road & Kilimani Support Corridor, Nairobi City",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.knh.or.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-3",
@@ -460,7 +560,12 @@
       "acceptsIndividualGroups": true,
       "description": "Premier Kenyan primary and secondary campus combining academics, physiotherapy, orthopedic care, and vocational confidence for physically differently abled learners.",
       "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
-      "imageAlt": "Volunteers collaborating warmly with students at a campus courtyard"
+      "imageAlt": "Volunteers collaborating warmly with students at a campus courtyard",
+      "physicalAddress": "Thika, Ruiru Eastern Bypass & Thika Joytown / Kambui Corridor, Kiambu County",
+      "contactPhone": "+254 700 000 000",
+      "contactEmail": "care@hisandhers.org",
+      "websiteUrl": "https://kiambu.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-4",
@@ -480,7 +585,12 @@
       "acceptsIndividualGroups": true,
       "description": "Kenya’s flagship national primary and high school for visually impaired learners—excelling in Braille literacy, music, athletics, and assistive coding.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Students engaged in guided reading and technology mentoring"
+      "imageAlt": "Students engaged in guided reading and technology mentoring",
+      "physicalAddress": "Thika, Ruiru Eastern Bypass & Thika Joytown / Kambui Corridor, Kiambu County",
+      "contactPhone": "+254 700 000 000",
+      "contactEmail": "care@hisandhers.org",
+      "websiteUrl": "https://kiambu.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-5",
@@ -500,7 +610,12 @@
       "acceptsIndividualGroups": true,
       "description": "Regional residential school celebrating deaf learners through Kenyan Sign Language mastery, drama, athletics, and practical vocational arts.",
       "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
-      "imageAlt": "Smiling students and mentors gathered outdoors with learning supplies"
+      "imageAlt": "Smiling students and mentors gathered outdoors with learning supplies",
+      "physicalAddress": "Githunguri / Kambui, Ruiru Eastern Bypass & Thika Joytown / Kambui Corridor, Kiambu County",
+      "contactPhone": "+254 700 000 000",
+      "contactEmail": "care@hisandhers.org",
+      "websiteUrl": "https://kiambu.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-6",
@@ -520,7 +635,12 @@
       "acceptsIndividualGroups": true,
       "description": "Renowned coastal campus providing Braille education, screen-reader digital labs, mobility training, and independent living preparation.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Mentors guiding coastal learners at classroom study desks"
+      "imageAlt": "Mentors guiding coastal learners at classroom study desks",
+      "physicalAddress": "Likoni, Links Road, Nyali / Coast General Referral Wing, Mombasa",
+      "contactPhone": "+254 41 231 4201",
+      "contactEmail": "coastcare@hisandhers.org",
+      "websiteUrl": "https://www.mombasa.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-7",
@@ -540,7 +660,12 @@
       "acceptsIndividualGroups": true,
       "description": "Barrier-free coastal national secondary school equipping students with mobility challenges for university, technical trades, and leadership.",
       "imageUrl": "/src/assets/images/prayer_fellowship_circle_1794821886765.jpg",
-      "imageAlt": "Students and facilitators sharing encouragement in a courtyard circle"
+      "imageAlt": "Students and facilitators sharing encouragement in a courtyard circle",
+      "physicalAddress": "Nyali / Mombasa, Links Road, Nyali / Coast General Referral Wing, Mombasa",
+      "contactPhone": "+254 41 231 4201",
+      "contactEmail": "coastcare@hisandhers.org",
+      "websiteUrl": "https://www.mombasa.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-8",
@@ -559,8 +684,13 @@
       "acceptsCorporateTeams": true,
       "acceptsIndividualGroups": true,
       "description": "Coastal centre of excellence welcoming learners with hearing, visual, physical, and developmental differences under dedicated specialist care.",
-      "imageUrl": "/src/assets/images/doc_asd_family_moment_1794832339166.jpg",
-      "imageAlt": "Caregiver and child smiling while engaging with tactile wooden blocks"
+      "imageUrl": "/src/assets/images/trauma_calm_listening_1795094868840.jpg",
+      "imageAlt": "Caregiver and child smiling while engaging with tactile wooden blocks",
+      "physicalAddress": "Mtwapa, Mombasa–Malindi Highway, Mtwapa / Kilifi County Referral Wing, Kilifi",
+      "contactPhone": "+254 41 752 2116",
+      "contactEmail": "kilificare@hisandhers.org",
+      "websiteUrl": "https://kilifi.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-9",
@@ -580,7 +710,12 @@
       "acceptsIndividualGroups": true,
       "description": "Historic Western-Nyanza boarding campus dedicated to visual-impairment excellence, mobility orientation, and accessible ICT training.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Learners seated warmly with mentors during study hours"
+      "imageAlt": "Learners seated warmly with mentors during study hours",
+      "physicalAddress": "Aluor / Gem, Kisumu–Busia Road, Aluor / Siaya Referral Hospital Precinct, Siaya",
+      "contactPhone": "+254 57 321 116",
+      "contactEmail": "siayacare@hisandhers.org",
+      "websiteUrl": "https://siaya.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-10",
@@ -600,7 +735,12 @@
       "acceptsIndividualGroups": true,
       "description": "Sister primary and national girls secondary campuses empowering deaf learners across Western Kenya through academic and vocational mastery.",
       "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
-      "imageAlt": "Students reading storybooks alongside community visitors"
+      "imageAlt": "Students reading storybooks alongside community visitors",
+      "physicalAddress": "Mumias, Kakamega–Mumias Road, Bukura & County Referral Precinct, Kakamega",
+      "contactPhone": "+254 56 203 0116",
+      "contactEmail": "kakamegacare@hisandhers.org",
+      "websiteUrl": "https://kakamega.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-11",
@@ -620,7 +760,12 @@
       "acceptsIndividualGroups": true,
       "description": "Serving learners across Nandi, Uasin Gishu, and the wider North Rift with deaf-friendly instruction and hands-on skills training.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Youth mentored in small learning circles around tables"
+      "imageAlt": "Youth mentored in small learning circles around tables",
+      "physicalAddress": "Kapsabet, Kapsabet–Chavakali Road, Near Kapsabet Referral Hospital, Kapsabet",
+      "contactPhone": "+254 53 525 116",
+      "contactEmail": "nandicare@hisandhers.org",
+      "websiteUrl": "https://nandi.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-12",
@@ -640,7 +785,12 @@
       "acceptsIndividualGroups": true,
       "description": "Regional secondary sanctuary helping deaf teenagers achieve KCSE qualifications, arts confidence, and career mentorship.",
       "imageUrl": "/src/assets/images/prayer_fellowship_circle_1794821886765.jpg",
-      "imageAlt": "Students and teachers gathered together in supportive dialogue"
+      "imageAlt": "Students and teachers gathered together in supportive dialogue",
+      "physicalAddress": "Rongo / Kuja, Rongo–Isebania Highway, Kuja & Migori Referral Block, Migori",
+      "contactPhone": "+254 59 201 116",
+      "contactEmail": "migoricare@hisandhers.org",
+      "websiteUrl": "https://migori.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-13",
@@ -659,8 +809,13 @@
       "acceptsCorporateTeams": true,
       "acceptsIndividualGroups": true,
       "description": "Nyanza residential school supporting physically differently abled children alongside inclusive cerebral palsy therapy and recreation.",
-      "imageUrl": "/src/assets/images/doc_asd_family_moment_1794832339166.jpg",
-      "imageAlt": "Caregiver and child playing with tactile learning toys"
+      "imageUrl": "/src/assets/images/trauma_calm_listening_1795094868840.jpg",
+      "imageAlt": "Caregiver and child playing with tactile learning toys",
+      "physicalAddress": "Kisumu Town, Milimani & JOOTRH Kakamega Road Corridor, Kisumu City",
+      "contactPhone": "+254 57 202 3116",
+      "contactEmail": "kisumucare@hisandhers.org",
+      "websiteUrl": "https://kisumu.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
     },
     {
       "id": "sch-14",
@@ -680,7 +835,62 @@
       "acceptsIndividualGroups": true,
       "description": "Mt. Kenya East residential special campus nurturing blind and low-vision students with Braille literacy, music, and digital tools.",
       "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
-      "imageAlt": "Mentors and students collaborating at study tables"
+      "imageAlt": "Mentors and students collaborating at study tables",
+      "physicalAddress": "Igoji / Meru, Makutano–Nkubu Road, Meru Town & Igoji Mission Precinct, Meru",
+      "contactPhone": "+254 64 313 2116",
+      "contactEmail": "merucare@hisandhers.org",
+      "websiteUrl": "https://www.soskenya.org",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (By Safeguarded Appointment)"
+    },
+    {
+      "id": "sch-15",
+      "name": "Kabarnet School for the Deaf & Blind",
+      "institutionType": "School for Differently Abled",
+      "regionGroup": "Rift Valley",
+      "specialization": "Hearing & Visual Impairment Inclusive Boarding",
+      "countyRegion": "Baringo",
+      "townArea": "Kabarnet",
+      "physicalAddress": "Hospital Hill Road, Kabarnet Town, Baringo County",
+      "contactPhone": "+254 53 221 116",
+      "contactEmail": "baringocare@hisandhers.org",
+      "websiteUrl": "https://baringo.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00 (Prior Safeguard Clearance)",
+      "childrenAgeRange": "Primary & Junior Secondary",
+      "currentNeeds": [
+        "Braille Slates",
+        "Solar Lanterns",
+        "Warm Blankets"
+      ],
+      "acceptsCorporateTeams": true,
+      "acceptsIndividualGroups": true,
+      "description": "Regional inclusive residential school equipping hearing- and visually-impaired learners across Baringo, Elgeyo-Marakwet, and Samburu.",
+      "imageUrl": "/src/assets/images/impact_education_youth_1794821888567.jpg",
+      "imageAlt": "Mentors and students collaborating warmly around study tables"
+    },
+    {
+      "id": "sch-16",
+      "name": "Rev. Muhoro Secondary School for the Deaf",
+      "institutionType": "School for Differently Abled",
+      "regionGroup": "Central",
+      "specialization": "Deaf Secondary & Technical Trades",
+      "countyRegion": "Nyeri",
+      "townArea": "Mukurweini / Nyeri",
+      "physicalAddress": "Mukurweini–Nyeri Corridor, Nyeri County",
+      "contactPhone": "+254 61 203 2116",
+      "contactEmail": "nyericare@hisandhers.org",
+      "websiteUrl": "https://nyeri.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:00",
+      "childrenAgeRange": "Secondary Youth",
+      "currentNeeds": [
+        "Workshop Toolkits",
+        "Sign-Language Science Posters",
+        "Winter Sweaters"
+      ],
+      "acceptsCorporateTeams": true,
+      "acceptsIndividualGroups": true,
+      "description": "Leading national secondary campus in Central Kenya empowering deaf students through academics and vocational leadership.",
+      "imageUrl": "/src/assets/images/doc_childrens_home_csr_1794832339445.jpg",
+      "imageAlt": "Learners and volunteers collaborating in a courtyard"
     }
   ],
   "rehabFacilities": [
@@ -696,7 +906,12 @@
       "acceptsCommunityReferrals": true,
       "summary": "Dignified medical detox supervision, evidence-based addiction counselling, and family reconciliation workshops in a quiet garden campus.",
       "imageUrl": "/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg",
-      "imageAlt": "Sunlit stone garden pathway and timber chairs at a peaceful rehabilitation centre"
+      "imageAlt": "Sunlit stone garden pathway and timber chairs at a peaceful rehabilitation centre",
+      "physicalAddress": "Karen Hardy Road off Ngong Road, Nairobi",
+      "contactPhone": "+254 20 272 6300",
+      "contactEmail": "nairobicare@hisandhers.org",
+      "websiteUrl": "https://www.nacada.go.ke",
+      "visitingHours": "Mon – Sun · 08:30 – 17:30"
     },
     {
       "id": "reh-2",
@@ -710,7 +925,12 @@
       "acceptsCommunityReferrals": true,
       "summary": "Dedicated youth behavioural rehabilitation, digital & substance recovery, parent coaching, and vocational reintegration close to home.",
       "imageUrl": "/src/assets/images/counselling_safe_space_1794823558841.jpg",
-      "imageAlt": "Warm counselling room with soft daylight and wooden armchairs"
+      "imageAlt": "Warm counselling room with soft daylight and wooden armchairs",
+      "physicalAddress": "Ruiru Eastern Bypass & Kikuyu Road Corridor, Kiambu County",
+      "contactPhone": "+254 700 000 000",
+      "contactEmail": "care@hisandhers.org",
+      "websiteUrl": "https://kiambu.go.ke",
+      "visitingHours": "Mon – Sat · 08:30 – 17:00"
     },
     {
       "id": "reh-3",
@@ -724,7 +944,12 @@
       "acceptsCommunityReferrals": true,
       "summary": "Trauma-informed inpatient and day-program care supporting survivors of acute crisis, grief, burnout, and emotional dependency.",
       "imageUrl": "/src/assets/images/safe_home_refuge_1794823558780.jpg",
-      "imageAlt": "Peaceful residential lounge offering calm refuge and supportive care"
+      "imageAlt": "Peaceful residential lounge offering calm refuge and supportive care",
+      "physicalAddress": "Milimani Road, Near Nakuru Level 5 PGH Precinct, Nakuru",
+      "contactPhone": "+254 51 221 5516",
+      "contactEmail": "nakurucare@hisandhers.org",
+      "websiteUrl": "https://nakuru.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 17:00"
     },
     {
       "id": "reh-4",
@@ -738,7 +963,12 @@
       "acceptsCommunityReferrals": true,
       "summary": "Accessible outpatient family rehabilitation, dual-diagnosis counselling, and weekly community recovery support circles around the lake region.",
       "imageUrl": "/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg",
-      "imageAlt": "Tranquil courtyard garden at a community family restoration clinic"
+      "imageAlt": "Tranquil courtyard garden at a community family restoration clinic",
+      "physicalAddress": "Milimani Avenue & JOOTRH Kakamega Road Wing, Kisumu",
+      "contactPhone": "+254 57 202 3116",
+      "contactEmail": "kisumucare@hisandhers.org",
+      "websiteUrl": "https://kisumu.go.ke",
+      "visitingHours": "Mon – Sat · 08:30 – 18:00"
     },
     {
       "id": "reh-5",
@@ -752,56 +982,137 @@
       "acceptsCommunityReferrals": true,
       "summary": "Coastal medical stabilisation, compassionate family therapy, and structured sober-living reintegration pathways.",
       "imageUrl": "/src/assets/images/counselling_safe_space_1794823558841.jpg",
-      "imageAlt": "Bright indoor therapy room welcoming families seeking recovery care"
+      "imageAlt": "Bright indoor therapy room welcoming families seeking recovery care",
+      "physicalAddress": "Links Road, Nyali & Coast General Referral Wing, Mombasa",
+      "contactPhone": "+254 41 231 4201",
+      "contactEmail": "coastcare@hisandhers.org",
+      "websiteUrl": "https://www.mombasa.go.ke",
+      "visitingHours": "24/7 Stabilization Intake · Daily Family Hours"
+    },
+    {
+      "id": "reh-6",
+      "name": "Eldoret MTRH & North Rift Restoration Wing",
+      "focusType": "Substance & Addiction Recovery",
+      "careFormat": "Detox & Medical Recovery",
+      "countyRegion": "Uasin Gishu",
+      "townArea": "Eldoret",
+      "physicalAddress": "Nandi Road, Moi Teaching & Referral Precinct, Eldoret",
+      "contactPhone": "+254 53 203 3471",
+      "contactEmail": "eldoretcare@hisandhers.org",
+      "websiteUrl": "https://www.mtrh.go.ke",
+      "visitingHours": "Mon – Sun · 08:00 – 17:00",
+      "lat": 0.5143,
+      "lng": 35.2698,
+      "acceptsCommunityReferrals": true,
+      "summary": "Medical detox, psychiatric accompaniment, and family restoration bridging Uasin Gishu, Nandi, Trans-Nzoia, and Turkana.",
+      "imageUrl": "/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg",
+      "imageAlt": "Calm sunlit courtyard at Eldoret community recovery partner"
+    },
+    {
+      "id": "reh-7",
+      "name": "Nyeri Highland Peace & Recovery Centre",
+      "focusType": "Family & Holistic Care",
+      "careFormat": "Residential & Outpatient",
+      "countyRegion": "Nyeri",
+      "townArea": "Nyeri Town",
+      "physicalAddress": "Kenyatta Road, Near Nyeri County Referral Hospital, Nyeri",
+      "contactPhone": "+254 61 203 2116",
+      "contactEmail": "nyericare@hisandhers.org",
+      "websiteUrl": "https://nyeri.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 17:00",
+      "lat": -0.4201,
+      "lng": 36.9476,
+      "acceptsCommunityReferrals": true,
+      "summary": "Calm Mt. Kenya residential and outpatient alcohol & stress recovery centre guiding families across Nyeri, Kirinyaga, and Laikipia.",
+      "imageUrl": "/src/assets/images/counselling_safe_space_1794823558841.jpg",
+      "imageAlt": "Quiet wood-lined counselling lounge welcoming highland families"
+    },
+    {
+      "id": "reh-8",
+      "name": "Meru & Eastern Family Renewal Clinic",
+      "focusType": "Youth & Adolescent Restoration",
+      "careFormat": "Outpatient Counselling",
+      "countyRegion": "Meru",
+      "townArea": "Meru Town",
+      "physicalAddress": "Makutano–Nkubu Road, Meru County Referral Wing, Meru",
+      "contactPhone": "+254 64 313 2116",
+      "contactEmail": "merucare@hisandhers.org",
+      "websiteUrl": "https://www.nacada.go.ke",
+      "visitingHours": "Mon – Fri · 08:30 – 17:00",
+      "lat": 0.0463,
+      "lng": 37.6559,
+      "acceptsCommunityReferrals": true,
+      "summary": "Outpatient counselling, peer sobriety mentorship, and parent guidance serving Meru, Tharaka-Nithi, Embu, and Isiolo.",
+      "imageUrl": "/src/assets/images/doc_rehab_recovery_garden_1794832339842.jpg",
+      "imageAlt": "Garden courtyard supporting Eastern Kenya recovery visits"
+    },
+    {
+      "id": "reh-9",
+      "name": "Kakamega Western Sobriety & Counselling Bridge",
+      "focusType": "Family & Holistic Care",
+      "careFormat": "Outpatient Counselling",
+      "countyRegion": "Kakamega",
+      "townArea": "Kakamega Town",
+      "physicalAddress": "Kisumu–Kakamega Road, Opposite Kakamega PGH, Kakamega",
+      "contactPhone": "+254 56 203 0116",
+      "contactEmail": "kakamegacare@hisandhers.org",
+      "websiteUrl": "https://kakamega.go.ke",
+      "visitingHours": "Mon – Sat · 09:00 – 16:30",
+      "lat": 0.2827,
+      "lng": 34.7519,
+      "acceptsCommunityReferrals": true,
+      "summary": "Community peer circles, pastoral family counselling, and detox referrals serving Kakamega, Bungoma, Vihiga, and Busia.",
+      "imageUrl": "/src/assets/images/safe_home_refuge_1794823558780.jpg",
+      "imageAlt": "Warm sunlit meeting lounge for Western Kenya recovery families"
     }
   ],
   "asdGuides": [
     {
-      "id": "asd-1",
-      "pillar": "Sensory-Friendly Home",
-      "title": "Creating a Calm Sensory Corner at Home",
-      "audienceTag": "Parents & Kids · Easy Daily Setup",
-      "summary": "Autistic children often experience lights, loud echoes, and clutter more intensely. A predictable low-stimulation corner helps their nervous system reset gently.",
+      "id": "mh-1",
+      "pillar": "Nervous System & Trauma",
+      "title": "Grounding the Body When Old Trauma Feels Present",
+      "audienceTag": "Adults & Survivors · Body-First Calm",
+      "summary": "Unresolved shock and long-term stress live in the body’s alarm system—causing tight chests, jumpiness, or sudden numbness long after a crisis ends.",
       "practicalSteps": [
-        "Choose a quiet corner with soft natural light or warm lamp lighting instead of harsh overhead bulbs.",
-        "Keep a familiar basket of comforting textures (weighted blanket, soft cushion, fidget toy, or noise-cancelling ear defenders).",
-        "Never use the calm corner as punishment—introduce it when your child is happy so it feels like a safe harbour."
+        "Press both feet flat against the floor and notice the solid weight of the chair supporting your back.",
+        "Slowly look around the room and name three everyday objects aloud to signal to your brain that today is safe.",
+        "Place one warm hand over your breastbone or arm and lengthen your exhale twice as long as your inhale."
       ]
     },
     {
-      "id": "asd-2",
-      "pillar": "Calm Overwhelm & Meltdowns",
-      "title": "Understanding Meltdowns vs. Tantrums With Love",
-      "audienceTag": "Parents & Caregivers · Crisis Moments",
-      "summary": "A meltdown is sensory or emotional overload—not bad behaviour. Lowering demands and staying calm helps your child feel safe faster.",
+      "id": "mh-2",
+      "pillar": "Stress, Panic & Sleep",
+      "title": "Interrupting Evening Overwhelm & Spiralling Thoughts",
+      "audienceTag": "Youth & Working Adults · Rest Reset",
+      "summary": "Constant worry over bills, work, or unsafe nights keeps cortisol elevated until sleep refuses to come. Gentle evening boundaries help the mind lay down its load.",
       "practicalSteps": [
-        "Speak softly using short, calm sentences (or pause talking altogether while ensuring physical safety).",
-        "Reduce triggers right away: dim bright lights, turn off loud TVs, and give breathing space without lecturing.",
-        "Wait until after your child is fully settled to reconnect with water, a hug (if welcomed), or a gentle visual check-in."
+        "Write tomorrow’s three non-negotiable concerns onto paper 45 minutes before bed so you do not rehearse them in the dark.",
+        "Rinse wrists with cool water or sip warm herbal tea away from breaking-news feeds and tense group chats.",
+        "Repeat the slow 4-4-6 cadence for five rounds while dropping your shoulders down from your ears."
       ]
     },
     {
-      "id": "asd-3",
-      "pillar": "Visual Routines & Speech",
-      "title": "Using Picture Schedules & Gentle Transitions",
-      "audienceTag": "Daily Living · Communication",
-      "summary": "Knowing what happens next reduces anxiety. Simple visual cards and 5-minute countdown warnings make mornings, meals, and bedtime smoother.",
+      "id": "mh-3",
+      "pillar": "Caregiver & Silent Burdens",
+      "title": "Sitting Beside Carers Before Burnout Takes Over",
+      "audienceTag": "Parents, Guardians & Elders · Steady Care",
+      "summary": "Mothers, fathers, grandparents, and relatives caring for chronically ill elders or children with high needs rarely get asked: “And how are you doing?”",
       "practicalSteps": [
-        "Place 4–5 simple picture or drawn cards in order for key routines (Wake Up → Brush Teeth → Breakfast → School).",
-        "Give clear countdown warnings before stopping play (“5 more minutes with blocks, then bath time”).",
-        "Celebrate all communication—speech, pointing, picture exchange, gestures, or typing are all valid voices."
+        "Name your exhaustion without guilt—caring faithfully does not mean pretending you have endless energy.",
+        "Ask one trusted neighbour or ward prayer partner to hold a 30-minute practical errand or meal drop once a week.",
+        "Connect with our Mental Health & Trauma desk or Home Visits circle for an unhurried listening cup of tea."
       ]
     },
     {
-      "id": "asd-4",
-      "pillar": "Siblings, School & Faith",
-      "title": "Helping Siblings, Relatives & Communities Understand",
-      "audienceTag": "Family & Community Inclusion",
-      "summary": "Extended family and community spaces thrive when people learn patience, clear sensory kindness, and joy in every child’s unique strengths.",
+      "id": "mh-4",
+      "pillar": "Grief, Faith & Belonging",
+      "title": "Walking Slowly Through Grief, Betrayal & Honest Prayer",
+      "audienceTag": "Community Circles · Ruiru & Kenya",
+      "summary": "Faith never demands fake smiles when your heart is breaking. Across our circle, grief is met with patience, shared tears, practical soup or unga, and quiet presence.",
       "practicalSteps": [
-        "Explain autism to siblings simply: “Their brain notices sounds and feelings extra strongly, so quiet kindness helps them shine.”",
-        "Share a short one-page “How I Like to Be Greeted” note with teachers, Sunday caregivers, and relatives.",
-        "Build around your child’s special interests (trains, music, drawing, patterns)—they are wonderful bridges to joy and learning."
+        "Give yourself permission to step away from loud advice that minimizes real heartbreak or loss.",
+        "Stay anchored to one honest weekly rhythm—a shared meal, a ward prayer walk, or a confidential call.",
+        "Reach out to our Helpline or Administrators & Help Desk so someone walks beside you past outreach day."
       ]
     }
   ],
@@ -844,21 +1155,21 @@
     },
     {
       "id": "imp-3",
-      "slug": "asd-parent-and-family-compassion-workshop",
-      "title": "ASD Parents & Caregivers Support Gathering",
+      "slug": "ruiru-four-ward-walk-and-student-care",
+      "title": "Ruiru Four-Ward Walk, Elder Blankets & Ruiru Boys Student Parcels",
       "category": "Acts of Compassion",
-      "dateLabel": "August 2025",
-      "locationLabel": "HIS AND HERS Care Family Hub",
-      "summary": "A sensory-friendly afternoon empowering parents of autistic children with visual routine tools, calm regulation tips, and peer solidarity.",
-      "whatWasDone": "Occupational therapists, parents, and community volunteers co-hosted an interactive sensory toolkit workshop while caring warmly for children in a calm adjoining playroom.",
-      "whyItMattered": "Raising a neurodivergent child can feel isolating without practical community understanding. Sharing real tools restores confidence and joy.",
-      "whoItServed": "Parents, guardians, siblings, and children on the autism spectrum.",
-      "whatGlowHopedToAchieve": "To build a warm, stigma-free community where ASD families feel celebrated and supported.",
-      "documentedStory": "Parents crafted custom picture schedules over tea while children explored wooden sensory puzzles in a gentle daylight room.",
-      "imageUrl": "/src/assets/images/doc_asd_family_moment_1794832339166.jpg",
-      "imageAlt": "Parent and young autistic child playing calmly with colorful wooden blocks and picture cards",
+      "dateLabel": "Ongoing · 2026",
+      "locationLabel": "Four Wards Across Ruiru, Kiambu County",
+      "summary": "Convened by Nancy Kariuki and the GLOW Prayer Movement alongside well-wishers—walking four Ruiru wards in prayer while gathering blankets for elders and maize flour, rice, and sugar for student homes at Ruiru Boys.",
+      "whatWasDone": "Neighbours walked and prayed together across four Ruiru wards, delivering thick warm blankets directly to older residents living alone and sharing bags of maize flour, rice, sugar, lunch, and encouragement at Ruiru Boys student homes.",
+      "whyItMattered": "Compassion stays alive when outreach becomes steady relationship—ensuring elders know whom to call on cold nights and students hear sincere encouragement over a shared meal.",
+      "whoItServed": "Older neighbours across four Ruiru wards and boarding student households at Ruiru Boys.",
+      "whatGlowHopedToAchieve": "To weave prayer and practical neighbourliness into an ongoing circle leading straight into Christmas of Hope.",
+      "documentedStory": "After walking and praying along dusty morning roads, conveners and friends shared an unhurried meal at Ruiru Boys, exchanging heartfelt words of encouragement.",
+      "imageUrl": "/src/assets/images/ruiru_elder_outreach_1795094869017.jpg",
+      "imageAlt": "Warm blankets, maize flour, and sugar carried thoughtfully to a smiling elder neighbour on a stone veranda in Ruiru",
       "featured": true,
-      "createdAt": "2025-08-22T10:00:00.000Z"
+      "createdAt": "2026-04-12T10:00:00.000Z"
     },
     {
       "id": "imp-4",
@@ -883,17 +1194,17 @@
     {
       "id": "evt-nov28",
       "slug": "november-28-thanksgiving-feast-and-early-christmas-relief",
-      "title": "November 28 Thanksgiving Feast & Early Christmas Relief Initiative",
+      "title": "Nov 28 Thanksgiving & Christmas of Hope Elder Feast",
       "category": "Community Outreach",
       "dateISO": "2026-11-28",
       "timeLabel": "10:00 – 16:00",
-      "venue": "47-County Community Tables & Karen Hub Courtyard",
-      "summary": "A joyful Thanksgiving Feast and Early Christmas outreach feeding families across communities and gifting small bundles of relief tokens to cushion hard economic times.",
-      "description": "On 28 November, HIS AND HERS hosts warm outdoor thanksgiving tables stocked with freshly prepared community meals alongside practical relief token bundles (essential grain staples, soap, school notebooks, and direct family vouchers) designed with dignity to cushion households heading into the festive season.",
+      "venue": "Ruiru Community Tables & 47-County Care Corridors",
+      "summary": "Sharing a unhurried Christmas of Hope meal with our elders, listening to their stories, feeding families, and packing take-home unga, rice, sugar, and relief token bundles.",
+      "description": "Preparing for Christmas of Hope on 28 November, His & Hers Circle of Hope invites neighbours, conveners, and well-wishers to sit beside our elders for a warm feast, hear their stories with unhurried respect, and pack nutritious take-home food and relief token bundles to cushion households through hard times.",
       "registrationOpen": true,
-      "registrationNote": "Everyone is welcome to dine, volunteer, or sponsor relief token bundles for families across all 47 counties.",
+      "registrationNote": "Karibu sana: join to share a table, listen to elders’ stories, volunteer, or sponsor take-home food bundles.",
       "imageUrl": "/src/assets/images/thanksgiving_christmas_feast_1794910602331.jpg",
-      "imageAlt": "Families and children seated joyfully at a sunlit community Thanksgiving feast beside neatly tied relief bundles",
+      "imageAlt": "Families and elders seated joyfully at a sunlit community Thanksgiving feast beside neatly tied relief bundles",
       "featured": true,
       "createdAt": "2026-11-17T10:25:17.553Z"
     },
@@ -916,18 +1227,18 @@
     },
     {
       "id": "evt-2",
-      "slug": "asd-parents-and-kids-sensory-play-morning",
-      "title": "ASD Parents Coffee & Sensory-Friendly Kids Morning",
-      "category": "ASD Family Gatherings",
+      "slug": "trauma-and-stress-listening-and-grounding-evening",
+      "title": "Calm After the Storm: Trauma & Stress Listening Evening",
+      "category": "Trauma & Stress Circles",
       "dateISO": "2026-12-05",
       "timeLabel": "10:00 – 12:30",
-      "venue": "HIS AND HERS Care Family Hub (Quiet Garden Room)",
-      "summary": "A calm, welcoming morning for parents raising children on the autism spectrum—featuring visual routine swaps, practical tips, and gentle sensory play.",
-      "description": "No shushing, no judgement. Parents connect with peers and occupational therapy mentors while children enjoy soft lighting, wooden sensory stations, and quiet corner activities.",
+      "venue": "His & Hers Circle of Hope (Ruiru & Karen Quiet Listening Rooms)",
+      "summary": "A calm, confidential morning for neighbours carrying chronic stress, anxiety, caregiver exhaustion, or trauma memories—with nervous-system grounding tools and warm listening.",
+      "description": "No shushing, no clinical coldness. Visitors sip warm tea beside peer companions and trauma-informed listeners, practice calm breathing anchors, and leave with practical weekly care connections.",
       "registrationOpen": true,
-      "registrationNote": "Free entry; let us know your child’s sensory preferences when registering.",
-      "imageUrl": "/src/assets/images/doc_asd_family_moment_1794832339166.jpg",
-      "imageAlt": "Parent and young child exploring sensory blocks and routine cards",
+      "registrationNote": "Free community entry; feel free to come quietly or simply sit and listen.",
+      "imageUrl": "/src/assets/images/trauma_calm_listening_1795094868840.jpg",
+      "imageAlt": "Two adults seated peacefully with warm tea in a quiet, sunlit listening room",
       "featured": true,
       "createdAt": "2026-11-16T11:34:31.481Z"
     },
@@ -977,7 +1288,7 @@
       "description": "Join neighbours, safeguarding volunteers, and faith companions for gentle worship, community safeguarding awareness, and private one-on-one support stations.",
       "registrationOpen": true,
       "registrationNote": "Open to individuals, families, and community partner teams.",
-      "imageUrl": "/src/assets/images/doc_worship_gathering_1794832340911.jpg",
+      "imageUrl": "/src/assets/images/ruiru_fellowship_courtyard_1795102206499.jpg",
       "imageAlt": "Community gathered together in warmth, hope, and fellowship",
       "featured": false,
       "createdAt": "2026-11-16T13:32:25.639Z"
@@ -1000,10 +1311,10 @@
       "contributorName": "Mwangaza Wellness Group",
       "region": "Kiambu",
       "tierId": "sensory",
-      "tierLabel": "ASD Sensory Calm Kit",
+      "tierLabel": "Trauma & Stress Healing Kit",
       "units": 3,
       "amountKes": 10500,
-      "encouragementNote": "Standing beside autistic children and their dedicated parents.",
+      "encouragementNote": "Standing beside neighbours carrying chronic stress, trauma, and silent burdens.",
       "createdAt": "2026-01-19T14:20:00.000Z"
     },
     {
@@ -1040,6 +1351,134 @@
       "createdAt": "2026-08-21T08:10:00.000Z"
     }
   ],
+  "administrators": [
+    {
+      "id": "adm-nancy",
+      "deskCode": "Convener 01",
+      "fullName": "Nancy Kariuki",
+      "roleTitle": "Lead Convener & Founding Steward",
+      "department": "Ruiru Four-Ward & Circle Stewardship",
+      "status": "Active",
+      "wardLocation": "Ruiru Founding Hub, Kiambu County",
+      "officeHours": "Mon – Sat · 09:00 – 17:00",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Guiding His & Hers Circle of Hope since its 2025 founding in Ruiru—walking alongside elders living alone, Ruiru Boys student homes, and families in quiet need.",
+      "routingHref": "/about",
+      "routingLabel": "Read Our Origin Story",
+      "accentHex": "#7A5A10"
+    },
+    {
+      "id": "adm-glow",
+      "deskCode": "Partner Desk",
+      "fullName": "GLOW Prayer Movement & Well-Wishers",
+      "roleTitle": "Intercessory & Ward Mobilisation Lead",
+      "department": "Prayer Walks & Blanket / Staples Drives",
+      "status": "Active",
+      "wardLocation": "Four Wards Across Ruiru & Kiambu",
+      "officeHours": "Wed & Sat Circles + Open Line",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Convening prayer walks across Ruiru wards, mobilising warm blankets for elders and staples for Ruiru Boys, and hosting Christmas of Hope tables.",
+      "routingHref": "/prayer-worship",
+      "routingLabel": "Visit Prayer & Worship",
+      "accentHex": "#3B155F"
+    },
+    {
+      "id": "adm-desk-1",
+      "deskCode": "Desk 01",
+      "fullName": "Administrator Particulars Updating",
+      "roleTitle": "Programmes & Children’s Homes Coordinator",
+      "department": "Homes, Inclusive Schools & Ward Outreach",
+      "status": "Awaiting Staff Particulars",
+      "wardLocation": "Ruiru & 47-County Partner Desk",
+      "officeHours": "Mon – Fri · 08:30 – 16:30",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Coordinating Children’s Home & Inclusive School visits across all 47 counties, CSR team briefings, elders home checks, and maize flour drives.",
+      "routingHref": "/home-visits",
+      "routingLabel": "Children’s Homes & Schools",
+      "accentHex": "#C2593F"
+    },
+    {
+      "id": "adm-desk-2",
+      "deskCode": "Desk 02",
+      "fullName": "Coordinator Particulars Updating",
+      "roleTitle": "Mental Health, Trauma & Stress Healing Desk",
+      "department": "Nervous System Care, Stress & Trauma Support",
+      "status": "Awaiting Staff Particulars",
+      "wardLocation": "Ruiru & Karen Trauma-Informed Listening Rooms",
+      "officeHours": "Tue – Sat · 09:00 – 18:00",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Providing trauma-informed listening, chronic stress and panic grounding tools, caregiver burnout recovery, and confidential counselling callbacks.",
+      "routingHref": "/mental-health",
+      "routingLabel": "Open Mental Health & Trauma Desk",
+      "accentHex": "#256358"
+    },
+    {
+      "id": "adm-desk-3",
+      "deskCode": "Desk 03",
+      "fullName": "Coordinator Particulars Updating",
+      "roleTitle": "Christmas of Hope & Elders Logistics Desk",
+      "department": "Nov 28 Feast & Take-Home Food Parcels",
+      "status": "Awaiting Staff Particulars",
+      "wardLocation": "Ruiru Community Tables & Nairobi Corridor",
+      "officeHours": "Mon – Sat · 09:00 – 17:00",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Organising shared elder tables, Ruiru Boys student hospitality, and take-home unga, rice, sugar, and relief token bundles.",
+      "routingHref": "/events",
+      "routingLabel": "View Upcoming Gatherings",
+      "accentHex": "#7A5A10"
+    },
+    {
+      "id": "adm-desk-4",
+      "deskCode": "Desk 04",
+      "fullName": "Steward Particulars Updating",
+      "roleTitle": "Safeguarding & Open Books Stewardship Lead",
+      "department": "Find My Home Refuge & 82/12/6 Accountability",
+      "status": "Awaiting Staff Particulars",
+      "wardLocation": "Confidential Safeguarding Desk",
+      "officeHours": "24/7 Urgent Safety Escalation",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Managing Find My Home refuge confidentiality, 47-county protection relay, 82/12/6 open-books audits, and partner home safeguarding.",
+      "routingHref": "/accountability",
+      "routingLabel": "Open Books & Accountability",
+      "accentHex": "#3B155F"
+    },
+    {
+      "id": "adm-desk-5",
+      "deskCode": "Desk 05",
+      "fullName": "Mothers & Guardians Lead Updating",
+      "roleTitle": "Special Needs Kids & Mothers Care Lead",
+      "department": "Single Mothers, Sole Guardians & Two-Parent Family Care",
+      "status": "Awaiting Staff Particulars",
+      "wardLocation": "Ruiru & 47-County Disability Family Network",
+      "officeHours": "Mon – Sat · 08:30 – 18:00",
+      "phone": "+254 700 000 000",
+      "whatsapp": "254700000000",
+      "email": "care@hisandhers.org",
+      "photoUrl": "",
+      "focusSummary": "Listening directly to mothers and guardians raising differently abled children—coordinating respite hours, care kits, inclusive schools, and family circles.",
+      "routingHref": "/special-needs-families",
+      "routingLabel": "Special Needs Families Hub",
+      "accentHex": "#C2593F"
+    }
+  ],
   "prayerRequests": [],
   "counsellingRequests": [],
   "safeHomeRequests": [],
@@ -1047,6 +1486,28 @@
   "partnerOrganizations": [],
   "rehabReferrals": [],
   "asdSupportRequests": [],
+  "specialNeedsRequests": [
+    {
+      "id": "snf-17f24f8d",
+      "guardianName": "Mama Kevin Test",
+      "householdStructure": "Single Mother Household",
+      "phoneOrWhatsapp": "+254712345678",
+      "email": "",
+      "preferredContactMethod": "Phone Call With Mother/Guardian Lead",
+      "county": "Kiambu",
+      "townWard": "Ruiru Town",
+      "childAgeGroup": "Early Childhood (Ages 0–5)",
+      "disabilityFocus": "Autism, Speech & Developmental Support",
+      "practicalNeeds": [
+        "Maize Flour, Hygiene & Diaper Cushion Pack",
+        "Weekly Mother-to-Mother Phone Check-In"
+      ],
+      "storyMessage": "My son is 7 and needs inclusive school linkage and physiotherapy support.",
+      "consentAccepted": true,
+      "status": "new",
+      "createdAt": "2026-11-19T15:43:07.979Z"
+    }
+  ],
   "volunteerEnquiries": [
     {
       "id": "vol-b8970fbe",
