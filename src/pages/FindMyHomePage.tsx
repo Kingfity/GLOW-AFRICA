@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { CheckCircle2, LogOut, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, LogOut, MapPin, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import { openCrisisTextChat } from '../components/CareGuideChatbot';
 import { openEmergencyAlertModal } from '../components/EmergencyAuthorityAlert';
+import { RefugeMapsLocator } from '../components/RefugeMapsLocator';
 import { SafeImage } from '../components/SafeImage';
 import type { SafeHomeRequest } from '../shared/types';
 import { validateSafeHomeRequest } from '../utils/validation';
@@ -155,6 +156,13 @@ export function FindMyHomePage() {
                 Open Discreet Crisis Text Chat
               </button>
               <a
+                href="#refuge-locator"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F]/80 border border-white/30 hover:bg-white/15 rounded-md transition-colors"
+              >
+                <MapPin className="w-4 h-4 text-[#F3D79B]" aria-hidden="true" />
+                Locate Nearest Place of Refuge
+              </a>
+              <a
                 href="#safe-refuge-form"
                 className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#FAF7F2] border border-white/30 hover:bg-white/10 rounded-md transition-colors"
               >
@@ -177,6 +185,37 @@ export function FindMyHomePage() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Dedicated Google Maps Locator · Places of Refuge Only */}
+      <section id="refuge-locator" className="py-14 sm:py-18 bg-[#FDF6EE] border-b border-[#7B2E3C]/15">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-6">
+          <div className="max-w-3xl space-y-2">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#7B2E3C]">
+              Live Refuge Locator · Location Access Enabled for Immediate Safety
+            </p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
+              Locate Verified Places of Refuge, Rescue Desks &amp; Safe Shelters Near You
+            </h2>
+            <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
+              Google Maps is active exclusively on this refuge page to help survivors and community
+              helpers find the closest Gender-Based Violence Recovery Centre (GVRC), safe house,
+              police gender desk, or child protection office around your current position.
+            </p>
+          </div>
+
+          <RefugeMapsLocator
+            onSelectRefugeCounty={(countyName, hubName) => {
+              setImmediateNeeds((prev) =>
+                prev.trim()
+                  ? prev
+                  : `Looking for urgent safe refuge coordination near ${countyName} County (${hubName}).`
+              );
+              const formEl = document.getElementById('safe-refuge-form');
+              formEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+          />
         </div>
       </section>
 

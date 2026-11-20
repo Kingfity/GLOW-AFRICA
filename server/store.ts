@@ -52,7 +52,10 @@ export interface AppDatabase {
   emergencyAlerts: EmergencyAuthorityAlert[];
 }
 
-const DATA_DIR = path.resolve(process.cwd(), 'data');
+const BUNDLED_DATA_DIR = path.resolve(process.cwd(), 'data');
+const DATA_DIR = process.env.VERCEL
+  ? path.join('/tmp', 'hisandhers-data')
+  : BUNDLED_DATA_DIR;
 const DB_FILE = path.join(DATA_DIR, 'hisandhers-db.json');
 
 function createSeedDatabase(): AppDatabase {
@@ -1388,9 +1391,14 @@ function ensureDatabaseExists(): AppDatabase {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
   if (!fs.existsSync(DB_FILE)) {
-    const seed = createSeedDatabase();
-    fs.writeFileSync(DB_FILE, JSON.stringify(seed, null, 2), 'utf8');
-    return seed;
+    const bundledDbFile = path.join(BUNDLED_DATA_DIR, 'hisandhers-db.json');
+    if (process.env.VERCEL && fs.existsSync(bundledDbFile)) {
+      fs.copyFileSync(bundledDbFile, DB_FILE);
+    } else {
+      const seed = createSeedDatabase();
+      fs.writeFileSync(DB_FILE, JSON.stringify(seed, null, 2), 'utf8');
+      return seed;
+    }
   }
   try {
     const raw = fs.readFileSync(DB_FILE, 'utf8');

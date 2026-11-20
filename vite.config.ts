@@ -2,10 +2,32 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
+
+function loadLocalFirebaseAppletConfig(): Record<string, string> {
+  // Never require firebase-applet-config.json in GitHub/Vercel builds if VITE_FIREBASE_* env vars are provided
+  if (process.env.VITE_FIREBASE_API_KEY) {
+    return {};
+  }
+  const configPath = path.resolve(__dirname, 'firebase-applet-config.json');
+  if (!fs.existsSync(configPath)) {
+    return {};
+  }
+  try {
+    const raw = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    return raw && typeof raw === 'object' ? raw : {};
+  } catch {
+    return {};
+  }
+}
 
 export default defineConfig(() => {
+  const localFirebaseConfig = loadLocalFirebaseAppletConfig();
+
   return {
+    define: {
+      __FIREBASE_APPLET_CONFIG__: JSON.stringify(localFirebaseConfig),
+    },
     plugins: [
       react(),
       tailwindcss(),
@@ -23,7 +45,7 @@ export default defineConfig(() => {
           const srcAssets = path.resolve(__dirname, 'src/assets');
           const distAssets = path.resolve(distDir, 'src/assets');
           if (fs.existsSync(distDir) && fs.existsSync(srcAssets)) {
-            fs.cpSync(srcAssets, distAssets, {recursive: true, force: true});
+            fs.cpSync(srcAssets, distAssets, { recursive: true, force: true });
           }
         },
       },

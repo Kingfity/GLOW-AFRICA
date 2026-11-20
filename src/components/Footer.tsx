@@ -141,6 +141,11 @@ export function Footer() {
                 </AppLink>
               </li>
               <li>
+                <AppLink href="/partners" className="hover:text-[#E5CA7B] transition-colors">
+                  Institutional Partners &amp; Grants
+                </AppLink>
+              </li>
+              <li>
                 <AppLink href="/leadership" className="hover:text-[#E5CA7B] transition-colors">
                   Administrators &amp; Help Desk
                 </AppLink>

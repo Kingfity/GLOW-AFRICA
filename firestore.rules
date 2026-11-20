@@ -1,0 +1,287 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Default-Deny Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Global Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isVerifiedAdminEmail() {
+      return isEmailVerified() && request.auth.token.email == 'kariukiephraim1st@gmail.com';
+    }
+
+    function isAdmin() {
+      return isVerifiedAdminEmail() || (
+        isEmailVerified() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isOwner(userId) {
+      return isEmailVerified() && request.auth.uid == userId;
+    }
+
+    function isBoundedStringArray(listVal, maxLen) {
+      return listVal is list &&
+        listVal.size() <= maxLen &&
+        (listVal.size() == 0 || listVal[0] is string);
+    }
+
+    // 3. Entity Validation Helpers (Eight Pillars Anti-Update-Gap)
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'displayName', 'photoURL', 'role', 'county', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly(['uid', 'displayName', 'photoURL', 'role', 'county', 'createdAt', 'updatedAt']) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+        data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 120 &&
+        data.photoURL is string && data.photoURL.size() <= 500 &&
+        (data.photoURL == '' || data.photoURL.matches('^https://.*')) &&
+        data.role in ['member', 'guardian', 'partner'] &&
+        data.county is string && data.county.size() >= 2 && data.county.size() <= 80 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidUserPrivateInfo(data) {
+      return data.keys().hasAll(['uid', 'email', 'phone', 'updatedAt']) &&
+        data.keys().hasOnly(['uid', 'email', 'phone', 'updatedAt']) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+        data.email is string && data.email.size() <= 160 &&
+        data.phone is string && data.phone.size() <= 40 &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidFamilyCarePlan(data) {
+      return data.keys().hasAll([
+          'ownerUid', 'guardianName', 'householdStructure', 'county',
+          'disabilityFocus', 'monthlyRespiteHours', 'completedRoutineIds',
+          'savedChallengeIds', 'savedFacilityIds', 'notes', 'status',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'ownerUid', 'guardianName', 'householdStructure', 'county',
+          'disabilityFocus', 'monthlyRespiteHours', 'completedRoutineIds',
+          'savedChallengeIds', 'savedFacilityIds', 'notes', 'status',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.ownerUid is string && data.ownerUid.size() >= 1 && data.ownerUid.size() <= 128 &&
+        data.guardianName is string && data.guardianName.size() >= 2 && data.guardianName.size() <= 120 &&
+        data.householdStructure is string && data.householdStructure.size() >= 2 && data.householdStructure.size() <= 80 &&
+        data.county is string && data.county.size() >= 2 && data.county.size() <= 80 &&
+        data.disabilityFocus is string && data.disabilityFocus.size() >= 2 && data.disabilityFocus.size() <= 140 &&
+        (data.monthlyRespiteHours is int || data.monthlyRespiteHours is float) &&
+        data.monthlyRespiteHours >= 1 && data.monthlyRespiteHours <= 200 &&
+        isBoundedStringArray(data.completedRoutineIds, 15) &&
+        isBoundedStringArray(data.savedChallengeIds, 15) &&
+        isBoundedStringArray(data.savedFacilityIds, 15) &&
+        data.notes is string && data.notes.size() <= 1200 &&
+        data.status in ['active', 'completed', 'archived'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidSponsorPledge(data) {
+      return data.keys().hasAll([
+          'ownerUid', 'organizationName', 'partnerTier', 'grantWindow',
+          'countyFocus', 'pledgeAmountLabel', 'contactEmail', 'notes',
+          'status', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'ownerUid', 'organizationName', 'partnerTier', 'grantWindow',
+          'countyFocus', 'pledgeAmountLabel', 'contactEmail', 'notes',
+          'status', 'createdAt', 'updatedAt'
+        ]) &&
+        data.ownerUid is string && data.ownerUid.size() >= 1 && data.ownerUid.size() <= 128 &&
+        data.organizationName is string && data.organizationName.size() >= 2 && data.organizationName.size() <= 160 &&
+        data.partnerTier is string && data.partnerTier.size() >= 2 && data.partnerTier.size() <= 100 &&
+        data.grantWindow is string && data.grantWindow.size() >= 2 && data.grantWindow.size() <= 120 &&
+        data.countyFocus is string && data.countyFocus.size() >= 2 && data.countyFocus.size() <= 80 &&
+        data.pledgeAmountLabel is string && data.pledgeAmountLabel.size() >= 1 && data.pledgeAmountLabel.size() <= 80 &&
+        data.contactEmail is string && data.contactEmail.size() >= 3 && data.contactEmail.size() <= 160 &&
+        data.contactEmail.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$') &&
+        data.notes is string && data.notes.size() <= 1500 &&
+        data.status in ['submitted', 'reviewing', 'approved'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidStoryAnimation(data) {
+      return data.keys().hasAll(['ownerUid', 'title', 'caption', 'county', 'aspectRatio', 'videoUrl', 'createdAt']) &&
+        data.keys().hasOnly(['ownerUid', 'title', 'caption', 'county', 'aspectRatio', 'videoUrl', 'createdAt']) &&
+        data.ownerUid is string && data.ownerUid.size() >= 1 && data.ownerUid.size() <= 128 &&
+        data.title is string && data.title.size() >= 2 && data.title.size() <= 140 &&
+        data.caption is string && data.caption.size() <= 500 &&
+        data.county is string && data.county.size() >= 2 && data.county.size() <= 80 &&
+        data.aspectRatio in ['16:9', '9:16'] &&
+        data.videoUrl is string && data.videoUrl.size() >= 1 && data.videoUrl.size() <= 500 &&
+        (
+          data.videoUrl == 'downloaded-local-story-reel' ||
+          data.videoUrl.matches('^(/uploads/|https://).*')
+        ) &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidAdminDoc(data) {
+      return data.keys().hasAll(['email', 'role', 'grantedAt']) &&
+        data.keys().hasOnly(['email', 'role', 'grantedAt']) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 160 &&
+        data.role == 'admin' &&
+        data.grantedAt is timestamp;
+    }
+
+    // 4. Collection Match Blocks
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isEmailVerified() && (resource.data.uid == request.auth.uid || isVerifiedAdminEmail());
+      allow create: if isValidId(userId) &&
+        isOwner(userId) &&
+        isValidUserProfile(incoming()) &&
+        incoming().uid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(userId) &&
+        isEmailVerified() &&
+        isValidUserProfile(incoming()) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          isAdmin() || (
+            isOwner(userId) &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'role', 'county', 'updatedAt'])
+          )
+        );
+      allow delete: if isValidId(userId) && isAdmin();
+
+      match /private/{docId} {
+        allow get: if isValidId(userId) && isValidId(docId) && (isOwner(userId) || isAdmin());
+        allow list: if false;
+        allow create: if isValidId(userId) && isValidId(docId) &&
+          docId == 'contact' &&
+          isOwner(userId) &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().uid == request.auth.uid &&
+          incoming().updatedAt == request.time;
+        allow update: if isValidId(userId) && isValidId(docId) &&
+          docId == 'contact' &&
+          isOwner(userId) &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().uid == existing().uid &&
+          incoming().updatedAt == request.time &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['email', 'phone', 'updatedAt']);
+        allow delete: if isValidId(userId) && isValidId(docId) && (isOwner(userId) || isAdmin());
+      }
+    }
+
+    match /familyCarePlans/{planId} {
+      allow get: if isValidId(planId) && isEmailVerified() && (existing().ownerUid == request.auth.uid || isAdmin());
+      allow list: if isEmailVerified() && (resource.data.ownerUid == request.auth.uid || isVerifiedAdminEmail());
+      allow create: if isValidId(planId) &&
+        isEmailVerified() &&
+        isValidFamilyCarePlan(incoming()) &&
+        incoming().ownerUid == request.auth.uid &&
+        incoming().status == 'active' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(planId) &&
+        isEmailVerified() &&
+        isValidFamilyCarePlan(incoming()) &&
+        incoming().ownerUid == existing().ownerUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          isAdmin() || (
+            existing().ownerUid == request.auth.uid &&
+            existing().status != 'archived' && (
+              (
+                incoming().diff(existing()).affectedKeys().hasOnly([
+                  'guardianName', 'householdStructure', 'county', 'disabilityFocus',
+                  'monthlyRespiteHours', 'completedRoutineIds', 'savedChallengeIds',
+                  'savedFacilityIds', 'notes', 'updatedAt'
+                ]) &&
+                incoming().status == existing().status
+              ) || (
+                incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']) &&
+                incoming().status in ['completed', 'archived']
+              )
+            )
+          )
+        );
+      allow delete: if isValidId(planId) && isEmailVerified() && (existing().ownerUid == request.auth.uid || isAdmin());
+    }
+
+    match /sponsorPledges/{pledgeId} {
+      allow get: if isValidId(pledgeId) && isEmailVerified() && (existing().ownerUid == request.auth.uid || isAdmin());
+      allow list: if isEmailVerified() && (resource.data.ownerUid == request.auth.uid || isVerifiedAdminEmail());
+      allow create: if isValidId(pledgeId) &&
+        isEmailVerified() &&
+        isValidSponsorPledge(incoming()) &&
+        incoming().ownerUid == request.auth.uid &&
+        incoming().status == 'submitted' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(pledgeId) &&
+        isEmailVerified() &&
+        isValidSponsorPledge(incoming()) &&
+        incoming().ownerUid == existing().ownerUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          isAdmin() || (
+            existing().ownerUid == request.auth.uid &&
+            existing().status != 'approved' &&
+            incoming().status == existing().status &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'partnerTier', 'grantWindow', 'countyFocus', 'pledgeAmountLabel', 'notes', 'updatedAt'
+            ])
+          )
+        );
+      allow delete: if isValidId(pledgeId) && isEmailVerified() && (existing().ownerUid == request.auth.uid || isAdmin());
+    }
+
+    match /storyAnimations/{storyId} {
+      allow get: if isValidId(storyId) && isEmailVerified() && (existing().ownerUid == request.auth.uid || isAdmin());
+      allow list: if isEmailVerified() && (resource.data.ownerUid == request.auth.uid || isVerifiedAdminEmail());
+      allow create: if isValidId(storyId) &&
+        isEmailVerified() &&
+        isValidStoryAnimation(incoming()) &&
+        incoming().ownerUid == request.auth.uid &&
+        incoming().createdAt == request.time;
+      allow update: if false;
+      allow delete: if isValidId(storyId) && isEmailVerified() && (existing().ownerUid == request.auth.uid || isAdmin());
+    }
+
+    match /admins/{userId} {
+      allow get: if isValidId(userId) && isEmailVerified() && (request.auth.uid == userId || isVerifiedAdminEmail());
+      allow list: if false;
+      allow create, update: if isValidId(userId) &&
+        isVerifiedAdminEmail() &&
+        isValidAdminDoc(incoming()) &&
+        incoming().grantedAt == request.time;
+      allow delete: if isValidId(userId) && isVerifiedAdminEmail();
+    }
+
+    match /test/{docId} {
+      allow get: if isValidId(docId) && docId == 'connection';
+      allow list, create, update, delete: if false;
+    }
+  }
+}

@@ -1483,7 +1483,21 @@
   "counsellingRequests": [],
   "safeHomeRequests": [],
   "homeVisitBookings": [],
-  "partnerOrganizations": [],
+  "partnerOrganizations": [
+    {
+      "id": "part-c44de922",
+      "organizationName": "Rift Valley Child Health Trust",
+      "partnerType": "Donor / Sponsor Network",
+      "contactPerson": "Dr. Anne Mutai",
+      "email": "grants@rvcht.example.org",
+      "phone": "+254 700 000 000",
+      "regionArea": "All 47 Counties (National)",
+      "collaborationFocus": "Philanthropic Foundation / Grantmaker · Single-Mother & Kinship Caregiver Respite + Unga Cushioning ($25,000+ Institutional Grant). Co-funding EARC therapy seats across Nakuru and Baringo counties with quarterly audited tracking.",
+      "websiteOrProfile": "",
+      "status": "new",
+      "createdAt": "2026-11-20T12:43:52.843Z"
+    }
+  ],
   "rehabReferrals": [],
   "asdSupportRequests": [],
   "specialNeedsRequests": [

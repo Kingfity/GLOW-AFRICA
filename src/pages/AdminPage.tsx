@@ -652,17 +652,13 @@ export function AdminPage() {
             </form>
 
             <div className="pt-4 border-t border-[#3B155F]/10 text-xs text-[#665B73] space-y-1">
-              <p className="font-semibold text-[#1E0B2B]">Default Local Environment Credentials</p>
-              <p>
-                Email: <span className="font-mono">admin@hisandhers.org</span>
-              </p>
-              <p>
-                Password: <span className="font-mono">HisAndHersAdmin!2026</span>
-              </p>
+              <p className="font-semibold text-[#1E0B2B]">Protected Stewardship Access</p>
               <p className="pt-1">
-                Configure <span className="font-mono">ADMIN_EMAIL</span> and{' '}
-                <span className="font-mono">ADMIN_PASSWORD</span> in your environment before
-                production deployment.
+                Sign in with the administrator credentials configured in your server environment (
+                <span className="font-mono">ADMIN_EMAIL</span>,{' '}
+                <span className="font-mono">ADMIN_PASSWORD</span>, and{' '}
+                <span className="font-mono">ADMIN_SECRET</span>). Repeated failed attempts trigger
+                an automatic security cooldown.
               </p>
             </div>
           </div>

@@ -17,7 +17,7 @@ import { SafeImage } from '../components/SafeImage';
 import { VisitKitEstimator } from '../components/VisitKitEstimator';
 import { useSiteData } from '../context/SiteDataContext';
 import type { ChildrensHome, HomeVisitBooking, PartnerOrganization } from '../shared/types';
-import { searchKenyaCounties } from '../utils/kenyaCounties';
+import { ALL_47_COUNTY_NAMES, searchKenyaCounties } from '../utils/kenyaCounties';
 import { validateHomeVisitBooking, validatePartnerOnboarding } from '../utils/validation';
 
 const ORGANIZER_TYPES: HomeVisitBooking['organizerType'][] = [
@@ -359,6 +359,45 @@ export function HomeVisitsPage() {
                 <span className="text-[#E5CA7B]">Safeguarded Visits</span>
               </figcaption>
             </figure>
+          </div>
+        </div>
+      </section>
+
+      {/* 47-County Care Desk Quick Selector */}
+      <section className="py-10 sm:py-12 bg-[#FAF7F2] border-b border-[#3B155F]/10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="max-w-2xl space-y-1.5">
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#256358]">
+              47-County Care Network · Instant Hub Directory
+            </p>
+            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1E0B2B]">
+              Jump Directly to Any County Placement &amp; School Liaison Desk
+            </h2>
+            <p className="text-sm text-[#3E3349] leading-relaxed">
+              Select a county below to display direct telephone contacts, physical address, and
+              county referral links alongside our partner children’s homes and inclusive schools.
+            </p>
+          </div>
+          <div className="w-full lg:w-80">
+            <label htmlFor="home-visits-county-jump" className="block text-xs font-semibold text-[#1E0B2B] mb-1.5">
+              Select Any of Kenya’s 47 Counties
+            </label>
+            <select
+              id="home-visits-county-jump"
+              value={ALL_47_COUNTY_NAMES.includes(searchQuery) ? searchQuery : ''}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setRegionFilter('All');
+              }}
+              className="w-full px-3.5 py-2.5 text-sm bg-white border border-[#3B155F]/20 rounded-lg text-[#1E0B2B]"
+            >
+              <option value="">All 47 Counties (Browse Full Directory)</option>
+              {ALL_47_COUNTY_NAMES.map((countyName) => (
+                <option key={countyName} value={countyName}>
+                  {countyName} County Hub
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </section>

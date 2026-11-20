@@ -1,23 +1,73 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import {
+  BookmarkCheck,
   CheckCircle2,
   ExternalLink,
+  HandHelping,
   HeartHandshake,
+  LogIn,
   Mail,
   MapPin,
   MessageCircle,
   Phone,
   Search,
   Sparkles,
+  Trash2,
   Users,
 } from 'lucide-react';
 import { SafeImage } from '../components/SafeImage';
+import { StoryVideoAnimator } from '../components/StoryVideoAnimator';
+import { useAuth } from '../context/AuthContext';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
+import {
+  KENYA_SUPPORT_INSTITUTIONS,
+  type ChallengeCategoryId,
+} from '../data/specialNeedsChallenges';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import type { HouseholdStructureType, SpecialNeedsFamilyRequest } from '../shared/types';
 import { calculateSpecialNeedsSupportPlan } from '../utils/careTools';
 import { ALL_KENYA_COUNTIES, findKenyaCounty } from '../utils/kenyaCounties';
+import {
+  buildCarePlanShareSummary,
+  filterParentingPlaybooks,
+} from '../utils/specialNeedsGuide';
 import { validateSpecialNeedsSupport } from '../utils/validation';
+
+const CHALLENGE_CATEGORIES: Array<{ id: ChallengeCategoryId; label: string }> = [
+  { id: 'all', label: 'All Real-Life Challenges' },
+  { id: 'physical-touch', label: 'Physical Touch & Lifting' },
+  { id: 'feeding-swallowing', label: 'Feeding & Swallowing' },
+  { id: 'sensory-communication', label: 'Sensory & Non-Verbal' },
+  { id: 'medical-seizures', label: 'Seizures & Night Sleep' },
+  { id: 'kenya-systems', label: 'NCPWD, EARC & SHA' },
+  { id: 'neighbour-help', label: 'How Neighbours Help' },
+];
+
+interface SavedCarePlanDoc {
+  id: string;
+  guardianName: string;
+  householdStructure: string;
+  county: string;
+  disabilityFocus: string;
+  monthlyRespiteHours: number;
+  completedRoutineIds: string[];
+  savedChallengeIds: string[];
+  notes: string;
+  status: string;
+}
 
 const HOUSEHOLD_OPTIONS: HouseholdStructureType[] = [
   'Single Mother Household',
@@ -71,6 +121,7 @@ const GUARDIAN_CIRCLES_NOTES = [
 
 export function SpecialNeedsFamiliesPage() {
   const { data } = useSiteData();
+  const { user, signInWithGoogle } = useAuth();
   const guardianDesk = useMemo(
     () =>
       data?.administrators?.find((a) => a.id === 'adm-desk-5') ||
@@ -80,6 +131,28 @@ export function SpecialNeedsFamiliesPage() {
   );
 
   const [pathwayTab, setPathwayTab] = useState<'single-parent' | 'two-parent'>('single-parent');
+
+  // Parenting Challenges Playbook Filter & Saved Challenges
+  const [challengeCategory, setChallengeCategory] = useState<ChallengeCategoryId>('all');
+  const [challengeQuery, setChallengeQuery] = useState('');
+  const [savedChallengeIds, setSavedChallengeIds] = useState<string[]>([
+    'ch-safe-lifting-touch',
+    'ch-kenya-support-systems',
+  ]);
+  const filteredPlaybooks = useMemo(
+    () => filterParentingPlaybooks(challengeCategory, challengeQuery),
+    [challengeCategory, challengeQuery]
+  );
+
+  // Live Kenyan Relief Grounded Search State
+  const [guidanceQuery, setGuidanceQuery] = useState(
+    'How do I get an NCPWD disability card and free EARC school assessment in my county?'
+  );
+  const [guidanceCounty, setGuidanceCounty] = useState('Kiambu');
+  const [guidanceLoading, setGuidanceLoading] = useState(false);
+  const [guidanceError, setGuidanceError] = useState('');
+  const [guidanceAnswer, setGuidanceAnswer] = useState('');
+  const [guidanceLinks, setGuidanceLinks] = useState<Array<{ title: string; uri: string }>>([]);
 
   // Interactive Estimator state
   const [estHousehold, setEstHousehold] = useState<HouseholdStructureType>(
@@ -92,6 +165,11 @@ export function SpecialNeedsFamiliesPage() {
     () => calculateSpecialNeedsSupportPlan(estHousehold, estFocus, estDependants),
     [estHousehold, estFocus, estDependants]
   );
+
+  // Firestore Saved Care Plans state
+  const [savedPlans, setSavedPlans] = useState<SavedCarePlanDoc[]>([]);
+  const [savingCarePlan, setSavingCarePlan] = useState(false);
+  const [carePlanNotice, setCarePlanNotice] = useState('');
 
   // Inclusive Schools across 47 counties
   const specialSchools = useMemo(
@@ -148,6 +226,147 @@ export function SpecialNeedsFamiliesPage() {
 
   const selectedCountyHub = useMemo(() => findKenyaCounty(county), [county]);
 
+  useEffect(() => {
+    if (!user) {
+      setSavedPlans([]);
+      return;
+    }
+    const q = query(
+      collection(db, 'familyCarePlans'),
+      where('ownerUid', '==', user.uid),
+      orderBy('updatedAt', 'desc')
+    );
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const docs: SavedCarePlanDoc[] = snapshot.docs.map((snap) => {
+          const d = snap.data();
+          return {
+            id: snap.id,
+            guardianName: String(d.guardianName || 'Guardian Care Plan'),
+            householdStructure: String(d.householdStructure || 'Single Mother Household'),
+            county: String(d.county || 'Kiambu'),
+            disabilityFocus: String(d.disabilityFocus || ''),
+            monthlyRespiteHours: Number(d.monthlyRespiteHours) || 12,
+            completedRoutineIds: Array.isArray(d.completedRoutineIds)
+              ? d.completedRoutineIds.map(String)
+              : [],
+            savedChallengeIds: Array.isArray(d.savedChallengeIds)
+              ? d.savedChallengeIds.map(String)
+              : [],
+            notes: String(d.notes || ''),
+            status: String(d.status || 'active'),
+          };
+        });
+        setSavedPlans(docs);
+      },
+      (err) => {
+        handleFirestoreError(err, OperationType.LIST, 'familyCarePlans');
+      }
+    );
+    return () => unsubscribe();
+  }, [user]);
+
+  const toggleSavedChallenge = (id: string) => {
+    setSavedChallengeIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id].slice(0, 15)
+    );
+  };
+
+  const askLeadAboutChallenge = (challengeTitle: string) => {
+    setStoryMessage(
+      `Habari Mother & Guardian Lead — I need practical support around: "${challengeTitle}". My child/dependant is in ${county} County and I would appreciate gentle guidance or neighbour respite connection.`
+    );
+    document.getElementById('guardian-conversation-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSaveCarePlanToFirestore = async () => {
+    if (!user) return;
+    setSavingCarePlan(true);
+    setCarePlanNotice('');
+    const summaryText = buildCarePlanShareSummary({
+      guardianName: guardianName || user.displayName || 'Circle Guardian',
+      householdStructure: estHousehold,
+      county,
+      disabilityFocus: estFocus,
+      monthlyRespiteHours: plan.monthlyRespiteHours,
+      savedChallengeIds,
+    });
+    try {
+      await addDoc(collection(db, 'familyCarePlans'), {
+        ownerUid: user.uid,
+        guardianName: (guardianName.trim() || user.displayName || 'Circle Guardian').slice(0, 120),
+        householdStructure: estHousehold.slice(0, 80),
+        county: county.slice(0, 80),
+        disabilityFocus: estFocus.slice(0, 140),
+        monthlyRespiteHours: Math.min(200, Math.max(1, plan.monthlyRespiteHours)),
+        completedRoutineIds: [],
+        savedChallengeIds: savedChallengeIds.slice(0, 15),
+        savedFacilityIds: [],
+        notes: summaryText.slice(0, 1200),
+        status: 'active',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      setCarePlanNotice('Personal Family Care Plan saved to your Firebase account.');
+    } catch (err) {
+      handleFirestoreError(err, OperationType.CREATE, 'familyCarePlans');
+    } finally {
+      setSavingCarePlan(false);
+    }
+  };
+
+  const handleTogglePlanRoutine = async (planDoc: SavedCarePlanDoc, routineId: string) => {
+    const exists = planDoc.completedRoutineIds.includes(routineId);
+    const updatedList = exists
+      ? planDoc.completedRoutineIds.filter((r) => r !== routineId)
+      : [...planDoc.completedRoutineIds, routineId].slice(0, 15);
+    try {
+      await updateDoc(doc(db, 'familyCarePlans', planDoc.id), {
+        completedRoutineIds: updatedList,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (err) {
+      handleFirestoreError(err, OperationType.UPDATE, `familyCarePlans/${planDoc.id}`);
+    }
+  };
+
+  const handleDeleteCarePlan = async (planId: string) => {
+    try {
+      await deleteDoc(doc(db, 'familyCarePlans', planId));
+    } catch (err) {
+      handleFirestoreError(err, OperationType.DELETE, `familyCarePlans/${planId}`);
+    }
+  };
+
+  const handleGroundedGuidanceSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGuidanceError('');
+    setGuidanceLoading(true);
+    try {
+      const res = await fetch('/api/grounded-care-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'guidance',
+          query: guidanceQuery,
+          county: guidanceCounty,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setGuidanceError(json.error || 'Could not reach live Kenyan relief guidance right now.');
+        return;
+      }
+      setGuidanceAnswer(json.answer || '');
+      setGuidanceLinks(Array.isArray(json.webChunks) ? json.webChunks : []);
+    } catch {
+      setGuidanceError('Network error while checking live Kenyan disability relief guidance.');
+    } finally {
+      setGuidanceLoading(false);
+    }
+  };
+
   const toggleNeed = (need: string) => {
     setPracticalNeeds((prev) =>
       prev.includes(need) ? prev.filter((n) => n !== need) : [...prev, need]
@@ -164,7 +383,14 @@ export function SpecialNeedsFamiliesPage() {
     setPracticalNeeds(mergedNeeds);
     if (!storyMessage.trim()) {
       setStoryMessage(
-        `I am writing as a ${estHousehold.toLowerCase()} caring for ${estDependants} child(ren) needing ${estFocus.toLowerCase()}. Please connect me directly with the Mother & Guardian Care Lead for a gentle conversation about respite and support packs.`
+        buildCarePlanShareSummary({
+          guardianName: guardianName || 'Mother / Guardian',
+          householdStructure: estHousehold,
+          county,
+          disabilityFocus: estFocus,
+          monthlyRespiteHours: plan.monthlyRespiteHours,
+          savedChallengeIds,
+        })
       );
     }
     const target = document.getElementById('guardian-conversation-form');
@@ -528,6 +754,272 @@ export function SpecialNeedsFamiliesPage() {
         </div>
       </section>
 
+      {/* Deep-Researched "Every Challenge You Face" Guided Playbooks & Friendly Neighbour Relief */}
+      <section
+        id="every-challenge-playbook"
+        className="py-14 lg:py-20 bg-[#FAF7F2] border-t border-[#3B155F]/10"
+      >
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-8">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="max-w-2xl space-y-2.5">
+              <p className="text-xs font-semibold tracking-wider uppercase text-[#C2593F]">
+                Practical Daily Guides · No Medical Jargon · Real Kenyan Homes
+              </p>
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
+                Every Challenge Parents &amp; Guardians Face — And How Your Neighbours Stand Beside You
+              </h2>
+              <p className="text-sm sm:text-base text-[#3E3349] leading-relaxed">
+                From safe physical touch and lifting without injuring spastic joints, to calming
+                choking fear during feeding, handling 2 AM seizures, or walking into EARC &amp; NCPWD
+                offices without middlemen—search every daily hurdle below and pin what fits your child.
+              </p>
+            </div>
+            <div className="w-full lg:w-80 relative">
+              <Search className="w-4 h-4 text-[#665B73] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="search"
+                value={challengeQuery}
+                onChange={(e) => setChallengeQuery(e.target.value)}
+                placeholder="Search lifting, feeding, seizures, touch, EARC..."
+                aria-label="Search parenting challenge playbooks"
+                className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-[#3B155F]/20 rounded-md text-[#1A1224]"
+              />
+            </div>
+          </div>
+
+          <div
+            role="tablist"
+            aria-label="Parenting challenge categories"
+            className="flex flex-wrap gap-2"
+          >
+            {CHALLENGE_CATEGORIES.map((cat) => {
+              const active = challengeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setChallengeCategory(cat.id)}
+                  className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors ${
+                    active
+                      ? 'bg-[#3B155F] text-[#FAF7F2]'
+                      : 'bg-white text-[#3E3349] border border-[#3B155F]/15 hover:bg-[#F3EEF8]'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredPlaybooks.map((playbook) => {
+              const isSaved = savedChallengeIds.includes(playbook.id);
+              return (
+                <article
+                  key={playbook.id}
+                  className="bg-white rounded-xl border border-[#3B155F]/15 p-6 sm:p-7 flex flex-col justify-between space-y-5 shadow-sm"
+                >
+                  <div className="space-y-3.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#256358]">
+                        {playbook.categoryLabel}
+                      </span>
+                      <span className="text-[11px] font-medium text-[#7A5A10]">
+                        {playbook.specialistDesk}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-2xl font-semibold text-[#1E0B2B] leading-snug">
+                      {playbook.title}
+                    </h3>
+                    <blockquote className="p-3.5 rounded-lg bg-[#FDF6EE] border-l-4 border-[#C2593F] text-xs sm:text-sm italic text-[#3E3349]">
+                      {playbook.whatParentsFeel}
+                    </blockquote>
+                    <p className="text-xs sm:text-sm text-[#3E3349] leading-relaxed">
+                      <strong className="text-[#1E0B2B]">Why it happens:</strong> {playbook.whyItHappens}
+                    </p>
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-[#3B155F]">
+                        Gentle Hands-On Care Steps:
+                      </p>
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-[#3E3349] list-disc pl-5">
+                        {playbook.practicalTips.map((tip, i) => (
+                          <li key={i} className="leading-relaxed">
+                            {tip}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="p-3.5 rounded-lg bg-[#EDF6F3] border border-[#256358]/20 text-xs sm:text-sm text-[#1D4E46]">
+                      <strong className="inline-flex items-center gap-1.5 font-semibold">
+                        <HandHelping className="w-4 h-4 shrink-0" />
+                        What Friendly Neighbours Can Do Right Now:
+                      </strong>{' '}
+                      {playbook.whatNeighboursCanDo}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#3B155F]/10">
+                    <button
+                      type="button"
+                      onClick={() => toggleSavedChallenge(playbook.id)}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-md border transition-colors ${
+                        isSaved
+                          ? 'bg-[#256358] text-white border-[#256358]'
+                          : 'bg-[#FAF7F2] text-[#1E0B2B] border-[#3B155F]/20 hover:bg-[#F3EEF8]'
+                      }`}
+                    >
+                      <BookmarkCheck className="w-3.5 h-3.5" />
+                      {isSaved ? 'Pinned to My Care Plan' : 'Pin to My Care Plan'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => askLeadAboutChallenge(playbook.title)}
+                      className="text-xs font-semibold text-[#C2593F] hover:text-[#3B155F] underline underline-offset-4"
+                    >
+                      Ask Mother &amp; Guardian Lead About This →
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Kenyan Relief Systems Directory & Live Google Search Grounding */}
+      <section
+        id="kenya-support-institutions"
+        className="py-14 lg:py-18 bg-[#EDF6F3] border-t border-[#256358]/15"
+      >
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-8">
+          <div className="max-w-2xl space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#256358]">
+              Zero-Middleman Kenyan Entitlements &amp; Support Networks
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#1E0B2B]">
+              Official Kenyan Desks That Belong to Your Family
+            </h2>
+            <p className="text-sm text-[#3E3349] leading-relaxed">
+              Every Kenyan guardian has legal access to free EARC educational assessments, NCPWD
+              assistive-device subsidies, SHA chronic care, and vetted therapy networks.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {KENYA_SUPPORT_INSTITUTIONS.map((inst) => (
+              <div
+                key={inst.id}
+                className="p-5 bg-white rounded-xl border border-[#256358]/15 flex flex-col justify-between space-y-4"
+              >
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#C2593F]">
+                    {inst.acronym}
+                  </p>
+                  <h3 className="font-display text-xl font-semibold text-[#1E0B2B]">
+                    {inst.fullName}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#3E3349] leading-relaxed">
+                    {inst.whatItProvides}
+                  </p>
+                  <p className="text-xs text-[#256358] leading-relaxed bg-[#EDF6F3] p-3 rounded-md">
+                    <strong>First Step:</strong> {inst.howToAccess}
+                  </p>
+                </div>
+                <a
+                  href={inst.contactOrUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#3B155F] hover:text-[#C2593F]"
+                >
+                  Official Portal &amp; Resources
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            ))}
+          </div>
+
+          {/* Live Google Search Grounded Guidance Form */}
+          <div className="bg-white rounded-xl border border-[#D4AF37]/45 p-6 sm:p-8 space-y-4 shadow-sm">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#7A5A10] inline-flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                Live Search Grounded Kenyan Guidance Desk
+              </p>
+              <h3 className="font-display text-2xl font-semibold text-[#1E0B2B]">
+                Ask a Practical Kenyan Question About EARC, NCPWD, SHA or Local Therapy
+              </h3>
+            </div>
+
+            <form onSubmit={handleGroundedGuidanceSearch} className="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <select
+                aria-label="County for guidance"
+                value={guidanceCounty}
+                onChange={(e) => setGuidanceCounty(e.target.value)}
+                className="md:col-span-3 px-3 py-2.5 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+              >
+                {ALL_KENYA_COUNTIES.map((c) => (
+                  <option key={c.code} value={c.name}>
+                    {c.name} County
+                  </option>
+                ))}
+              </select>
+              <input
+                type="text"
+                value={guidanceQuery}
+                onChange={(e) => setGuidanceQuery(e.target.value)}
+                placeholder="Ask e.g. Where is the nearest public EARC or NCPWD cash transfer office?"
+                className="md:col-span-6 px-3.5 py-2.5 text-sm bg-[#FAF7F2] border border-[#3B155F]/20 rounded-md"
+              />
+              <button
+                type="submit"
+                disabled={guidanceLoading}
+                className="md:col-span-3 px-4 py-2.5 text-sm font-semibold bg-[#256358] text-white hover:bg-[#1C4D44] disabled:opacity-60 rounded-md transition-colors"
+              >
+                {guidanceLoading ? 'Checking Sources...' : 'Search Kenyan Guidance'}
+              </button>
+            </form>
+
+            {guidanceError && (
+              <p role="alert" className="p-3 text-xs bg-rose-50 border border-rose-200 text-rose-800 rounded-md">
+                {guidanceError}
+              </p>
+            )}
+
+            {guidanceAnswer && (
+              <div className="p-5 bg-[#FAF7F2] rounded-lg border border-[#3B155F]/15 space-y-3">
+                <div className="text-xs sm:text-sm text-[#1E0B2B] leading-relaxed whitespace-pre-line">
+                  {guidanceAnswer}
+                </div>
+                {guidanceLinks.length > 0 && (
+                  <div className="pt-2 border-t border-[#3B155F]/10">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#256358] mb-1.5">
+                      Verified Source Links:
+                    </p>
+                    <ul className="flex flex-wrap gap-2">
+                      {guidanceLinks.slice(0, 5).map((link, idx) => (
+                        <li key={`${link.uri}-${idx}`}>
+                          <a
+                            href={link.uri}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-white border border-[#3B155F]/20 rounded text-[#3B155F] hover:underline"
+                          >
+                            {link.title}
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Interactive Household Care & Support Kit Estimator */}
       <section
         id="family-support-estimator"
@@ -662,13 +1154,98 @@ export function SpecialNeedsFamiliesPage() {
               </ul>
             </div>
 
-            <button
-              type="button"
-              onClick={applyEstimatorToForm}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors"
-            >
-              Use This Plan to Message Our Mother &amp; Guardian Lead →
-            </button>
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={applyEstimatorToForm}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors"
+              >
+                Use This Plan to Message Mother &amp; Guardian Lead →
+              </button>
+              {user ? (
+                <button
+                  type="button"
+                  onClick={() => void handleSaveCarePlanToFirestore()}
+                  disabled={savingCarePlan}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[#1E0B2B] bg-[#F5D67B] hover:bg-[#D4AF37] disabled:opacity-60 rounded-md transition-colors"
+                >
+                  <BookmarkCheck className="w-4 h-4" />
+                  {savingCarePlan ? 'Saving Plan...' : 'Save Care Plan to My Account'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => void signInWithGoogle('guardian', county)}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 hover:bg-white rounded-md transition-colors"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Sign In With Google to Save Care Plan
+                </button>
+              )}
+            </div>
+
+            {carePlanNotice && (
+              <p className="text-xs font-semibold text-[#256358]">{carePlanNotice}</p>
+            )}
+
+            {user && savedPlans.length > 0 && (
+              <div className="pt-4 border-t border-[#3B155F]/12 space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#256358]">
+                  Your Saved Family Care Plans ({savedPlans.length})
+                </p>
+                <div className="space-y-2.5">
+                  {savedPlans.map((sp) => {
+                    const checkedMorning = sp.completedRoutineIds.includes('morning-stretch');
+                    const checkedMeds = sp.completedRoutineIds.includes('evening-meds');
+                    return (
+                      <div
+                        key={sp.id}
+                        className="p-4 bg-white rounded-lg border border-[#3B155F]/15 space-y-2 text-xs"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="font-semibold text-[#1E0B2B]">
+                            {sp.guardianName} · {sp.householdStructure} ({sp.county})
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => void handleDeleteCarePlan(sp.id)}
+                            aria-label="Remove saved care plan"
+                            className="inline-flex items-center gap-1 text-rose-700 hover:underline"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Remove
+                          </button>
+                        </div>
+                        <p className="text-[#3E3349]">
+                          {sp.disabilityFocus} · Target {sp.monthlyRespiteHours} hrs/mo respite ·{' '}
+                          {sp.savedChallengeIds.length} pinned guides
+                        </p>
+                        <div className="flex flex-wrap gap-3 pt-1">
+                          <label className="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={checkedMorning}
+                              onChange={() => void handleTogglePlanRoutine(sp, 'morning-stretch')}
+                              className="accent-[#256358]"
+                            />
+                            Morning Gentle Massage &amp; Upright Feeding Check
+                          </label>
+                          <label className="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={checkedMeds}
+                              onChange={() => void handleTogglePlanRoutine(sp, 'evening-meds')}
+                              className="accent-[#256358]"
+                            />
+                            7-Day Meds &amp; Night Rest Log Ready
+                          </label>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -1148,6 +1725,16 @@ export function SpecialNeedsFamiliesPage() {
               </form>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* Family Moment Video Keepsake Animator */}
+      <section className="py-12 lg:py-16 bg-[#F4EFE6] border-t border-[#3B155F]/10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <StoryVideoAnimator
+            heading="Bring a Family or Care Circle Photo Gently to Life"
+            subtitle="Parents, guardians, and support circles can turn an approved gathering or outdoor courtyard photograph into a warm 6-second tribute video."
+          />
         </div>
       </section>
     </div>

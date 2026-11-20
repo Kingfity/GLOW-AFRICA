@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { AppLink } from '../context/RouterContext';
 import { useSiteData } from '../context/SiteDataContext';
 import { SafeImage } from '../components/SafeImage';
+import { StoryVideoAnimator } from '../components/StoryVideoAnimator';
 import { TransparentImpactDashboard } from '../components/TransparentImpactDashboard';
 import { filterImpactProjects } from '../utils/validation';
 
@@ -148,6 +149,13 @@ export function ImpactPage() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Community Story Photo-to-Video Keepsake Studio */}
+      <section className="py-12 sm:py-16 bg-[#F4EFE6] border-t border-[#3B155F]/10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <StoryVideoAnimator />
         </div>
       </section>
     </div>

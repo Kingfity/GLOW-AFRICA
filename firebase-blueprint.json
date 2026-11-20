@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Publicly minimal profile for signed-in guardians, volunteers, and partners.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "role": { "type": "string", "enum": ["member", "guardian", "partner"] },
+        "county": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "photoURL", "role", "county", "createdAt", "updatedAt"]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "PII-isolated private contact record owned strictly by the authenticated user.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 160 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "phone", "updatedAt"]
+    },
+    "FamilyCarePlan": {
+      "title": "FamilyCarePlan",
+      "description": "Persistent personalised household care plan, saved challenges, and respite targets for parents and guardians.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "guardianName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "householdStructure": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "county": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "disabilityFocus": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "monthlyRespiteHours": { "type": "number" },
+        "completedRoutineIds": { "type": "array" },
+        "savedChallengeIds": { "type": "array" },
+        "savedFacilityIds": { "type": "array" },
+        "notes": { "type": "string", "maxLength": 1200 },
+        "status": { "type": "string", "enum": ["active", "completed", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "ownerUid",
+        "guardianName",
+        "householdStructure",
+        "county",
+        "disabilityFocus",
+        "monthlyRespiteHours",
+        "completedRoutineIds",
+        "savedChallengeIds",
+        "savedFacilityIds",
+        "notes",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "SponsorPartnerPledge": {
+      "title": "SponsorPartnerPledge",
+      "description": "Institutional grant inquiry, CSR sponsorship, or philanthropic partner commitment.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "organizationName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "partnerTier": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "grantWindow": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "countyFocus": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "pledgeAmountLabel": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "contactEmail": { "type": "string", "maxLength": 160 },
+        "notes": { "type": "string", "maxLength": 1500 },
+        "status": { "type": "string", "enum": ["submitted", "reviewing", "approved"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "ownerUid",
+        "organizationName",
+        "partnerTier",
+        "grantWindow",
+        "countyFocus",
+        "pledgeAmountLabel",
+        "contactEmail",
+        "notes",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StoryVideoRecord": {
+      "title": "StoryVideoRecord",
+      "description": "Metadata for animated community impact and family tribute reels generated from uploaded photos.",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "caption": { "type": "string", "maxLength": 500 },
+        "county": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "aspectRatio": { "type": "string", "enum": ["16:9", "9:16"] },
+        "videoUrl": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "title", "caption", "county", "aspectRatio", "videoUrl", "createdAt"]
+    },
+    "AdminRoleDoc": {
+      "title": "AdminRoleDoc",
+      "description": "Trusted administrator grant document verified in security rules.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 160 },
+        "role": { "type": "string", "enum": ["admin"] },
+        "grantedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role", "grantedAt"]
+    },
+    "ConnectionProbe": {
+      "title": "ConnectionProbe",
+      "description": "Read-only connectivity probe document used on initial startup.",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "UserProfile" },
+      "description": "Publicly minimal profile documents owned by the user."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "UserPrivateInfo" },
+      "description": "Private PII subcollection accessible only to the owning user or verified admin."
+    },
+    "/familyCarePlans/{planId}": {
+      "schema": { "$ref": "FamilyCarePlan" },
+      "description": "Personalised family respite and special-needs challenge plans owned by signed-in guardians."
+    },
+    "/sponsorPledges/{pledgeId}": {
+      "schema": { "$ref": "SponsorPartnerPledge" },
+      "description": "Philanthropic partner and institutional grant commitments."
+    },
+    "/storyAnimations/{storyId}": {
+      "schema": { "$ref": "StoryVideoRecord" },
+      "description": "Saved metadata records for animated impact video stories."
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "AdminRoleDoc" },
+      "description": "Authorised platform administrator lookup records."
+    },
+    "/test/{docId}": {
+      "schema": { "$ref": "ConnectionProbe" },
+      "description": "Startup Firestore server connectivity check collection."
+    }
+  }
+}

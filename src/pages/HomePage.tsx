@@ -548,12 +548,18 @@ export function HomePage() {
                   children’s home—or onboard your organisation to collaborate across our network.
                 </p>
               </div>
-              <div>
+              <div className="flex flex-wrap gap-3">
+                <AppLink
+                  href="/partners"
+                  className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors whitespace-nowrap"
+                >
+                  Institutional Partners &amp; Grants
+                </AppLink>
                 <AppLink
                   href="/home-visits"
-                  className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#C2593F] hover:bg-[#A64831] rounded-md transition-colors whitespace-nowrap"
+                  className="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-[#FAF7F2] bg-[#C2593F] hover:bg-[#A64831] rounded-md transition-colors whitespace-nowrap"
                 >
-                  Children’s Homes &amp; Onboarding
+                  Children’s Homes &amp; CSR
                 </AppLink>
               </div>
             </div>

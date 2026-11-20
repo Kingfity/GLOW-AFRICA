@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { LogIn, LogOut, Menu, X } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { AppLink, useRouter } from '../context/RouterContext';
 
 const NAV_ITEMS = [
@@ -7,8 +8,8 @@ const NAV_ITEMS = [
   { label: 'Children’s Homes', href: '/home-visits' },
   { label: 'Special Needs', href: '/special-needs-families' },
   { label: 'Mental Health', href: '/mental-health' },
-  { label: 'Recovery', href: '/recovery' },
   { label: 'Events', href: '/events' },
+  { label: 'Partners', href: '/partners' },
 ];
 
 export function BrandMark({
@@ -110,6 +111,7 @@ export function BrandMark({
 
 export function Navbar() {
   const { path } = useRouter();
+  const { user, profile, signInWithGoogle, signOutUser } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -164,8 +166,30 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Zone 3: Single Primary Action + Mobile Drawer Toggle */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Zone 3: Steward Sign-In + Single Primary Action + Mobile Drawer Toggle */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {user ? (
+            <button
+              type="button"
+              onClick={() => void signOutUser()}
+              title={`Signed in as ${profile?.displayName || user.email || 'Member'} — Click to sign out`}
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[#1E0B2B] border border-[#3B155F]/20 hover:bg-[#F3EEF8] rounded-md transition-colors whitespace-nowrap shrink-0"
+            >
+              <LogOut className="w-3.5 h-3.5 text-[#C2593F]" aria-hidden="true" />
+              <span className="max-w-[110px] truncate">
+                {(profile?.displayName || user.displayName || 'Circle').split(' ')[0]}
+              </span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => void signInWithGoogle('guardian', 'Kiambu')}
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[#3B155F] border border-[#3B155F]/25 hover:bg-[#F3EEF8] rounded-md transition-colors whitespace-nowrap shrink-0"
+            >
+              <LogIn className="w-3.5 h-3.5" aria-hidden="true" />
+              Care Plan Sign-In
+            </button>
+          )}
           <AppLink
             href="/get-involved"
             className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs sm:text-sm font-semibold text-[#FAF7F2] bg-[#3B155F] hover:bg-[#2C1042] rounded-md transition-colors duration-150 whitespace-nowrap shrink-0"
@@ -194,8 +218,10 @@ export function Navbar() {
         >
           {[
             ...NAV_ITEMS,
+            { label: 'Institutional Partners & Grants', href: '/partners' },
             { label: 'Special Needs Kids & Families', href: '/special-needs-families' },
             { label: 'Mental Health, Trauma & Stress', href: '/mental-health' },
+            { label: 'Recovery & Peer Voices', href: '/recovery' },
             { label: 'Rehabilitation Across 47 Counties', href: '/rehabilitation' },
             { label: 'Family Wellness · Calm Corner', href: '/gbv' },
             { label: 'Accountability (Open Books)', href: '/accountability' },
@@ -206,25 +232,52 @@ export function Navbar() {
             { label: 'Our Impact Since 2025', href: '/impact' },
             { label: 'Prayer & Worship', href: '/prayer-worship' },
             { label: 'Contact Us', href: '/contact' },
-          ].filter((item, idx, arr) => arr.findIndex((x) => x.href === item.href) === idx).map((item) => {
-            const active = isActive(item.href);
-            return (
-              <AppLink
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                ariaCurrent={active ? 'page' : undefined}
-                className={`block px-3 py-3 rounded-md text-base font-medium transition-colors ${
-                  active
-                    ? 'bg-[#F3EEF8] text-[#3B155F] font-semibold'
-                    : 'text-[#1A1224] hover:bg-[#F3EEF8]/70'
-                }`}
+          ]
+            .filter((item, idx, arr) => arr.findIndex((x) => x.href === item.href) === idx)
+            .map((item) => {
+              const active = isActive(item.href);
+              return (
+                <AppLink
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  ariaCurrent={active ? 'page' : undefined}
+                  className={`block px-3 py-3 rounded-md text-base font-medium transition-colors ${
+                    active
+                      ? 'bg-[#F3EEF8] text-[#3B155F] font-semibold'
+                      : 'text-[#1A1224] hover:bg-[#F3EEF8]/70'
+                  }`}
+                >
+                  {item.label}
+                </AppLink>
+              );
+            })}
+          <div className="pt-3 border-t border-[#3B155F]/10 space-y-2">
+            {user ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  void signOutUser();
+                }}
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md"
               >
-                {item.label}
-              </AppLink>
-            );
-          })}
-          <div className="pt-3 border-t border-[#3B155F]/10">
+                <LogOut className="w-4 h-4" aria-hidden="true" />
+                Sign Out ({profile?.displayName || user.displayName || 'Circle Member'})
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  void signInWithGoogle('guardian', 'Kiambu');
+                }}
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-semibold text-[#3B155F] border border-[#3B155F]/25 rounded-md"
+              >
+                <LogIn className="w-4 h-4" aria-hidden="true" />
+                Care Plan Google Sign-In
+              </button>
+            )}
             <AppLink
               href="/get-involved"
               onClick={() => setMobileOpen(false)}
